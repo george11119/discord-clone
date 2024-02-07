@@ -1,7 +1,8 @@
 import styled from "styled-components"
+import SidebarIcon from "./SidebarIcon.tsx"
 
-const SidebarWrapper = styled.div`
-  background: grey;
+const SidebarWrapper = styled.nav`
+  background: rgb(30, 31, 34);
   padding-top: 8px;
   width: 72px;
   height: 100vh;
@@ -10,24 +11,6 @@ const SidebarWrapper = styled.div`
   align-items: center;
   gap: 8px;
 `
-
-const SidebarIconWrapper = styled.div`
-  height: 48px;
-  width: 48px;
-  background: blue;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-`
-
-const SidebarIcon = ({ name }: { name: string }) => {
-  return (
-    <SidebarIconWrapper>
-      <div>{name}</div>
-    </SidebarIconWrapper>
-  )
-}
 
 const Sidebar = () => {
   return (

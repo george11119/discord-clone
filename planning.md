@@ -5,7 +5,7 @@
 ---
 
 <ul>
-  <li>Create frontend</li>
+  <li>Create frontend UI</li>
   <ul>
     <li>Create sidebar</li>
     <li>Create input box</li>
@@ -26,7 +26,7 @@
 erDiagram
   user ||--|{ message: has_many_belongs_to
   user {
-    int id
+    int id PK
     string username
     string email
     string password
@@ -34,19 +34,19 @@ erDiagram
 
   server ||--|{ channel: has_many_belongs_to
   server {
-    int id
+    int id PK
   }
 
   channel ||--|{ message: has_many_belongs_to
   channel {
-    int id
-    int server_id
+    int id PK
+    int server_id FK
   }
 
   message {
-    int id
+    int id PK
     string text
-    int user_id
-    int channel_id
+    int user_id FK
+    int channel_id FK
   }
 ```
