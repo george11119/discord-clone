@@ -1,4 +1,8 @@
+<h1 align="center">Project plan</h1>
+
 ### Todo
+
+---
 
 <ul>
   <li>Create frontend</li>
@@ -16,9 +20,11 @@
 
 ### Database layout
 
+---
+
 ```mermaid
 erDiagram
-  user ||--|{ message: has_many
+  user ||--|{ message: has_many_belongs_to
   user {
     int id
     string username
@@ -26,18 +32,21 @@ erDiagram
     string password
   }
 
-  server ||--|{ channel: has_many
+  server ||--|{ channel: has_many_belongs_to
   server {
     int id
   }
 
-  channel ||--|{ message: has_many
+  channel ||--|{ message: has_many_belongs_to
   channel {
     int id
+    int server_id
   }
 
   message {
     int id
     string text
+    int user_id
+    int channel_id
   }
 ```
