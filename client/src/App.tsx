@@ -1,5 +1,7 @@
-function App() {
-  return <div>Hello world</div>
+import Sidebar from "./components/Sidebar.tsx"
+
+const App = () => {
+  return <Sidebar />
 }
 
 export default App
