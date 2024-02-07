@@ -15,10 +15,10 @@ const SidebarWrapper = styled.nav`
 const Sidebar = () => {
   return (
     <SidebarWrapper>
-      <SidebarIcon name={"AAA"} />
-      <SidebarIcon name={"BBB"} />
-      <SidebarIcon name={"CCC"} />
-      <SidebarIcon name={"DDD"} />
+      <SidebarIcon name={"group chat 1"} />
+      <SidebarIcon name={"group chat 2"} />
+      <SidebarIcon name={"league server"} />
+      <SidebarIcon name={"homework server"} />
     </SidebarWrapper>
   )
 }
