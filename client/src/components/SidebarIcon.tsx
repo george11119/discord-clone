@@ -37,6 +37,7 @@ const SidebarIcon = ({ name, tooltip }: { name: string; tooltip?: string }) => {
         }}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
+        onMouseDown={() => setIsHovered(false)}
       >
         {firstLetter}
         <Tooltip tooltip={tooltip ? tooltip : name} isHovered={isHovered} />

@@ -1,7 +1,6 @@
-import { motion } from "framer-motion"
 import styled from "styled-components"
 
-const TooltipWrapper = styled.span`
+const TooltipWrapper = styled.span<{ isHovered: boolean }>`
   position: absolute;
   width: auto;
   padding: 10px;
@@ -11,6 +10,8 @@ const TooltipWrapper = styled.span`
   color: white;
   background: #070707;
   pointer-events: none;
+  transform: scale(${({ isHovered }) => (isHovered ? 1 : 0)});
+  transition: transform 0.15s;
 `
 
 // const TooltipArrow = styled.span`
@@ -28,13 +29,7 @@ const Tooltip = ({
   tooltip: string
   isHovered: boolean
 }) => {
-  return (
-    <>
-      <TooltipWrapper as={motion.span} animate={{ scale: isHovered ? 1 : 0 }}>
-        {tooltip}
-      </TooltipWrapper>
-    </>
-  )
+  return <TooltipWrapper isHovered={isHovered}>{tooltip}</TooltipWrapper>
 }
 
 export default Tooltip
