@@ -10,7 +10,8 @@ const ChatContainerHeaderWrapper = styled.div`
   display: flex;
   align-items: center;
   font-weight: 600;
-  font-size: 12px;
+  font-size: 16px;
+  flex-shrink: 0;
 `
 
 const ChatContainerHeader = () => {
