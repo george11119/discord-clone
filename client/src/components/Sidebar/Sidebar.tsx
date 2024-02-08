@@ -10,6 +10,7 @@ const SidebarWrapper = styled.nav`
   align-items: center;
   gap: 8px;
   padding-top: 12px;
+  flex-shrink: 0;
 `
 
 const Sidebar = () => {

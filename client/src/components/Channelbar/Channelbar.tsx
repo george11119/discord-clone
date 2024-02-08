@@ -6,6 +6,7 @@ const ChannelbarWrapper = styled.nav`
   width: 240px;
   height: 100vh;
   background-color: rgb(43, 45, 49);
+  flex-shrink: 0;
 `
 
 const Channelbar = () => {
