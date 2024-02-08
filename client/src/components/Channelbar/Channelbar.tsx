@@ -1,5 +1,6 @@
 import styled from "styled-components"
 import ChannelBarHeader from "./ChannelbarHeader.tsx"
+import ChannelList from "./ChannelList.tsx"
 
 const ChannelbarWrapper = styled.nav`
   width: 240px;
@@ -10,7 +11,8 @@ const ChannelbarWrapper = styled.nav`
 const Channelbar = () => {
   return (
     <ChannelbarWrapper>
-      <ChannelBarHeader></ChannelBarHeader>
+      <ChannelBarHeader title={"Channel title"} />
+      <ChannelList />
     </ChannelbarWrapper>
   )
 }
