@@ -7,7 +7,6 @@ const SidebarIconWrapper = styled.div`
   height: 48px;
   width: 48px;
   background: rgb(49, 51, 56);
-  color: rgb(219, 222, 225);
   display: flex;
   align-items: center;
   justify-content: center;

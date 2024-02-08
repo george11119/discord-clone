@@ -3,13 +3,13 @@ import SidebarIcon from "./SidebarIcon.tsx"
 
 const SidebarWrapper = styled.nav`
   background: rgb(30, 31, 34);
-  padding-top: 8px;
   width: 72px;
   height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 8px;
+  padding-top: 12px;
 `
 
 const Sidebar = () => {
