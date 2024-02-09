@@ -1,4 +1,5 @@
 import styled from "styled-components"
+import Hashtag from "../shared/svg/Hashtag.tsx"
 
 const Wrapper = styled.div`
   box-shadow:
@@ -17,6 +18,7 @@ const Wrapper = styled.div`
 const Header = () => {
   return (
     <Wrapper>
+      <Hashtag size={24} color="#80848e" />
       <div>Chat container header</div>
     </Wrapper>
   )

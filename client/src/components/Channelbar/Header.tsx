@@ -1,5 +1,5 @@
 import styled from "styled-components"
-import VerticalSpacer from "../shared/VerticalSpacer.tsx"
+import VerticalSpacer from "../shared/components/VerticalSpacer.tsx"
 
 const Wrapper = styled.div`
   box-shadow:

@@ -1,6 +1,6 @@
 import styled from "styled-components"
+import DropdownButton from "./DropdownButton.tsx"
 
-const Svg = styled.svg``
 
 const Wrapper = styled.div`
   padding-top: 16px;
@@ -15,20 +15,7 @@ const Wrapper = styled.div`
 const ChannelListCategory = ({ title }: { title: string }) => {
   return (
     <Wrapper>
-      <Svg
-        role="img"
-        xmlns="http://www.w3.org/2000/svg"
-        width="12"
-        height="12"
-        fill="none"
-        viewBox="0 0 24 24"
-      >
-        <path
-          fill="currentColor"
-          d="M5.3 9.3a1 1 0 0 1 1.4 0l5.3 5.29 5.3-5.3a1 1 0 1 1 1.4 1.42l-6 6a1 1 0 0 1-1.4 0l-6-6a1 1 0 0 1 0-1.42Z"
-          className=""
-        ></path>
-      </Svg>
+      <DropdownButton size={12} />
       {title.toUpperCase()}
     </Wrapper>
   )
