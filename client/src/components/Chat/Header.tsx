@@ -11,15 +11,16 @@ const Wrapper = styled.div`
   display: flex;
   align-items: center;
   font-weight: 600;
-  font-size: 16px;
+  font-size: 14px;
   flex-shrink: 0;
+  user-select: none;
 `
 
 const Header = () => {
   return (
     <Wrapper>
       <Hashtag size={24} color="#80848e" />
-      <div>Chat container header</div>
+      <h1>chat container header</h1>
     </Wrapper>
   )
 }
