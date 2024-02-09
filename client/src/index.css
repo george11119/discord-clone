@@ -19,3 +19,10 @@ body {
   font-family: "Noto Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
   overflow: hidden;
 }
+input {
+  border-width: 0;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  outline: none;
+}
