@@ -20,7 +20,7 @@ const Header = () => {
   return (
     <Wrapper>
       <Hashtag size={24} color="#80848e" />
-      <h1>chat container header</h1>
+      <h1>General</h1>
     </Wrapper>
   )
 }

@@ -1,6 +1,6 @@
 import styled from "styled-components"
 import Header from "./Header.tsx"
-import ChatContainer from "./ChatContainer.tsx"
+import ChatMessageDisplay from "./ChatMessageDisplay.tsx"
 import MessageInput from "./MessageInput.tsx"
 
 const Wrapper = styled.div`
@@ -11,14 +11,14 @@ const Wrapper = styled.div`
   flex-direction: column;
 `
 
-const Chat = () => {
+const ChatAreaContainer = () => {
   return (
     <Wrapper>
       <Header />
-      <ChatContainer />
+      <ChatMessageDisplay />
       <MessageInput />
     </Wrapper>
   )
 }
 
-export default Chat
+export default ChatAreaContainer
