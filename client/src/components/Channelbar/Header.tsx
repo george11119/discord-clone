@@ -1,7 +1,7 @@
 import styled from "styled-components"
 import VerticalSpacer from "../shared/VerticalSpacer.tsx"
 
-const ChannelBarHeaderWrapper = styled.div`
+const Wrapper = styled.div`
   box-shadow:
     rgba(2, 2, 2, 0.2) 0px 1px 0px 0px,
     rgba(6, 6, 7, 0.05) 0px 1.5px 0px 0px,
@@ -14,13 +14,13 @@ const ChannelBarHeaderWrapper = styled.div`
   cursor: pointer;
 `
 
-const ChannelBarHeader = ({ title }: { title: string }) => {
+const Header = ({ title }: { title: string }) => {
   return (
     <>
-      <ChannelBarHeaderWrapper>{title}</ChannelBarHeaderWrapper>
+      <Wrapper>{title}</Wrapper>
       <VerticalSpacer height={12} />
     </>
   )
 }
 
-export default ChannelBarHeader
+export default Header

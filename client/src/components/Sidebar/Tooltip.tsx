@@ -1,6 +1,6 @@
 import styled from "styled-components"
 
-const TooltipWrapper = styled.span<{ $isHovered: boolean }>`
+const Wrapper = styled.span<{ $isHovered: boolean }>`
   pointer-events: none;
   transform: scale(${({ $isHovered }) => ($isHovered ? 1 : 0)});
   transition: ${({ $isHovered }) => ($isHovered ? "transform 0.15s" : "none")};
@@ -35,10 +35,10 @@ const Tooltip = ({
   isHovered: boolean
 }) => {
   return (
-    <TooltipWrapper $isHovered={isHovered}>
+    <Wrapper $isHovered={isHovered}>
       <TooltipArrow></TooltipArrow>
       <TooltipMessage>{tooltip}</TooltipMessage>
-    </TooltipWrapper>
+    </Wrapper>
   )
 }
 

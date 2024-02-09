@@ -2,7 +2,7 @@ import styled from "styled-components"
 import ChannelListItem from "./ChannelListItem.tsx"
 import ChannelListCategory from "./ChannelListCategory.tsx"
 
-const ChannelListWrapper = styled.ul`
+const Wrapper = styled.ul`
   list-style: none;
   margin: 0 8px;
   color: rgb(148, 155, 164);
@@ -10,7 +10,7 @@ const ChannelListWrapper = styled.ul`
 
 const ChannelList = () => {
   return (
-    <ChannelListWrapper>
+    <Wrapper>
       <ChannelListCategory title={"General"} />
       <ChannelListItem name={"asdf"} />
       <ChannelListItem name={"asdf"} />
@@ -18,7 +18,7 @@ const ChannelList = () => {
       <ChannelListItem name={"asdf"} />
       <ChannelListItem name={"asdf"} />
       <ChannelListItem name={"asdf"} />
-    </ChannelListWrapper>
+    </Wrapper>
   )
 }
 

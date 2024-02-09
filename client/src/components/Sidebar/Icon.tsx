@@ -3,7 +3,7 @@ import { motion } from "framer-motion"
 import { useState } from "react"
 import Tooltip from "./Tooltip.tsx"
 
-const SidebarIconWrapper = styled.div`
+const Wrapper = styled.div`
   height: 48px;
   width: 48px;
   background: rgb(49, 51, 56);
@@ -17,13 +17,13 @@ const SidebarIconWrapper = styled.div`
   user-select: none;
 `
 
-const SidebarIcon = ({ name, tooltip }: { name: string; tooltip?: string }) => {
+const Icon = ({ name, tooltip }: { name: string; tooltip?: string }) => {
   const [isHovered, setIsHovered] = useState(false)
   const firstLetter: string = name[0].toUpperCase()
 
   return (
     <div>
-      <SidebarIconWrapper
+      <Wrapper
         as={motion.div}
         whileHover={{
           backgroundColor: "rgb(88, 101, 242)",
@@ -40,9 +40,9 @@ const SidebarIcon = ({ name, tooltip }: { name: string; tooltip?: string }) => {
       >
         {firstLetter}
         <Tooltip tooltip={tooltip ? tooltip : name} isHovered={isHovered} />
-      </SidebarIconWrapper>
+      </Wrapper>
     </div>
   )
 }
 
-export default SidebarIcon
+export default Icon

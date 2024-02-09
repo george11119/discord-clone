@@ -1,7 +1,7 @@
 import styled from "styled-components"
-import SidebarIcon from "./SidebarIcon.tsx"
+import Icon from "./Icon.tsx"
 
-const SidebarWrapper = styled.nav`
+const Wrapper = styled.nav`
   background: rgb(30, 31, 34);
   width: 72px;
   height: 100vh;
@@ -15,12 +15,12 @@ const SidebarWrapper = styled.nav`
 
 const Sidebar = () => {
   return (
-    <SidebarWrapper>
-      <SidebarIcon name={"group chat 1"} />
-      <SidebarIcon name={"group chat 2"} />
-      <SidebarIcon name={"league server"} />
-      <SidebarIcon name={"homework server"} />
-    </SidebarWrapper>
+    <Wrapper>
+      <Icon name={"group chat 1"} />
+      <Icon name={"group chat 2"} />
+      <Icon name={"league server"} />
+      <Icon name={"homework server"} />
+    </Wrapper>
   )
 }
 

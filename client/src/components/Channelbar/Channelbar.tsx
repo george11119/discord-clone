@@ -1,8 +1,8 @@
 import styled from "styled-components"
-import ChannelBarHeader from "./ChannelbarHeader.tsx"
+import Header from "./Header.tsx"
 import ChannelList from "./ChannelList.tsx"
 
-const ChannelbarWrapper = styled.nav`
+const Wrapper = styled.nav`
   width: 240px;
   height: 100vh;
   background-color: rgb(43, 45, 49);
@@ -11,10 +11,10 @@ const ChannelbarWrapper = styled.nav`
 
 const Channelbar = () => {
   return (
-    <ChannelbarWrapper>
-      <ChannelBarHeader title={"Channel title"} />
+    <Wrapper>
+      <Header title={"Channel title"} />
       <ChannelList />
-    </ChannelbarWrapper>
+    </Wrapper>
   )
 }
 

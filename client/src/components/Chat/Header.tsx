@@ -1,6 +1,6 @@
 import styled from "styled-components"
 
-const ChatContainerHeaderWrapper = styled.div`
+const Wrapper = styled.div`
   box-shadow:
     rgba(2, 2, 2, 0.2) 0px 1px 0px 0px,
     rgba(6, 6, 7, 0.05) 0px 1.5px 0px 0px,
@@ -14,12 +14,12 @@ const ChatContainerHeaderWrapper = styled.div`
   flex-shrink: 0;
 `
 
-const ChatContainerHeader = () => {
+const Header = () => {
   return (
-    <ChatContainerHeaderWrapper>
+    <Wrapper>
       <div>Chat container header</div>
-    </ChatContainerHeaderWrapper>
+    </Wrapper>
   )
 }
 
-export default ChatContainerHeader
+export default Header

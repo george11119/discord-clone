@@ -1,6 +1,6 @@
 import styled from "styled-components"
 
-const ChannelListItemWrapper = styled.li`
+const Wrapper = styled.li`
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -16,7 +16,7 @@ const SvgWrapper = styled.svg`
 `
 const ChannelListItem = ({ name }: { name: string }) => {
   return (
-    <ChannelListItemWrapper>
+    <Wrapper>
       <SvgWrapper
         role="img"
         xmlns="http://www.w3.org/2000/svg"
@@ -33,7 +33,7 @@ const ChannelListItem = ({ name }: { name: string }) => {
         ></path>
       </SvgWrapper>
       {name}
-    </ChannelListItemWrapper>
+    </Wrapper>
   )
 }
 
