@@ -29,7 +29,13 @@ const MessageWrapper = styled.div`
   font-weight: 400;
 `
 
-const ChatMessage = () => {
+const ChatMessage = ({
+  message,
+  sender,
+}: {
+  message: string
+  sender: string
+}) => {
   return (
     <Wrapper>
       <Img
@@ -37,11 +43,9 @@ const ChatMessage = () => {
         alt="discord profile picture"
       />
       <div>
-        <span>George</span>
+        <span>{sender}</span>
         <DateWrapper>02/09/2024 2:58 PM</DateWrapper>
-        <MessageWrapper>
-          <div>Hello world</div>
-        </MessageWrapper>
+        <MessageWrapper>{message}</MessageWrapper>
       </div>
     </Wrapper>
   )

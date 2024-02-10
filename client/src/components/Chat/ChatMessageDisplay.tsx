@@ -12,28 +12,28 @@ const Wrapper = styled.ul`
 const ChatMessageDisplay = () => {
   return (
     <Wrapper>
-      <ChatMessage />
-      <ChatMessage />
-      <ChatMessage />
-      <ChatMessage />
-      <ChatMessage />
-      <ChatMessage />
-      <ChatMessage />
-      <ChatMessage />
-      <ChatMessage />
-      <ChatMessage />
-      <ChatMessage />
-      <ChatMessage />
-      <ChatMessage />
-      <ChatMessage />
-      <ChatMessage />
-      <ChatMessage />
-      <ChatMessage />
-      <ChatMessage />
-      <ChatMessage />
-      <ChatMessage />
-      <ChatMessage />
-      <ChatMessage />
+      <ChatMessage message={"hello world"} sender={"George"} />
+      <ChatMessage message={"hello world"} sender={"George"} />
+      <ChatMessage message={"hello world"} sender={"George"} />
+      <ChatMessage message={"hello world"} sender={"George"} />
+      <ChatMessage message={"hello world"} sender={"George"} />
+      <ChatMessage message={"hello world"} sender={"George"} />
+      <ChatMessage message={"hello world"} sender={"George"} />
+      <ChatMessage message={"hello world"} sender={"George"} />
+      <ChatMessage message={"hello world"} sender={"George"} />
+      <ChatMessage message={"hello world"} sender={"George"} />
+      <ChatMessage message={"hello world"} sender={"George"} />
+      <ChatMessage message={"hello world"} sender={"George"} />
+      <ChatMessage message={"hello world"} sender={"George"} />
+      <ChatMessage message={"hello world"} sender={"George"} />
+      <ChatMessage message={"hello world"} sender={"George"} />
+      <ChatMessage message={"hello world"} sender={"George"} />
+      <ChatMessage message={"hello world"} sender={"George"} />
+      <ChatMessage message={"hello world"} sender={"George"} />
+      <ChatMessage message={"hello world"} sender={"George"} />
+      <ChatMessage message={"hello world"} sender={"George"} />
+      <ChatMessage message={"hello world"} sender={"George"} />
+      <ChatMessage message={"hello world"} sender={"George"} />
       <VerticalSpacer height={30} />
     </Wrapper>
   )
