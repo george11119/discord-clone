@@ -1,7 +1,7 @@
 import { prisma } from "../utils/db"
-import { Message } from "../types"
+import { message } from "../../../types"
 
-export const getAllMessages = async (): Promise<Message[]> => {
+export const getAllMessages = async (): Promise<message[]> => {
   const messages = await prisma.message.findMany()
   return messages
 }
@@ -10,7 +10,7 @@ export const createMessage = async ({
   messageBody,
 }: {
   messageBody: string
-}): Promise<Message> => {
+}): Promise<message> => {
   const message = await prisma.message.create({ data: { messageBody } })
   return message
 }

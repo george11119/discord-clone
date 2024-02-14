@@ -32,9 +32,11 @@ const MessageWrapper = styled.div`
 const ChatMessage = ({
   message,
   sender,
+  createdAt,
 }: {
   message: string
   sender: string
+  createdAt: string
 }) => {
   return (
     <Wrapper>
@@ -44,7 +46,7 @@ const ChatMessage = ({
       />
       <div>
         <span>{sender}</span>
-        <DateWrapper>02/09/2024 2:58 PM</DateWrapper>
+        <DateWrapper>{createdAt}</DateWrapper>
         <MessageWrapper>{message}</MessageWrapper>
       </div>
     </Wrapper>

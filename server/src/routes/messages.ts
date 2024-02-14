@@ -2,7 +2,7 @@ import express from "express"
 import {
   createMessage,
   getAllMessages,
-} from "../../controllers/messagesController"
+} from "../controllers/messagesController"
 
 const router = express.Router()
 

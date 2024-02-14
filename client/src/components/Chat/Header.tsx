@@ -16,11 +16,11 @@ const Wrapper = styled.div`
   user-select: none;
 `
 
-const Header = () => {
+const Header = ({ chatTitle }: { chatTitle: string }) => {
   return (
     <Wrapper>
       <Hashtag size={24} color="#80848e" />
-      <h1>General</h1>
+      <h1>{chatTitle}</h1>
     </Wrapper>
   )
 }

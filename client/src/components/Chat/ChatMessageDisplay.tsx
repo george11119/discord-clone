@@ -1,6 +1,10 @@
 import styled from "styled-components"
 import ChatMessage from "./ChatMessage.tsx"
 import VerticalSpacer from "../shared/components/VerticalSpacer.tsx"
+import { useContext } from "react"
+import { MessagesContext } from "./ChatAreaContainer.tsx"
+import { message } from "../../../../types.ts"
+import { formatDateTime } from "../../helpers/dateTime.ts"
 
 const Wrapper = styled.ul`
   flex: 1;
@@ -10,30 +14,19 @@ const Wrapper = styled.ul`
 `
 
 const ChatMessageDisplay = () => {
+  const { messages } = useContext(MessagesContext)
   return (
     <Wrapper>
-      <ChatMessage message={"hello world"} sender={"George"} />
-      <ChatMessage message={"hello world"} sender={"George"} />
-      <ChatMessage message={"hello world"} sender={"George"} />
-      <ChatMessage message={"hello world"} sender={"George"} />
-      <ChatMessage message={"hello world"} sender={"George"} />
-      <ChatMessage message={"hello world"} sender={"George"} />
-      <ChatMessage message={"hello world"} sender={"George"} />
-      <ChatMessage message={"hello world"} sender={"George"} />
-      <ChatMessage message={"hello world"} sender={"George"} />
-      <ChatMessage message={"hello world"} sender={"George"} />
-      <ChatMessage message={"hello world"} sender={"George"} />
-      <ChatMessage message={"hello world"} sender={"George"} />
-      <ChatMessage message={"hello world"} sender={"George"} />
-      <ChatMessage message={"hello world"} sender={"George"} />
-      <ChatMessage message={"hello world"} sender={"George"} />
-      <ChatMessage message={"hello world"} sender={"George"} />
-      <ChatMessage message={"hello world"} sender={"George"} />
-      <ChatMessage message={"hello world"} sender={"George"} />
-      <ChatMessage message={"hello world"} sender={"George"} />
-      <ChatMessage message={"hello world"} sender={"George"} />
-      <ChatMessage message={"hello world"} sender={"George"} />
-      <ChatMessage message={"hello world"} sender={"George"} />
+      {messages.map((message: message) => {
+        return (
+          <ChatMessage
+            key={message.id}
+            message={message.messageBody}
+            createdAt={formatDateTime(message.createdAt)}
+            sender={"George"}
+          />
+        )
+      })}
       <VerticalSpacer height={30} />
     </Wrapper>
   )

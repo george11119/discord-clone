@@ -1,6 +1,6 @@
 import express from "express"
 import cors from "cors"
-import messagesRouter from "./routes/v1/messages"
+import messagesRouter from "./routes/messages"
 
 export const app = express()
 
