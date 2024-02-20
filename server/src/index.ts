@@ -1,6 +1,6 @@
 import config from "./utils/config"
-import { app } from "./app"
+import { server } from "./app"
 
-app.listen(config.PORT, () => {
+server.listen(config.PORT, () => {
   console.log(`Server listening on port ${config.PORT}`)
 })
