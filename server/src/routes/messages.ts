@@ -3,6 +3,8 @@ import {
   createMessage,
   getAllMessages,
 } from "../controllers/messagesController"
+import logger from "../utils/logger"
+import { io } from "../app"
 
 const router = express.Router()
 

@@ -4,10 +4,12 @@ import messagesRouter from "./routes/messages"
 import { createServer } from "http"
 import { Server } from "socket.io"
 import config from "./utils/config"
+import logger from "./utils/logger"
+import { createMessage } from "./controllers/messagesController"
 
 const app = express()
 export const server = createServer(app)
-const io = new Server(server, {
+export const io = new Server(server, {
   cors: {
     origin: [config.CLIENT_URL],
   },
@@ -26,9 +28,14 @@ app.use("/api/messages", messagesRouter)
 
 // websocket stuff
 io.on("connection", (socket) => {
-  console.log("A user connected")
+  logger.info("A user connected")
 
   socket.on("disconnect", () => {
-    console.log("A user disconnected")
+    logger.info("A user disconnected")
+  })
+
+  socket.on("message:create", async (res) => {
+    const createdMessage = await createMessage(res)
+    io.emit("message:create", { createdMessage })
   })
 })

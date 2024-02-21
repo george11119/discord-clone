@@ -1,6 +1,7 @@
 import styled from "styled-components"
 import { FormEvent, useState } from "react"
 import UploadFileButton from "./UploadFileButton.tsx"
+import { socket } from "../../services/socketService.ts"
 
 const Wrapper = styled.form`
   height: 68px;
@@ -31,7 +32,7 @@ const MessageInput = () => {
 
   const sendMessage = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault()
-    console.log(message)
+    socket.emit("message:create", { messageBody: message })
     setMessage("")
   }
 
