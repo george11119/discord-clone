@@ -1,6 +1,6 @@
 import styled from "styled-components"
-import Icon from "./Icon.tsx"
-import Separator from "./Separator.tsx"
+import Icon from "./components/Icon.tsx"
+import Separator from "./components/Separator.tsx"
 
 const Wrapper = styled.nav`
   background: rgb(30, 31, 34);

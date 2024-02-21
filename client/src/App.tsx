@@ -1,7 +1,7 @@
 import styled from "styled-components"
-import Sidebar from "./components/Sidebar/Sidebar.tsx"
-import Channelbar from "./components/Channelbar/Channelbar.tsx"
-import ChatAreaContainer from "./components/Chat/ChatAreaContainer.tsx"
+import Sidebar from "./pages/Sidebar/Sidebar.tsx"
+import Channelbar from "./pages/Channelbar/Channelbar.tsx"
+import ChatAreaContainer from "./pages/Chat/ChatAreaContainer.tsx"
 import { useEffect, useState } from "react"
 import { socket } from "./services/socketService.ts"
 

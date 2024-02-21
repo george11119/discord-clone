@@ -1,11 +1,10 @@
 import express from "express"
 import cors from "cors"
-import messagesRouter from "./routes/messages"
+import messageRouter from "./routes/messageRoutes"
 import { createServer } from "http"
 import { Server } from "socket.io"
 import config from "./utils/config"
-import logger from "./utils/logger"
-import { createMessage } from "./controllers/messagesController"
+import messageService from "./services/messageService"
 
 const app = express()
 export const server = createServer(app)
@@ -24,18 +23,9 @@ app.get("/api", (req, res) => {
 })
 
 // routes
-app.use("/api/messages", messagesRouter)
+app.use("/api/messages", messageRouter)
 
 // websocket stuff
 io.on("connection", (socket) => {
-  logger.info("A user connected")
-
-  socket.on("disconnect", () => {
-    logger.info("A user disconnected")
-  })
-
-  socket.on("message:create", async (res) => {
-    const createdMessage = await createMessage(res)
-    io.emit("message:create", { createdMessage })
-  })
+  socket.on("message:create", messageService.createMessage)
 })

@@ -1,6 +1,6 @@
 import styled from "styled-components"
-import Header from "./Header.tsx"
-import ChannelList from "./ChannelList.tsx"
+import Header from "./components/Header.tsx"
+import ChannelList from "./components/ChannelList.tsx"
 
 const Wrapper = styled.nav`
   width: 240px;
