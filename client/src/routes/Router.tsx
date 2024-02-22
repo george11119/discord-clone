@@ -3,6 +3,7 @@ import App from "../App.tsx"
 import RootLayout from "../pages/layouts/RootLayout.tsx"
 import AuthLayout from "../pages/layouts/AuthLayout.tsx"
 import LoginPage from "../pages/Auth/Login/LoginPage.tsx"
+import SignupPage from "../pages/Auth/Signup/SignupPage.tsx"
 
 const Router = () => {
   const router = createBrowserRouter([
@@ -13,7 +14,10 @@ const Router = () => {
     },
     {
       element: <AuthLayout />,
-      children: [{ path: "login", element: <LoginPage /> }],
+      children: [
+        { path: "login", element: <LoginPage /> },
+        { path: "signup", element: <SignupPage /> },
+      ],
     },
   ])
 
