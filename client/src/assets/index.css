@@ -9,16 +9,18 @@ html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockq
   font-size: 100%;
   vertical-align: baseline;
 }
+
 /* prettier-ignore */
 article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
   display: block;
 }
+
 body {
-  color: rgb(219, 222, 225);
   line-height: 1;
   font-family: "Noto Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
   overflow: hidden;
 }
+
 input {
   border-width: 0;
   padding: 0;

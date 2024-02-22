@@ -2,7 +2,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom"
 import App from "../App.tsx"
 import RootLayout from "../pages/layouts/RootLayout.tsx"
 import AuthLayout from "../pages/layouts/AuthLayout.tsx"
-import Login from "../pages/Login.tsx"
+import LoginPage from "../pages/Auth/Login/LoginPage.tsx"
 
 const Router = () => {
   const router = createBrowserRouter([
@@ -13,7 +13,7 @@ const Router = () => {
     },
     {
       element: <AuthLayout />,
-      children: [{ path: "login", element: <Login /> }],
+      children: [{ path: "login", element: <LoginPage /> }],
     },
   ])
 

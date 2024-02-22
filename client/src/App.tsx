@@ -7,6 +7,7 @@ import { socket } from "./services/socketService.ts"
 
 const Wrapper = styled.div`
   display: flex;
+  color: rgb(219, 222, 225);
 `
 
 const App = () => {
