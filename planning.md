@@ -14,11 +14,11 @@
   <li>Create backend</li>
   <ul>
     <li>Implement messaging feature - DONE</li>
-    <li>Fix folder structure</li>
-    <li>Write tests for code</li>
+    <li>Fix folder structure - DONE</li>
     <li>Add users/login functionality</li>
     <li>Add channels</li>
     <li>Add servers</li>
+    <li>Write tests for code</li>
   </ul>
 </ul>
 
