@@ -1,9 +1,9 @@
 import styled from "styled-components"
-import Sidebar from "./pages/Sidebar/Sidebar.tsx"
-import Channelbar from "./pages/Channelbar/Channelbar.tsx"
-import ChatAreaContainer from "./pages/Chat/ChatAreaContainer.tsx"
+import Sidebar from "./Sidebar/Sidebar.tsx"
+import Channelbar from "./Channelbar/Channelbar.tsx"
+import ChatAreaContainer from "./Chat/ChatAreaContainer.tsx"
 import { useEffect, useState } from "react"
-import { socket } from "./services/socketService.ts"
+import { socket } from "../../services/socketService.ts"
 
 const Wrapper = styled.div`
   display: flex;

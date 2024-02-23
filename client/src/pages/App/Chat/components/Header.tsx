@@ -1,5 +1,5 @@
 import styled from "styled-components"
-import VerticalSpacer from "../../../shared/components/VerticalSpacer.tsx"
+import Hashtag from "../../../../shared/svg/Hashtag.tsx"
 
 const Wrapper = styled.div`
   box-shadow:
@@ -11,15 +11,17 @@ const Wrapper = styled.div`
   display: flex;
   align-items: center;
   font-weight: 600;
-  cursor: pointer;
+  font-size: 14px;
+  flex-shrink: 0;
+  user-select: none;
 `
 
-const Header = ({ title }: { title: string }) => {
+const Header = ({ chatTitle }: { chatTitle: string }) => {
   return (
-    <>
-      <Wrapper>{title}</Wrapper>
-      <VerticalSpacer height={12} />
-    </>
+    <Wrapper>
+      <Hashtag size={24} color="#80848e" />
+      <h1>{chatTitle}</h1>
+    </Wrapper>
   )
 }
 

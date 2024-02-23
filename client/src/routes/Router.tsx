@@ -1,5 +1,5 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom"
-import App from "../App.tsx"
+import App from "../pages/App/App.tsx"
 import RootLayout from "../pages/layouts/RootLayout.tsx"
 import AuthLayout from "../pages/layouts/AuthLayout.tsx"
 import LoginPage from "../pages/Auth/Login/LoginPage.tsx"

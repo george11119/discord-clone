@@ -3,8 +3,8 @@ import Header from "./components/Header.tsx"
 import ChatMessageDisplay from "./components/ChatMessageDisplay.tsx"
 import MessageInput from "./components/MessageInput.tsx"
 import { createContext, useEffect, useState } from "react"
-import messageService from "../../services/messageService.ts"
-import { message } from "../../../../types.ts"
+import messageService from "../../../services/messageService.ts"
+import { message } from "../../../../../types.ts"
 
 const Wrapper = styled.div`
   background-color: rgb(49, 51, 56);

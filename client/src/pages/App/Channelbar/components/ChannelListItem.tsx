@@ -1,5 +1,5 @@
 import styled from "styled-components"
-import Hashtag from "../../../shared/svg/Hashtag.tsx"
+import Hashtag from "../../../../shared/svg/Hashtag.tsx"
 
 const Wrapper = styled.li`
   cursor: pointer;

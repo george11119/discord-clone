@@ -1,5 +1,8 @@
 import LoginForm from "./LoginForm.tsx"
 import styled from "styled-components"
+import OAuthButtons from "./OAuthButtons.tsx"
+import { motion } from "framer-motion"
+
 
 const Wrapper = styled.div`
   height: 344px;
@@ -12,11 +15,6 @@ const Wrapper = styled.div`
   display: flex;
 `
 
-const Box = styled.div`
-  width: 240px;
-  border: 1px solid red;
-  margin-left: auto;
-`
 
 const LoginPage = () => {
   const handleLogin = (username: string, password: string): void => {
@@ -25,9 +23,9 @@ const LoginPage = () => {
   }
 
   return (
-    <Wrapper>
+    <Wrapper as={motion.div} initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
       <LoginForm handleLogin={handleLogin} />
-      <Box></Box>
+      <OAuthButtons />
     </Wrapper>
   )
 }

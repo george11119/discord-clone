@@ -1,7 +1,7 @@
 import styled from "styled-components"
 import { motion } from "framer-motion"
-import Tooltip from "../../../shared/components/Tooltip.tsx"
-import Logo from "../../../shared/svg/Logo.tsx"
+import Tooltip from "../../../../shared/components/Tooltip.tsx"
+import Logo from "../../../../shared/svg/Logo.tsx"
 
 const Wrapper = styled.div`
   height: 48px;

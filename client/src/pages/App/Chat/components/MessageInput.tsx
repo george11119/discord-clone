@@ -1,7 +1,7 @@
 import styled from "styled-components"
 import { FormEvent, useState } from "react"
 import UploadFileButton from "./UploadFileButton.tsx"
-import messageService from "../../../services/messageService.ts"
+import messageService from "../../../../services/messageService.ts"
 
 const Wrapper = styled.form`
   height: 68px;
