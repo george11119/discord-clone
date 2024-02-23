@@ -1,10 +1,25 @@
 import { FormEvent, useState } from "react"
 import styled from "styled-components"
+import FormInput from "../../../shared/components/FormInput.tsx"
+import Button from "../components/Button.tsx"
 
-const Input = styled.input`
-  outline: black;
-  border: 1px solid black;
-  max-width: 200px;
+const Wrapper = styled.div`
+`
+
+const Header = styled.h1`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 24px;
+  color: rgb(242, 243, 245);
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 20px;
+`
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
 `
 
 const SignupForm = ({
@@ -23,42 +38,25 @@ const SignupForm = ({
   }
 
   return (
-    <>
-      <h1>Log in</h1>
-      <form onSubmit={signup}>
-        <div>
-          <label htmlFor="email">email: </label>
-          <Input
-            type="text"
-            id="email"
-            name="email"
-            value={email}
-            onChange={({ target }) => setEmail(target.value)}
-          />
-        </div>
-        <div>
-          <label htmlFor="username">username: </label>
-          <Input
-            type="text"
-            id="username"
-            name="username"
-            value={username}
-            onChange={({ target }) => setUsername(target.value)}
-          />
-        </div>
-        <div>
-          <label htmlFor="password">password: </label>
-          <Input
-            type="password"
-            id="password"
-            name="password"
-            value={password}
-            onChange={({ target }) => setPassword(target.value)}
-          />
-        </div>
-        <button type="submit">Sign up</button>
-      </form>
-    </>
+    <Wrapper>
+      <Header>Create an account</Header>
+      <Form onSubmit={signup}>
+        <FormInput name="email" type="text" value={email} setValue={setEmail} />
+        <FormInput
+          name="username"
+          type="text"
+          value={username}
+          setValue={setUsername}
+        />
+        <FormInput
+          name="password"
+          type="text"
+          value={password}
+          setValue={setPassword}
+        />
+        <Button text="Continue" type="submit" />
+      </Form>
+    </Wrapper>
   )
 }
 
