@@ -1,33 +1,17 @@
 import { FormEvent, useState } from "react"
 import styled from "styled-components"
 import LoginHeader from "./LoginHeader.tsx"
+import FormInput from "../../../shared/components/FormInput.tsx"
+import RegisterLink from "./RegisterLink.tsx"
 
 const Wrapper = styled.div`
   flex-grow: 1;
   margin-right: 64px;
 `
 
-
 const Form = styled.form`
   display: flex;
   flex-direction: column;
-`
-
-const Label = styled.label`
-  height: 16px;
-  font-size: 12px;
-  font-weight: 700;
-`
-
-const Input = styled.input`
-  margin-top: 8px;
-  margin-bottom: 20px;
-  padding: 10px;
-  background-color: #1e1f22;
-  border-radius: 3px;
-  box-sizing: border-box;
-  height: 40px;
-  color: rgb(181, 186, 193);
 `
 
 const Button = styled.button`
@@ -63,28 +47,21 @@ const LoginForm = ({
     <Wrapper>
       <LoginHeader />
       <Form onSubmit={login}>
-        <div>
-          <Label htmlFor="username">USERNAME: </Label>
-          <Input
-            type="text"
-            id="username"
-            name="username"
-            value={username}
-            onChange={({ target }) => setUsername(target.value)}
-          />
-        </div>
-        <div>
-          <Label htmlFor="password">PASSWORD: </Label>
-          <Input
-            type="password"
-            id="password"
-            name="password"
-            value={password}
-            onChange={({ target }) => setPassword(target.value)}
-          />
-        </div>
+        <FormInput
+          name="username"
+          type="text"
+          value={username}
+          setValue={setUsername}
+        />
+        <FormInput
+          name="password"
+          type="password"
+          value={password}
+          setValue={setPassword}
+        />
         <Button type="submit">Log in</Button>
       </Form>
+      <RegisterLink />
     </Wrapper>
   )
 }
