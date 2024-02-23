@@ -6,17 +6,17 @@ import DiscordIcon from "../assets/discord_icon.svg"
 // @ts-expect-error eslint stfu
 import GithubIcon from "../assets/github_icon.svg"
 
-const Wrapper = styled.div<{ isLoginPage: boolean }>`
-  width: ${(props) => (props.isLoginPage ? 240 : 416)}px;
+const Wrapper = styled.div<{ $isLoginPage: boolean }>`
+  width: ${(props) => (props.$isLoginPage ? 240 : 416)}px;
   margin-left: auto;
   display: flex;
   flex-direction: column;
-  margin-top: ${(props) => (props.isLoginPage ? "auto" : 0)};
-  margin-bottom: ${(props) => (props.isLoginPage ? 20 : 16)}px;
+  margin-top: ${(props) => (props.$isLoginPage ? "auto" : 0)};
+  margin-bottom: ${(props) => (props.$isLoginPage ? 20 : 16)}px;
   margin-right: 32px;
 `
 
-const Button = styled.button<{ isLoginPage: boolean }>`
+const Button = styled.button<{ $isLoginPage: boolean }>`
   height: 44px;
   font-size: 15px;
   padding: 14px 25px;
@@ -24,7 +24,7 @@ const Button = styled.button<{ isLoginPage: boolean }>`
   border: none;
   display: flex;
   align-items: center;
-  margin-bottom: ${(props) => (props.isLoginPage ? 20 : 12)}px;
+  margin-bottom: ${(props) => (props.$isLoginPage ? 20 : 12)}px;
   justify-content: center;
   font-weight: 600;
   gap: 12px;
@@ -38,9 +38,9 @@ const OAuthButtons = ({ isLoginPage }: { isLoginPage: boolean }) => {
   const buttonText: string = isLoginPage ? "Login" : "Sign up"
 
   return (
-    <Wrapper isLoginPage={isLoginPage}>
+    <Wrapper $isLoginPage={isLoginPage}>
       <Button
-        isLoginPage={isLoginPage}
+        $isLoginPage={isLoginPage}
         onClick={() => alert("Not implemented")}
         style={{ backgroundColor: "rgb(88, 101, 242)", color: "white" }}
       >
@@ -48,14 +48,14 @@ const OAuthButtons = ({ isLoginPage }: { isLoginPage: boolean }) => {
         {buttonText} with Discord
       </Button>
       <Button
-        isLoginPage={isLoginPage}
+        $isLoginPage={isLoginPage}
         onClick={() => alert("Not implemented")}
       >
         <img src={GoogleIcon} alt="google icon" />
         {buttonText} with Google
       </Button>
       <Button
-        isLoginPage={isLoginPage}
+        $isLoginPage={isLoginPage}
         onClick={() => alert("Not implemented")}
       >
         <img src={GithubIcon} alt="github icon" />
@@ -63,7 +63,7 @@ const OAuthButtons = ({ isLoginPage }: { isLoginPage: boolean }) => {
       </Button>
       {isLoginPage && (
         <Button
-          isLoginPage={isLoginPage}
+          $isLoginPage={isLoginPage}
           onClick={() => alert("Not implemented")}
         >
           Continue as Guest

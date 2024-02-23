@@ -15,6 +15,7 @@ const Header = styled.h1`
   font-size: 22px;
   font-weight: 600;
   margin-bottom: 20px;
+  user-select: none;
 `
 
 const Form = styled.form`

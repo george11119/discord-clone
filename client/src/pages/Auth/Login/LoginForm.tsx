@@ -19,25 +19,20 @@ const LoginForm = ({
 }: {
   handleLogin: (username: string, password: string) => void
 }) => {
-  const [username, setUsername] = useState("")
+  const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
 
   const login = (e: FormEvent) => {
     e.preventDefault()
 
-    handleLogin(username, password)
+    handleLogin(email, password)
   }
 
   return (
     <Wrapper>
       <LoginHeader />
       <Form onSubmit={login}>
-        <FormInput
-          name="username"
-          type="text"
-          value={username}
-          setValue={setUsername}
-        />
+        <FormInput name="Email" type="text" value={email} setValue={setEmail} />
         <FormInput
           name="password"
           type="password"

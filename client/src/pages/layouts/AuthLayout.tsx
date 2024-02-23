@@ -35,9 +35,9 @@ const AuthLayout = () => {
         width={location.pathname === "/login" ? 720 : 416}
         height={location.pathname === "/login" ? 344 : 616}
         as={motion.div}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
+        key={location.pathname}
+        initial={{ opacity: 0, y: -75 }}
+        animate={{ opacity: 1, y: 0 }}
       >
         <Outlet />
       </Modal>

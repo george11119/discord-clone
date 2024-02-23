@@ -6,6 +6,7 @@ const Wrapper = styled.div`
   margin: 16px 0;
   align-items: center;
   font-size: 14px;
+  user-select: none;
 `
 
 const Line = styled.div`

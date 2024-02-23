@@ -6,6 +6,7 @@ const Wrapper = styled.div`
   align-items: center;
   line-height: 24px;
   height: 68px;
+  user-select: none;
 `
 
 const Header = styled.h1`

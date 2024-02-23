@@ -4,6 +4,7 @@ import RootLayout from "../pages/layouts/RootLayout.tsx"
 import AuthLayout from "../pages/layouts/AuthLayout.tsx"
 import LoginPage from "../pages/Auth/Login/LoginPage.tsx"
 import SignupPage from "../pages/Auth/Signup/SignupPage.tsx"
+import { AnimatePresence } from "framer-motion"
 
 const Router = () => {
   const router = createBrowserRouter([
@@ -21,7 +22,11 @@ const Router = () => {
     },
   ])
 
-  return <RouterProvider router={router} />
+  return (
+    <AnimatePresence>
+      <RouterProvider router={router} />
+    </AnimatePresence>
+  )
 }
 
 export default Router
