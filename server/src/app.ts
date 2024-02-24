@@ -1,10 +1,11 @@
 import express from "express"
 import cors from "cors"
-import messageRouter from "./routes/messageRoutes"
+import "express-async-errors"
+import messageRouter from "./controllers/messages/messages.routes"
 import { createServer } from "http"
 import { Server } from "socket.io"
-import config from "./utils/config"
-import messageService from "./services/messageService"
+import config from "./config/config"
+import messageService from "./controllers/messages/messages.socket"
 
 const app = express()
 export const server = createServer(app)

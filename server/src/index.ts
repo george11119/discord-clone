@@ -1,4 +1,4 @@
-import config from "./utils/config"
+import config from "./config/config"
 import { server } from "./app"
 import logger from "./utils/logger"
 

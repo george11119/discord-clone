@@ -1,5 +1,5 @@
-import { prisma } from "../db/db"
-import { message } from "../../../types"
+import { prisma } from "../../utils/db"
+import { message } from "../../../../types"
 
 const getAllMessages = async (): Promise<message[]> => {
   const messages = await prisma.message.findMany()
