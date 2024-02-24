@@ -23,7 +23,9 @@ router.post("/", async (req, res) => {
     })
   } else {
     await db.getRepository(User).save(user)
-    res.status(201).json(user)
+    res
+      .status(201)
+      .json(await db.getRepository(User).findOneBy({ id: user.id }))
   }
 })
 
