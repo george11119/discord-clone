@@ -6,6 +6,15 @@ import { createServer } from "http"
 import { Server } from "socket.io"
 import config from "./config/config"
 import messageService from "./controllers/messages/messages.socket"
+import { db } from "./config/db"
+
+db.initialize()
+  .then(() => {
+    console.log("Database initialized")
+  })
+  .catch((e) => {
+    console.log("Database initialization error", e)
+  })
 
 const app = express()
 export const server = createServer(app)
