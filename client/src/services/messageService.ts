@@ -9,7 +9,7 @@ const getMessages = async (): Promise<message[]> => {
   return res.data
 }
 
-const createMessage = (messageObject: { messageBody: string }) => {
+const createMessage = (messageObject: { content: string }) => {
   socket.emit("message:create", messageObject)
 }
 

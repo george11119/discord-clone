@@ -7,13 +7,21 @@ import {
   UpdateDateColumn,
 } from "typeorm"
 
+import { Exclude } from "class-transformer"
+
 @Entity()
-export class Message extends BaseEntity {
+export class User extends BaseEntity {
   @PrimaryGeneratedColumn("uuid")
   id: string
 
   @Column()
-  content: string
+  username: string
+
+  @Column()
+  email: string
+
+  @Column({ select: false })
+  passwordHash: string
 
   @CreateDateColumn()
   createdAt: Date

@@ -40,7 +40,7 @@ const ChatMessageDisplay = () => {
           return (
             <ChatMessage
               key={message.id}
-              message={message.messageBody}
+              message={message.content}
               createdAt={formatDateTime(message.createdAt)}
               sender={"George"}
             />

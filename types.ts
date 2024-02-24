@@ -1,6 +1,6 @@
 export type message = {
   id: string
-  messageBody: string
+  content: string
   createdAt: Date
   updatedAt: Date
 }

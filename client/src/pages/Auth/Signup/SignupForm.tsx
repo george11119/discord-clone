@@ -3,8 +3,7 @@ import styled from "styled-components"
 import FormInput from "../../../shared/components/FormInput.tsx"
 import Button from "../components/Button.tsx"
 
-const Wrapper = styled.div`
-`
+const Wrapper = styled.div``
 
 const Header = styled.h1`
   display: flex;
@@ -42,7 +41,12 @@ const SignupForm = ({
     <Wrapper>
       <Header>Create an account</Header>
       <Form onSubmit={signup}>
-        <FormInput name="email" type="text" value={email} setValue={setEmail} />
+        <FormInput
+          name="email"
+          type="email"
+          value={email}
+          setValue={setEmail}
+        />
         <FormInput
           name="username"
           type="text"
@@ -51,7 +55,7 @@ const SignupForm = ({
         />
         <FormInput
           name="password"
-          type="text"
+          type="password"
           value={password}
           setValue={setPassword}
         />

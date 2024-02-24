@@ -1,12 +1,14 @@
 import express from "express"
 import cors from "cors"
 import "express-async-errors"
-import messageRouter from "./controllers/messages/messages.routes"
 import { createServer } from "http"
 import { Server } from "socket.io"
-import config from "./config/config"
-import messageService from "./controllers/messages/messages.socket"
 import { db } from "./config/db"
+import config from "./config/config"
+
+import messageRouter from "./controllers/messages/messages.routes"
+import usersRouter from "./controllers/users/users.routes"
+import messageService from "./controllers/messages/messages.socket"
 
 db.initialize()
   .then(() => {
@@ -34,6 +36,7 @@ app.get("/api", (req, res) => {
 
 // routes
 app.use("/api/messages", messageRouter)
+app.use("/api/users", usersRouter)
 
 // websocket stuff
 io.on("connection", (socket) => {

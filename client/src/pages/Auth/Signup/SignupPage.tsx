@@ -1,8 +1,9 @@
 import SignupForm from "./SignupForm.tsx"
 import styled from "styled-components"
-import { Link } from "react-router-dom"
+import {Link} from "react-router-dom"
 import OAuthButtons from "../components/OAuthButtons.tsx"
 import Divider from "./Divider.tsx"
+import userService from "../../../services/userService.ts"
 
 const Wrapper = styled.div`
   display: flex;
@@ -27,14 +28,13 @@ const LinkWrapper = styled(Link)`
 `
 
 const SignupPage = () => {
-  const handleSignup = (
+  const handleSignup = async (
     username: string,
     password: string,
     email: string,
-  ): void => {
-    console.log(email)
-    console.log(username)
-    console.log(password)
+  ) => {
+    const user = await userService.createUser({username, password, email})
+    console.log(user)
   }
 
   return (

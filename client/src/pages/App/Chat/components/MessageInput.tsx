@@ -34,7 +34,7 @@ const MessageInput = () => {
     e.preventDefault()
     if (message === "") return
 
-    messageService.createMessage({ messageBody: message })
+    messageService.createMessage({ content: message })
     setMessage("")
   }
 
