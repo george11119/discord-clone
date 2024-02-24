@@ -6,18 +6,19 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from "typeorm"
-
-import { Exclude } from "class-transformer"
+import { IsEmail, Length, min } from "class-validator"
 
 @Entity()
 export class User extends BaseEntity {
   @PrimaryGeneratedColumn("uuid")
   id: string
 
-  @Column()
+  @Column({ unique: true, nullable: false })
+  @Length(2, 32)
   username: string
 
-  @Column()
+  @Column({ unique: true })
+  @IsEmail()
   email: string
 
   @Column({ select: false })

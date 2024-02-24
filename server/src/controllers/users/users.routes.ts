@@ -2,25 +2,28 @@ import { User } from "../../models/user"
 import bcrypt from "bcrypt"
 import express from "express"
 import { db } from "../../config/db"
-import usersHelpers from "./users.helpers"
+import { validate } from "class-validator"
 
 const router = express.Router()
 
 // create new user
 router.post("/", async (req, res) => {
-  try {
-    const { username, email, password } = req.body
+  const { username, email, password } = req.body
 
-    const saltRounds = 10
-    const passwordHash = await bcrypt.hash(password, saltRounds)
+  const saltRounds = 10
+  const passwordHash = await bcrypt.hash(password, saltRounds)
 
-    const user = await db
-      .getRepository(User)
-      .save({ username, email, passwordHash })
+  const user = db.getRepository(User).create({ username, email, passwordHash })
 
-    res.status(201).json(usersHelpers.removePasswordHash(user))
-  } catch (e) {
-    console.log(e)
+  const validationErrors = await validate(user)
+
+  if (validationErrors.length > 0 || password.length < 8) {
+    res.status(400).send({
+      error: "Validation failed",
+    })
+  } else {
+    await db.getRepository(User).save(user)
+    res.status(201).json(user)
   }
 })
 

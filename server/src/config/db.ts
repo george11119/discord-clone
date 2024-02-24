@@ -13,6 +13,6 @@ export const db = new DataSource({
   password: connectionOptions.password,
   database: connectionOptions.database || "",
   entities: [__dirname + "./../models/*.{js,ts}"],
-  logging: true,
+  logging: false,
   synchronize: true,
 })

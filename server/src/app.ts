@@ -10,6 +10,10 @@ import messageRouter from "./controllers/messages/messages.routes"
 import usersRouter from "./controllers/users/users.routes"
 import messageService from "./controllers/messages/messages.socket"
 
+import { requestLogger } from "./middleware/requestLogger"
+import { unknownEndpoint } from "./middleware/unknownEndpoint"
+import { errorHandler } from "./middleware/errorHandler"
+
 db.initialize()
   .then(() => {
     console.log("Database initialized")
@@ -28,6 +32,7 @@ export const io = new Server(server, {
 
 app.use(express.json())
 app.use(cors())
+app.use(requestLogger)
 
 // test route
 app.get("/api", (req, res) => {
@@ -37,6 +42,9 @@ app.get("/api", (req, res) => {
 // routes
 app.use("/api/messages", messageRouter)
 app.use("/api/users", usersRouter)
+
+app.use(unknownEndpoint)
+app.use(errorHandler)
 
 // websocket stuff
 io.on("connection", (socket) => {

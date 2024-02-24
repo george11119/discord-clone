@@ -1,4 +1,5 @@
 import styled from "styled-components"
+import LoadingSpinner from "./LoadingSpinner.tsx"
 
 const Wrapper = styled.button`
   margin-top: 24px;
@@ -15,8 +16,16 @@ const Wrapper = styled.button`
   }
 `
 
-const Button = ({ text, ...rest }: { text: string; [rest: string]: any }) => {
-  return <Wrapper {...rest}>{text}</Wrapper>
+const Button = ({
+  text,
+  isLoading = false,
+  ...rest
+}: {
+  text: string
+  isLoading: boolean
+  [rest: string]: any
+}) => {
+  return <Wrapper {...rest}>{isLoading ? <LoadingSpinner /> : text}</Wrapper>
 }
 
 export default Button

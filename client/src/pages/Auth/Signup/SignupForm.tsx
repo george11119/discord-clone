@@ -25,16 +25,29 @@ const Form = styled.form`
 const SignupForm = ({
   handleSignup,
 }: {
-  handleSignup: (username: string, password: string, email: string) => void
+  handleSignup: (
+    username: string,
+    password: string,
+    email: string,
+  ) => Promise<void>
 }) => {
   const [username, setUsername] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const [isError, setIsError] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
-  const signup = (e: FormEvent) => {
-    e.preventDefault()
-
-    handleSignup(username, password, email)
+  const signup = async (e: FormEvent) => {
+    try {
+      e.preventDefault()
+      setIsError(false)
+      setIsLoading(true)
+      await handleSignup(username, password, email)
+      setIsLoading(false)
+    } catch (e) {
+      setIsLoading(false)
+      setIsError(true)
+    }
   }
 
   return (
@@ -46,20 +59,26 @@ const SignupForm = ({
           type="email"
           value={email}
           setValue={setEmail}
+          showErrorText={isError}
+          errorText="Invalid email, username, or password"
         />
         <FormInput
           name="username"
           type="text"
           value={username}
           setValue={setUsername}
+          showErrorText={isError}
+          errorText="Invalid email, username, or password"
         />
         <FormInput
           name="password"
           type="password"
           value={password}
           setValue={setPassword}
+          showErrorText={isError}
+          errorText="Invalid email, username, or password"
         />
-        <Button text="Continue" type="submit" />
+        <Button text="Continue" type="submit" isLoading={isLoading} />
       </Form>
     </Wrapper>
   )
