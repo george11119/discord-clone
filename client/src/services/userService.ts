@@ -1,5 +1,5 @@
 import axios from "axios"
-import config from "../utils/config.ts"
+import config from "../config/config.ts"
 
 const url = `${config.SERVER_URL}/api/users`
 

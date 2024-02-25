@@ -41,7 +41,7 @@ const FormInput = ({
   type: string
   value: string
   errorText?: string
-  showErrorText: boolean
+  showErrorText?: boolean
   setValue: (value: string) => void
 }) => {
   const labelId = useId()

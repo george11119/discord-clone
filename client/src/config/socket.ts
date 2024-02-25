@@ -1,5 +1,5 @@
 import io from "socket.io-client"
-import config from "../utils/config.ts"
+import config from "./config.ts"
 
 const URL = config.SERVER_URL
 

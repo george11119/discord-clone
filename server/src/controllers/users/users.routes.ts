@@ -1,7 +1,6 @@
 import { User } from "../../models/user"
 import bcrypt from "bcrypt"
 import express from "express"
-import { db } from "../../config/db"
 import { validate } from "class-validator"
 
 const router = express.Router()
@@ -13,7 +12,7 @@ router.post("/", async (req, res) => {
   const saltRounds = 10
   const passwordHash = await bcrypt.hash(password, saltRounds)
 
-  const user = db.getRepository(User).create({ username, email, passwordHash })
+  const user = User.create({ username, email, passwordHash })
 
   const validationErrors = await validate(user)
 
@@ -22,10 +21,8 @@ router.post("/", async (req, res) => {
       error: "Validation failed",
     })
   } else {
-    await db.getRepository(User).save(user)
-    res
-      .status(201)
-      .json(await db.getRepository(User).findOneBy({ id: user.id }))
+    await User.save(user)
+    res.status(201).json(await User.findOneBy({ id: user.id }))
   }
 })
 

@@ -17,15 +17,15 @@ const Form = styled.form`
 const LoginForm = ({
   handleLogin,
 }: {
-  handleLogin: (username: string, password: string) => void
+  handleLogin: (username: string, password: string) => Promise<void>
 }) => {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
 
-  const login = (e: FormEvent) => {
+  const login = async (e: FormEvent) => {
     e.preventDefault()
 
-    handleLogin(email, password)
+    await handleLogin(email, password)
   }
 
   return (

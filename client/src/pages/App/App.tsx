@@ -3,7 +3,7 @@ import Sidebar from "./Sidebar/Sidebar.tsx"
 import Channelbar from "./Channelbar/Channelbar.tsx"
 import ChatAreaContainer from "./Chat/ChatAreaContainer.tsx"
 import { useEffect, useState } from "react"
-import { socket } from "../../services/socketService.ts"
+import { socket } from "../../config/socket.ts"
 
 const Wrapper = styled.div`
   display: flex;

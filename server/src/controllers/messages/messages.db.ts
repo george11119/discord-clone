@@ -1,8 +1,7 @@
-import { db } from "../../config/db"
 import { Message } from "../../models/message"
 
 const getAllMessages = async (): Promise<Message[]> => {
-  const messages = await db.getRepository(Message).find()
+  const messages = await Message.find()
   return messages
 }
 
@@ -11,7 +10,7 @@ const createNewMessage = async ({
 }: {
   content: string
 }): Promise<Message> => {
-  const message = await db.getRepository(Message).save({ content })
+  const message = await Message.save({ content })
   return message
 }
 

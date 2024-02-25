@@ -5,7 +5,7 @@ import { useContext, useEffect } from "react"
 import { MessagesContext } from "../ChatAreaContainer.tsx"
 import { message } from "../../../../../../types.ts"
 import { formatDateTime } from "../../../../utils/dateTime.ts"
-import { socket } from "../../../../services/socketService.ts"
+import { socket } from "../../../../config/socket.ts"
 
 const Wrapper = styled.ul`
   flex: 1;

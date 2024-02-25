@@ -1,11 +1,14 @@
 import LoginForm from "./LoginForm.tsx"
 import OAuthButtons from "../components/OAuthButtons.tsx"
 import HorizontalSpacer from "../../../shared/components/HorizontalSpacer.tsx"
+import loginService from "../../../services/loginService.ts"
 
 const LoginPage = () => {
-  const handleLogin = (username: string, password: string): void => {
-    console.log(username)
-    console.log(password)
+  const handleLogin = async (
+    username: string,
+    password: string,
+  ): Promise<void> => {
+    await loginService.login({ username, password })
   }
 
   return (

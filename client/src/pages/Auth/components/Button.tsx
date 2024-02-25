@@ -22,7 +22,7 @@ const Button = ({
   ...rest
 }: {
   text: string
-  isLoading: boolean
+  isLoading?: boolean
   [rest: string]: any
 }) => {
   return <Wrapper {...rest}>{isLoading ? <LoadingSpinner /> : text}</Wrapper>
