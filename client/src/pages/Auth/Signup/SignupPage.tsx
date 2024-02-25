@@ -33,8 +33,7 @@ const SignupPage = () => {
     password: string,
     email: string,
   ) => {
-    const user = await userService.createUser({ username, password, email })
-    console.log(user)
+    await userService.createUser({ username, password, email })
   }
 
   return (

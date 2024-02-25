@@ -5,7 +5,8 @@ const Wrapper = styled.div`
   margin-bottom: 20px;
 `
 
-const Label = styled.label`
+const Label = styled.label<{ $isError: boolean }>`
+  color: ${(props) => (props.$isError ? "rgb(250, 119, 124)" : "inherit")};
   height: 16px;
   font-size: 12px;
   font-weight: 700;
@@ -48,7 +49,9 @@ const FormInput = ({
 
   return (
     <Wrapper>
-      <Label htmlFor={labelId}>{name.toUpperCase()}: </Label>
+      <Label $isError={showErrorText} htmlFor={labelId}>
+        {name.toUpperCase()}:{" "}
+      </Label>
       {showErrorText && <ErrorSpan> - {errorText}</ErrorSpan>}
       <Input
         type={type}

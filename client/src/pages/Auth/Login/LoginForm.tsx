@@ -12,6 +12,7 @@ const Wrapper = styled.div`
 const Form = styled.form`
   display: flex;
   flex-direction: column;
+  width: 384px;
 `
 
 const LoginForm = ({
@@ -21,25 +22,43 @@ const LoginForm = ({
 }) => {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const [isError, setIsError] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
   const login = async (e: FormEvent) => {
-    e.preventDefault()
-
-    await handleLogin(email, password)
+    try {
+      e.preventDefault()
+      setIsError(false)
+      setIsLoading(true)
+      await handleLogin(email, password)
+      setIsLoading(false)
+    } catch (e) {
+      setIsLoading(false)
+      setIsError(true)
+    }
   }
 
   return (
     <Wrapper>
       <LoginHeader />
       <Form onSubmit={login}>
-        <FormInput name="Email" type="text" value={email} setValue={setEmail} />
+        <FormInput
+          name="Email"
+          type="text"
+          value={email}
+          setValue={setEmail}
+          showErrorText={isError}
+          errorText="Invalid email or password"
+        />
         <FormInput
           name="password"
           type="password"
           value={password}
           setValue={setPassword}
+          showErrorText={isError}
+          errorText="Invalid email or password"
         />
-        <Button type="submit" text="Log in" />
+        <Button type="submit" text="Log in" isLoading={isLoading} />
       </Form>
       <RegisterLink />
     </Wrapper>

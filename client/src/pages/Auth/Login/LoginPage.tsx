@@ -9,6 +9,7 @@ const LoginPage = () => {
     password: string,
   ): Promise<void> => {
     await loginService.login({ username, password })
+
   }
 
   return (
