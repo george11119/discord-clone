@@ -35,6 +35,10 @@ const Button = styled.button<{ $isLoginPage: boolean }>`
 `
 
 const OAuthButtons = ({ isLoginPage }: { isLoginPage: boolean }) => {
+  const googleOAuthAction = () => {
+    window.open("http://localhost:3001/api/auth/google", "_self")
+  }
+
   const buttonText: string = isLoginPage ? "Login" : "Sign up"
 
   return (
@@ -47,10 +51,7 @@ const OAuthButtons = ({ isLoginPage }: { isLoginPage: boolean }) => {
         <img src={DiscordIcon} alt="discord icon" />
         {buttonText} with Discord
       </Button>
-      <Button
-        $isLoginPage={isLoginPage}
-        onClick={() => alert("Not implemented")}
-      >
+      <Button $isLoginPage={isLoginPage} onClick={googleOAuthAction}>
         <img src={GoogleIcon} alt="google icon" />
         {buttonText} with Google
       </Button>

@@ -7,7 +7,7 @@ import { db } from "./config/db"
 import config from "./config/config"
 import passport from "passport"
 
-import "./config/passport-setup"
+import "./config/passportConfig"
 import authRouter from "./controllers/auth/auth.routes"
 import messageRouter from "./controllers/messages/messages.routes"
 import usersRouter from "./controllers/users/users.routes"

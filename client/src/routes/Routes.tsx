@@ -5,7 +5,7 @@ import AuthLayout from "../pages/Layouts/AuthLayout.tsx"
 import LoginPage from "../pages/Auth/Login/LoginPage.tsx"
 import SignupPage from "../pages/Auth/Signup/SignupPage.tsx"
 import { AnimatePresence } from "framer-motion"
-import AuthContextProvider from "../pages/Auth/AuthContextProvider.tsx"
+import OAuthRedirect from "../pages/Auth/OAuthRedirect.tsx"
 
 const Routes = () => {
   const router = createBrowserRouter([
@@ -13,6 +13,10 @@ const Routes = () => {
       path: "/",
       element: <RootLayout />,
       children: [{ index: true, element: <Home /> }],
+    },
+    {
+      path: "jwt",
+      element: <OAuthRedirect />,
     },
     {
       element: <AuthLayout />,
@@ -24,11 +28,9 @@ const Routes = () => {
   ])
 
   return (
-    <AuthContextProvider>
-      <AnimatePresence>
-        <RouterProvider router={router} />
-      </AnimatePresence>
-    </AuthContextProvider>
+    <AnimatePresence>
+      <RouterProvider router={router} />
+    </AnimatePresence>
   )
 }
 

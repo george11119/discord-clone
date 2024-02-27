@@ -1,6 +1,12 @@
 import { createContext } from "react"
 
-const AuthContext = createContext({
+type AuthContextType = {
+  user: null | object
+  loggedIn: boolean
+  checkLoginState: () => void
+}
+
+const AuthContext = createContext<AuthContextType>({
   user: null,
   loggedIn: false,
   checkLoginState: () => {},

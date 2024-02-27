@@ -16,8 +16,11 @@ router.get(
 
       if (!token) return res.json({ loggedIn: false })
 
-      const userId = jwt.verify(token, config.JWT_SECRET)
+      const userId = jwt.verify(token, config.JWT_SECRET as string)
       const user = await User.findOneBy({ id: userId as string })
+
+      if (!user) return res.json({ loggedIn: false })
+
       res.json({ loggedIn: true, user })
     } catch (e) {
       res.json({ loggedIn: false })
@@ -33,6 +36,22 @@ router.post(
     // @ts-expect-error user is wrong type in Request type
     const token = jwt.sign(req.user.id, config.JWT_SECRET)
     res.json({ token })
+  },
+)
+
+// google oauth login
+router.get("/google", passport.authenticate("google", { scope: ["email"] }))
+
+router.get(
+  "/google/callback",
+  passport.authenticate("google", {
+    session: false,
+    failureRedirect: `${config.CLIENT_URL}`,
+  }),
+  (req, res) => {
+    // @ts-expect-error user is wrong type in Request type
+    const token = jwt.sign(req.user.id, config.JWT_SECRET)
+    res.redirect(`${config.CLIENT_URL}/jwt?token=${token}`)
   },
 )
 

@@ -21,7 +21,7 @@ export class User extends BaseEntity {
   @IsEmail()
   email: string
 
-  @Column({ select: false })
+  @Column({ select: false, nullable: true })
   passwordHash: string
 
   @CreateDateColumn()
