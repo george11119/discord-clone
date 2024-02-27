@@ -2,6 +2,7 @@ import passport from "passport"
 import { Strategy as LocalStrategy } from "passport-local"
 import { Strategy as GoogleStrategy } from "passport-google-oauth20"
 import { Strategy as DiscordStrategy } from "passport-discord"
+import { Strategy as GithubStrategy } from "passport-github2"
 import { User } from "../models/user"
 import bcrypt from "bcrypt"
 import config from "./config"
@@ -38,13 +39,14 @@ passport.use(
     },
     async (accessToken, refreshToken, profile, done) => {
       const email = profile._json.email
+      const username = email?.split("@")[0]
 
       let user = await User.findOneBy({ email })
 
       if (!user) {
         user = User.create({
           email,
-          username: `user_${email}`,
+          username,
         })
 
         await User.save(user)
@@ -54,6 +56,7 @@ passport.use(
     },
   ),
 )
+
 passport.use(
   new DiscordStrategy(
     {
@@ -64,6 +67,36 @@ passport.use(
     },
     async (accessToken, refreshToken, profile, done) => {
       const { email, username } = profile
+
+      let user = await User.findOneBy({ email })
+
+      if (!user) {
+        user = User.create({
+          email,
+          username,
+        })
+
+        await User.save(user)
+      }
+
+      done(null, user, { message: "Login successful" })
+    },
+  ),
+)
+
+passport.use(
+  new GithubStrategy(
+    {
+      clientID: config.GITHUB_CLIENT_ID as string,
+      clientSecret: config.GITHUB_CLIENT_SECRET as string,
+      callbackURL: "http://localhost:3001/api/auth/github/callback",
+      scope: ["user:email"],
+    },
+    // @ts-expect-error wtf it worked for the first 2
+    async (accessToken, refreshToken, profile, done) => {
+      console.log(profile)
+      const email = profile.emails[0].value
+      const { username } = profile
 
       let user = await User.findOneBy({ email })
 

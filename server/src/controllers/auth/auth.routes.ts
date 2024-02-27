@@ -71,4 +71,23 @@ router.get(
   },
 )
 
+// github OAuth login
+router.get(
+  "/github",
+  passport.authenticate("github", { scope: ["user:email"] }),
+)
+
+router.get(
+  "/github/callback",
+  passport.authenticate("github", {
+    session: false,
+    failureRedirect: `${config.CLIENT_URL}`,
+  }),
+  (req, res) => {
+    // @ts-expect-error user is wrong type in Request type
+    const token = jwt.sign(req.user.id, config.JWT_SECRET)
+    res.redirect(`${config.CLIENT_URL}/jwt?token=${token}`)
+  },
+)
+
 export default router

@@ -43,6 +43,10 @@ const OAuthButtons = ({ isLoginPage }: { isLoginPage: boolean }) => {
     window.open("http://localhost:3001/api/auth/discord", "_self")
   }
 
+  const githubOAuthAction = () => {
+    window.open("http://localhost:3001/api/auth/github", "_self")
+  }
+
   const buttonText: string = isLoginPage ? "Login" : "Sign up"
 
   return (
@@ -59,10 +63,7 @@ const OAuthButtons = ({ isLoginPage }: { isLoginPage: boolean }) => {
         <img src={GoogleIcon} alt="google icon" />
         {buttonText} with Google
       </Button>
-      <Button
-        $isLoginPage={isLoginPage}
-        onClick={() => alert("Not implemented")}
-      >
+      <Button $isLoginPage={isLoginPage} onClick={githubOAuthAction}>
         <img src={GithubIcon} alt="github icon" />
         {buttonText} with Github
       </Button>
