@@ -1,6 +1,6 @@
 import { Navigate, Outlet } from "react-router-dom"
-import { AuthContext } from "../../routes/Router.tsx"
 import { useContext } from "react"
+import AuthContext from "../Auth/AuthContext.ts"
 
 const RootLayout = () => {
   const { loggedIn } = useContext(AuthContext)

@@ -1,5 +1,5 @@
 import ReactDOM from "react-dom/client"
 import "./assets/index.css"
-import Router from "./routes/Router.tsx"
+import App from "./App.tsx"
 
-ReactDOM.createRoot(document.getElementById("root")!).render(<Router />)
+ReactDOM.createRoot(document.getElementById("root")!).render(<App />)

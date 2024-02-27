@@ -2,7 +2,7 @@ import { Navigate, Outlet, useLocation } from "react-router-dom"
 import styled from "styled-components"
 import { motion } from "framer-motion"
 import { useContext } from "react"
-import { AuthContext } from "../../routes/Router.tsx"
+import AuthContext from "../Auth/AuthContext.ts"
 
 const Wrapper = styled.div`
   display: flex;

@@ -3,7 +3,7 @@ import OAuthButtons from "../components/OAuthButtons.tsx"
 import HorizontalSpacer from "../../../shared/components/HorizontalSpacer.tsx"
 import loginService from "../../../services/loginService.ts"
 import { useContext } from "react"
-import { AuthContext } from "../../../routes/Router.tsx"
+import AuthContext from "../AuthContext.ts"
 
 const LoginPage = () => {
   const { checkLoginState } = useContext(AuthContext)

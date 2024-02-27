@@ -10,7 +10,7 @@ const Wrapper = styled.div`
   color: rgb(219, 222, 225);
 `
 
-const App = () => {
+const Home = () => {
   const [isConnected, setIsConnected] = useState(socket.connected)
 
   useEffect(() => {
@@ -40,4 +40,4 @@ const App = () => {
   )
 }
 
-export default App
+export default Home
