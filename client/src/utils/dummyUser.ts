@@ -2,5 +2,5 @@
 const isLoggedIn = false
 
 export default {
-  isLoggedIn,
+  loggedIn: isLoggedIn,
 }

@@ -5,20 +5,18 @@ import AuthLayout from "../pages/layouts/AuthLayout.tsx"
 import LoginPage from "../pages/Auth/Login/LoginPage.tsx"
 import SignupPage from "../pages/Auth/Signup/SignupPage.tsx"
 import { AnimatePresence } from "framer-motion"
-import {
-  createContext,
-  useState,
-  useCallback,
-  useEffect,
-  ReactNode,
-} from "react"
+import { createContext, useState, useCallback, useEffect } from "react"
 import axios from "axios"
 
-// TODO move this out into its own file and rewrite this
-const AuthContext = createContext()
+export const AuthContext = createContext({
+  user: null,
+  loggedIn: false,
+  checkLoginState: () => {},
+})
 
-const AuthContextProvider = ({ children }: { children: ReactNode }) => {
-  const [loggedIn, setLoggedIn] = useState(null)
+const Router = () => {
+  // TODO move this out into its own file and rewrite this
+  const [loggedIn, setLoggedIn] = useState(false)
   const [user, setUser] = useState(null)
 
   const checkLoginState = useCallback(async () => {
@@ -47,14 +45,6 @@ const AuthContextProvider = ({ children }: { children: ReactNode }) => {
     checkLoginState()
   }, [checkLoginState])
 
-  return (
-    <AuthContext.Provider value={{ loggedIn, checkLoginState, user }}>
-      {children}
-    </AuthContext.Provider>
-  )
-}
-
-const Router = () => {
   const router = createBrowserRouter([
     {
       path: "/",
@@ -71,11 +61,11 @@ const Router = () => {
   ])
 
   return (
-    <AuthContextProvider>
+    <AuthContext.Provider value={{ loggedIn, checkLoginState, user }}>
       <AnimatePresence>
         <RouterProvider router={router} />
       </AnimatePresence>
-    </AuthContextProvider>
+    </AuthContext.Provider>
   )
 }
 

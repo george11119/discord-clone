@@ -1,7 +1,8 @@
-import dummyUser from "../../utils/dummyUser.ts"
 import { Navigate, Outlet, useLocation } from "react-router-dom"
 import styled from "styled-components"
 import { motion } from "framer-motion"
+import { useContext } from "react"
+import { AuthContext } from "../../routes/Router.tsx"
 
 const Wrapper = styled.div`
   display: flex;
@@ -25,9 +26,9 @@ const Modal = styled.div<{ height: number; width: number }>`
 
 const AuthLayout = () => {
   const location = useLocation()
-  const { isLoggedIn } = dummyUser
+  const { loggedIn } = useContext(AuthContext)
 
-  return isLoggedIn ? (
+  return loggedIn ? (
     <Navigate to="/" />
   ) : (
     <Wrapper>

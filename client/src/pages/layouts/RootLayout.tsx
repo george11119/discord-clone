@@ -1,10 +1,11 @@
-import dummyUser from "../../utils/dummyUser.ts"
 import { Navigate, Outlet } from "react-router-dom"
+import { AuthContext } from "../../routes/Router.tsx"
+import { useContext } from "react"
 
 const RootLayout = () => {
-  const { isLoggedIn } = dummyUser
+  const { loggedIn } = useContext(AuthContext)
 
-  return isLoggedIn ? <Outlet /> : <Navigate to="/login" />
+  return loggedIn ? <Outlet /> : <Navigate to="/login" />
 }
 
 export default RootLayout
