@@ -6,7 +6,6 @@ import { Server } from "socket.io"
 import { db } from "./config/db"
 import config from "./config/config"
 import passport from "passport"
-import session from "express-session"
 
 import "./config/passport-setup"
 import authRouter from "./controllers/auth/auth.routes"
@@ -34,16 +33,7 @@ export const io = new Server(server, {
   },
 })
 
-app.use(
-  session({
-    secret: "secret",
-    resave: false,
-    saveUninitialized: true,
-  }),
-)
-
 app.use(passport.initialize())
-app.use(passport.session())
 app.use(express.json())
 app.use(
   cors({

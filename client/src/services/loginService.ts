@@ -3,8 +3,8 @@ import config from "../config/config.ts"
 
 const url = `${config.SERVER_URL}/api/auth`
 
-const login = async (userParams: { username: string; password: string }) => {
-  const res = await axios.post(url, userParams)
+const login = async (userParams: { email: string; password: string }) => {
+  const res = await axios.post(`${url}/login`, userParams)
   return res.data
 }
 

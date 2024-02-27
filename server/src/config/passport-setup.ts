@@ -3,17 +3,10 @@ import { Strategy as LocalStrategy } from "passport-local"
 import { User } from "../models/user"
 import bcrypt from "bcrypt"
 
-passport.serializeUser((user, done) => {
-  done(null, user)
-})
-
-passport.deserializeUser((user, done) => {
-  done(null, user!)
-})
-
 passport.use(
-  new LocalStrategy(async (email, password, done) => {
-    try {
+  new LocalStrategy(
+    { usernameField: "email", passwordField: "password" },
+    async (email, password, done) => {
       const user = await User.findOneBy({ email })
       const passwordHash = await User.findOne({
         where: { email: email },
@@ -25,13 +18,11 @@ passport.use(
           ? false
           : await bcrypt.compare(password, passwordHash.passwordHash)
 
-      if (user && passwordCorrect) {
-        return done(null, user)
-      } else {
-        return done(null, false)
+      if (!user || !passwordCorrect) {
+        return done(null, false, { message: "Incorrect email or password" })
       }
-    } catch (e) {
-      return done(e)
-    }
-  }),
+
+      done(null, user, { message: "Login successful" })
+    },
+  ),
 )

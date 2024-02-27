@@ -18,7 +18,7 @@ const Form = styled.form`
 const LoginForm = ({
   handleLogin,
 }: {
-  handleLogin: (username: string, password: string) => Promise<void>
+  handleLogin: (email: string, password: string) => Promise<void>
 }) => {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")

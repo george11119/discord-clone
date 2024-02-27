@@ -5,11 +5,11 @@ import loginService from "../../../services/loginService.ts"
 
 const LoginPage = () => {
   const handleLogin = async (
-    username: string,
+    email: string,
     password: string,
   ): Promise<void> => {
-    await loginService.login({ username, password })
-
+    const res = await loginService.login({ email, password })
+    localStorage.setItem("discord-clone-jwt-token", res.token)
   }
 
   return (
