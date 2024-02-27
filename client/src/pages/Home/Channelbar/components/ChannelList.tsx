@@ -1,6 +1,7 @@
 import styled from "styled-components"
 import ChannelListItem from "./ChannelListItem.tsx"
 import ChannelListCategory from "./ChannelListCategory.tsx"
+import LogoutButton from "../../../Auth/LogoutButton.tsx"
 
 const Wrapper = styled.ul`
   list-style: none;
@@ -18,6 +19,7 @@ const ChannelList = () => {
       <ChannelListItem name={"asdf"} />
       <ChannelListItem name={"asdf"} />
       <ChannelListItem name={"asdf"} />
+      <LogoutButton />
     </Wrapper>
   )
 }
