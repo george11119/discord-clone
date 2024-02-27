@@ -55,4 +55,20 @@ router.get(
   },
 )
 
+// discord OAuth login
+router.get("/discord", passport.authenticate("discord"))
+
+router.get(
+  "/discord/callback",
+  passport.authenticate("discord", {
+    session: false,
+    failureRedirect: `${config.CLIENT_URL}`,
+  }),
+  (req, res) => {
+    // @ts-expect-error user is wrong type in Request type
+    const token = jwt.sign(req.user.id, config.JWT_SECRET)
+    res.redirect(`${config.CLIENT_URL}/jwt?token=${token}`)
+  },
+)
+
 export default router

@@ -1,6 +1,7 @@
 import passport from "passport"
 import { Strategy as LocalStrategy } from "passport-local"
 import { Strategy as GoogleStrategy } from "passport-google-oauth20"
+import { Strategy as DiscordStrategy } from "passport-discord"
 import { User } from "../models/user"
 import bcrypt from "bcrypt"
 import config from "./config"
@@ -36,12 +37,40 @@ passport.use(
       callbackURL: "http://localhost:3001/api/auth/google/callback",
     },
     async (accessToken, refreshToken, profile, done) => {
-      let user = await User.findOneBy({ email: profile._json.email })
+      const email = profile._json.email
+
+      let user = await User.findOneBy({ email })
 
       if (!user) {
         user = User.create({
-          email: profile._json.email,
-          username: `user_${profile._json.email}`,
+          email,
+          username: `user_${email}`,
+        })
+
+        await User.save(user)
+      }
+
+      done(null, user, { message: "Login successful" })
+    },
+  ),
+)
+passport.use(
+  new DiscordStrategy(
+    {
+      clientID: config.DISCORD_CLIENT_ID as string,
+      clientSecret: config.DISCORD_CLIENT_SECRET as string,
+      callbackURL: "http://localhost:3001/api/auth/discord/callback",
+      scope: ["identify", "email"],
+    },
+    async (accessToken, refreshToken, profile, done) => {
+      const { email, username } = profile
+
+      let user = await User.findOneBy({ email })
+
+      if (!user) {
+        user = User.create({
+          email,
+          username,
         })
 
         await User.save(user)

@@ -39,13 +39,17 @@ const OAuthButtons = ({ isLoginPage }: { isLoginPage: boolean }) => {
     window.open("http://localhost:3001/api/auth/google", "_self")
   }
 
+  const discordOAuthAction = () => {
+    window.open("http://localhost:3001/api/auth/discord", "_self")
+  }
+
   const buttonText: string = isLoginPage ? "Login" : "Sign up"
 
   return (
     <Wrapper $isLoginPage={isLoginPage}>
       <Button
         $isLoginPage={isLoginPage}
-        onClick={() => alert("Not implemented")}
+        onClick={discordOAuthAction}
         style={{ backgroundColor: "rgb(88, 101, 242)", color: "white" }}
       >
         <img src={DiscordIcon} alt="discord icon" />
