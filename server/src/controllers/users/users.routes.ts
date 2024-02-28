@@ -2,6 +2,8 @@ import { User } from "../../models/user"
 import bcrypt from "bcrypt"
 import express from "express"
 import { validate } from "class-validator"
+import jwt from "jsonwebtoken"
+import config from "../../config/config"
 
 const router = express.Router()
 
@@ -22,7 +24,11 @@ router.post("/", async (req, res) => {
     })
   } else {
     await User.save(user)
-    res.status(201).json(await User.findOneBy({ id: user.id }))
+
+    const token = jwt.sign(user.id, config.JWT_SECRET as string)
+    const savedUser = await User.findOneBy({ id: user.id })
+
+    res.status(201).json({ token, user: savedUser })
   }
 })
 

@@ -4,6 +4,8 @@ import { Link } from "react-router-dom"
 import OAuthButtons from "../components/OAuthButtons.tsx"
 import Divider from "./Divider.tsx"
 import userService from "../../../services/userService.ts"
+import { useContext } from "react"
+import AuthContext from "../AuthContext.ts"
 
 const Wrapper = styled.div`
   display: flex;
@@ -28,12 +30,16 @@ const LinkWrapper = styled(Link)`
 `
 
 const SignupPage = () => {
+  const { checkLoginState } = useContext(AuthContext)
+
   const handleSignup = async (
     username: string,
     password: string,
     email: string,
   ) => {
-    await userService.createUser({ username, password, email })
+    const res = await userService.createUser({ username, password, email })
+    localStorage.setItem("discord-clone-jwt-token", res.token)
+    checkLoginState()
   }
 
   return (
