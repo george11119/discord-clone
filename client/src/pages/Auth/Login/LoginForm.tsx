@@ -44,11 +44,12 @@ const LoginForm = ({
       <Form onSubmit={login}>
         <FormInput
           name="Email"
-          type="text"
+          type="email"
           value={email}
           setValue={setEmail}
           showErrorText={isError}
           errorText="Invalid email or password"
+          required={true}
         />
         <FormInput
           name="password"
@@ -57,6 +58,7 @@ const LoginForm = ({
           setValue={setPassword}
           showErrorText={isError}
           errorText="Invalid email or password"
+          required={true}
         />
         <Button type="submit" text="Log in" isLoading={isLoading} />
       </Form>

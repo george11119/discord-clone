@@ -44,6 +44,7 @@ const FormInput = ({
   errorText?: string
   showErrorText?: boolean
   setValue: (value: string) => void
+  [rest: string]: any
 }) => {
   const labelId = useId()
 

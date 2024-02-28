@@ -61,6 +61,7 @@ const SignupForm = ({
           setValue={setEmail}
           showErrorText={isError}
           errorText="Invalid email, username, or password"
+          required={true}
         />
         <FormInput
           name="username"
@@ -69,6 +70,7 @@ const SignupForm = ({
           setValue={setUsername}
           showErrorText={isError}
           errorText="Invalid email, username, or password"
+          required={true}
         />
         <FormInput
           name="password"
@@ -77,6 +79,7 @@ const SignupForm = ({
           setValue={setPassword}
           showErrorText={isError}
           errorText="Invalid email, username, or password"
+          required={true}
         />
         <Button text="Continue" type="submit" isLoading={isLoading} />
       </Form>
