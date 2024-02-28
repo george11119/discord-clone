@@ -5,6 +5,7 @@ import GoogleIcon from "../assets/google_icon.svg"
 import DiscordIcon from "../assets/discord_icon.svg"
 // @ts-expect-error eslint stfu
 import GithubIcon from "../assets/github_icon.svg"
+import config from "../../../config/config.ts"
 
 const Wrapper = styled.div<{ $isLoginPage: boolean }>`
   width: ${(props) => (props.$isLoginPage ? 240 : 416)}px;
@@ -36,15 +37,15 @@ const Button = styled.button<{ $isLoginPage: boolean }>`
 
 const OAuthButtons = ({ isLoginPage }: { isLoginPage: boolean }) => {
   const googleOAuthAction = () => {
-    window.open("http://localhost:3001/api/auth/google", "_self")
+    window.open(`${config.API_ENDPOINT}/auth/google`, "_self")
   }
 
   const discordOAuthAction = () => {
-    window.open("http://localhost:3001/api/auth/discord", "_self")
+    window.open(`${config.API_ENDPOINT}/auth/discord`, "_self")
   }
 
   const githubOAuthAction = () => {
-    window.open("http://localhost:3001/api/auth/github", "_self")
+    window.open(`${config.API_ENDPOINT}/auth/github`, "_self")
   }
 
   const buttonText: string = isLoginPage ? "Login" : "Sign up"

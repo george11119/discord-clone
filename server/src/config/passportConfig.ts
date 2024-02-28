@@ -35,7 +35,7 @@ passport.use(
     {
       clientID: config.GOOGLE_CLIENT_ID as string,
       clientSecret: config.GOOGLE_CLIENT_SECRET as string,
-      callbackURL: "http://localhost:3001/api/auth/google/callback",
+      callbackURL: `${config.API_ENDPOINT}/auth/google/callback`,
     },
     async (accessToken, refreshToken, profile, done) => {
       const email = profile._json.email
@@ -62,7 +62,7 @@ passport.use(
     {
       clientID: config.DISCORD_CLIENT_ID as string,
       clientSecret: config.DISCORD_CLIENT_SECRET as string,
-      callbackURL: "http://localhost:3001/api/auth/discord/callback",
+      callbackURL: `${config.API_ENDPOINT}/auth/discord/callback`,
       scope: ["identify", "email"],
     },
     async (accessToken, refreshToken, profile, done) => {
@@ -89,7 +89,7 @@ passport.use(
     {
       clientID: config.GITHUB_CLIENT_ID as string,
       clientSecret: config.GITHUB_CLIENT_SECRET as string,
-      callbackURL: "http://localhost:3001/api/auth/github/callback",
+      callbackURL: `${config.API_ENDPOINT}/auth/github/callback`,
       scope: ["user:email"],
     },
     // @ts-expect-error wtf it worked for the first 2

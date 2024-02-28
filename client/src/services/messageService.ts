@@ -1,8 +1,9 @@
 import axios from "axios"
 import { message } from "../../types.ts"
 import { socket } from "../config/socket.ts"
+import config from "../config/config.ts"
 
-const url = "http://localhost:3001/api/messages"
+const url = `${config.API_ENDPOINT}/messages`
 
 const getMessages = async (): Promise<message[]> => {
   const res = await axios.get(url)

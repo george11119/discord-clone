@@ -5,7 +5,7 @@ import AuthContext from "../Auth/AuthContext.ts"
 const RootLayout = () => {
   const { loggedIn } = useContext(AuthContext)
 
-  return loggedIn ? <Outlet /> : <Navigate to="/login" />
+  return loggedIn ? <Outlet /> : <Navigate to="/login" replace={true} />
 }
 
 export default RootLayout

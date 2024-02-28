@@ -1,6 +1,7 @@
 import { ReactNode, useCallback, useEffect, useState } from "react"
 import AuthContext from "./AuthContext.ts"
 import axios from "axios"
+import config from "../../config/config.ts"
 
 const AuthContextProvider = ({ children }: { children: ReactNode }) => {
   const [loggedIn, setLoggedIn] = useState(false)
@@ -10,7 +11,7 @@ const AuthContextProvider = ({ children }: { children: ReactNode }) => {
     const token = localStorage.getItem("discord-clone-jwt-token")
 
     try {
-      const res = await axios.get(`http://localhost:3001/api/auth/logged_in`, {
+      const res = await axios.get(`${config.API_ENDPOINT}/auth/logged_in`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       const { loggedIn, user } = res.data

@@ -29,7 +29,7 @@ const AuthLayout = () => {
   const { loggedIn } = useContext(AuthContext)
 
   return loggedIn ? (
-    <Navigate to="/" />
+    <Navigate to="/" replace={true} />
   ) : (
     <Wrapper>
       <Modal
