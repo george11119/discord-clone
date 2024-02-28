@@ -16,13 +16,14 @@ import messageService from "./controllers/messages/messages.socket"
 import { requestLogger } from "./middleware/requestLogger"
 import { unknownEndpoint } from "./middleware/unknownEndpoint"
 import { errorHandler } from "./middleware/errorHandler"
+import logger from "./utils/logger"
 
 db.initialize()
   .then(() => {
-    console.log("Database initialized")
+    logger.info("Database initialized")
   })
   .catch((e) => {
-    console.log("Database initialization error", e)
+    logger.error("Database initialization error", e)
   })
 
 const app = express()

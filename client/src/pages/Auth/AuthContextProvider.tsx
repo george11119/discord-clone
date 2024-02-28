@@ -17,9 +17,6 @@ const AuthContextProvider = ({ children }: { children: ReactNode }) => {
 
       setLoggedIn(loggedIn)
       user && setUser(user)
-
-      console.log(`User:`, user)
-      console.log(`Logged in: ${loggedIn}`)
     } catch (e) {
       console.log(e)
     }

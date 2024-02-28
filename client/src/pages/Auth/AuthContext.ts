@@ -1,7 +1,8 @@
 import { createContext } from "react"
+import { User } from "./../../../types.ts"
 
 type AuthContextType = {
-  user: null | object
+  user: null | User
   loggedIn: boolean
   checkLoginState: () => void
 }

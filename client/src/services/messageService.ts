@@ -1,5 +1,5 @@
 import axios from "axios"
-import { message } from "../../../types.ts"
+import { message } from "../../types.ts"
 import { socket } from "../config/socket.ts"
 
 const url = "http://localhost:3001/api/messages"
