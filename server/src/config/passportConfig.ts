@@ -94,7 +94,6 @@ passport.use(
     },
     // @ts-expect-error wtf it worked for the first 2
     async (accessToken, refreshToken, profile, done) => {
-      console.log(profile)
       const email = profile.emails[0].value
       const { username } = profile
 

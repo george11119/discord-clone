@@ -1,9 +1,9 @@
 import passport from "passport"
 import express, { Request, Response } from "express"
 import config from "../../config/config"
-import jwt from "jsonwebtoken"
 import tokenExtractor from "../../middleware/tokenExtractor"
 import { User } from "../../models/user"
+import jwtUtils from "../../utils/jwtUtils"
 
 const router = express.Router()
 
@@ -16,8 +16,8 @@ router.get(
 
       if (!token) return res.json({ loggedIn: false })
 
-      const userId = jwt.verify(token, config.JWT_SECRET as string)
-      const user = await User.findOneBy({ id: userId as string })
+      const { userId } = jwtUtils.verifyToken(token)
+      const user = await User.findOneBy({ id: userId })
 
       if (!user) return res.json({ loggedIn: false })
 
@@ -33,8 +33,7 @@ router.post(
   "/login",
   passport.authenticate("local", { session: false }),
   (req: Request, res: Response) => {
-    // @ts-expect-error user is wrong type in Request type
-    const token = jwt.sign(req.user.id, config.JWT_SECRET)
+    const token = jwtUtils.signToken({ userId: req.user?.id as string })
     res.json({ token })
   },
 )
@@ -49,8 +48,7 @@ router.get(
     failureRedirect: `${config.CLIENT_URL}`,
   }),
   (req, res) => {
-    // @ts-expect-error user is wrong type in Request type
-    const token = jwt.sign(req.user.id, config.JWT_SECRET)
+    const token = jwtUtils.signToken({ userId: req.user?.id as string })
     res.redirect(`${config.CLIENT_URL}/jwt?token=${token}`)
   },
 )
@@ -65,8 +63,7 @@ router.get(
     failureRedirect: `${config.CLIENT_URL}`,
   }),
   (req, res) => {
-    // @ts-expect-error user is wrong type in Request type
-    const token = jwt.sign(req.user.id, config.JWT_SECRET)
+    const token = jwtUtils.signToken({ userId: req.user?.id as string })
     res.redirect(`${config.CLIENT_URL}/jwt?token=${token}`)
   },
 )
@@ -84,8 +81,7 @@ router.get(
     failureRedirect: `${config.CLIENT_URL}`,
   }),
   (req, res) => {
-    // @ts-expect-error user is wrong type in Request type
-    const token = jwt.sign(req.user.id, config.JWT_SECRET)
+    const token = jwtUtils.signToken({ userId: req.user?.id as string })
     res.redirect(`${config.CLIENT_URL}/jwt?token=${token}`)
   },
 )

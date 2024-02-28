@@ -6,7 +6,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from "typeorm"
-import { IsEmail, Length, min } from "class-validator"
+import { IsEmail, Length } from "class-validator"
 
 @Entity()
 export class User extends BaseEntity {
