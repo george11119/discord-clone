@@ -44,6 +44,7 @@ erDiagram
   channel ||--|{ message: has_many_belongs_to
   channel {
     int id PK
+    string name
     int server_id FK
   }
 
