@@ -1,5 +1,6 @@
 import styled from "styled-components"
 import UserDropdownMenu from "./UserDropdownMenu.tsx"
+import UserBarButtons from "./UserBarButtons.tsx"
 
 const Wrapper = styled.div`
   background-color: rgb(35, 36, 40);
@@ -10,12 +11,13 @@ const Wrapper = styled.div`
   padding: 0 8px;
 `
 
-const UserInfo = () => {
+const UserBar = () => {
   return (
     <Wrapper>
       <UserDropdownMenu />
+      <UserBarButtons />
     </Wrapper>
   )
 }
 
-export default UserInfo
+export default UserBar

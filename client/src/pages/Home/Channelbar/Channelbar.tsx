@@ -1,7 +1,7 @@
 import styled from "styled-components"
 import Header from "./components/Header.tsx"
-import ChannelList from "./components/ChannelList.tsx"
-import UserInfo from "./components/UserInfo.tsx"
+import ChannelList from "./components/ChannelList/ChannelList.tsx"
+import UserBar from "./components/UserInfo/UserBar.tsx"
 
 const Wrapper = styled.nav`
   width: 240px;
@@ -17,7 +17,7 @@ const Channelbar = () => {
     <Wrapper>
       <Header title={"Channel title"} />
       <ChannelList />
-      <UserInfo />
+      <UserBar />
     </Wrapper>
   )
 }

@@ -5,10 +5,12 @@ const Tooltip = ({
   children,
   tooltip,
   placement,
+  fontSize,
 }: {
   children: JSX.Element | string
   tooltip: string
   placement: "top" | "left" | "right" | "bottom"
+  fontSize?: number
 }) => {
   const tooltipId = useId()
   const [isOpen, setIsOpen] = useState(false)
@@ -30,7 +32,7 @@ const Tooltip = ({
         isOpen={isOpen}
         style={{
           backgroundColor: "#070707",
-          fontSize: "16px",
+          fontSize: fontSize ? `${fontSize}px` : "16px",
           borderRadius: "4px",
         }}
         place={placement}
