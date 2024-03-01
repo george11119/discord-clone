@@ -1,11 +1,10 @@
-import { MouseEventHandler, useContext, useState } from "react"
+import { useContext, useState } from "react"
 import AuthContext from "../../../../Auth/AuthContext.ts"
 import styled from "styled-components"
 import UserProfilePopout from "./UserProfilePopout.tsx"
+import UserProfilePicture from "../../../../../shared/components/UserProfilePicture.tsx"
 
-const UserProfilePicture = styled.svg`
-  height: 32px;
-  width: 32px;
+const ProfilePictureContainer = styled.div`
   flex: 0 0 auto;
   margin-left: 4px;
 `
@@ -63,9 +62,9 @@ const UserInfo = () => {
     <Wrapper>
       {popoutOpen && <UserProfilePopout setPopoutOpen={setPopoutOpen} />}
       <UserInfoWrapper onClick={togglePopoutVisibility}>
-        <UserProfilePicture>
-          <circle cx="16" cy="16" r="16" fill="red{/*rgb(49, 51, 56)*/}" />
-        </UserProfilePicture>
+        <ProfilePictureContainer>
+          <UserProfilePicture profileDiameter={32} />
+        </ProfilePictureContainer>
         <InfoDisplay>
           <Username>{user?.username}</Username>
           <Status>Online</Status>

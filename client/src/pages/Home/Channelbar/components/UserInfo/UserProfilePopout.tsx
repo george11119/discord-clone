@@ -6,6 +6,7 @@ import VerticalSpacer from "../../../../../shared/components/VerticalSpacer.tsx"
 import LogoutButton from "../../../../Auth/LogoutButton.tsx"
 import { motion } from "framer-motion"
 import useOnOutsideClick from "../../../../../hooks/useOnOutsideClick.ts"
+import UserProfilePicture from "../../../../../shared/components/UserProfilePicture.tsx"
 
 const Wrapper = styled.div`
   display: flex;
@@ -25,7 +26,7 @@ const Banner = styled.div`
   background-color: rgb(181, 135, 74);
   border-radius: 8px 8px 0 0;
 `
-const ProfilePictureContainer = styled.div`
+const ProfilePictureBorder = styled.div`
   height: 92px;
   width: 92px;
   position: absolute;
@@ -35,10 +36,8 @@ const ProfilePictureContainer = styled.div`
   background-color: rgb(35, 36, 40);
 `
 
-const UserProfilePicture = styled.svg`
+const ProfilePictureContainer = styled.div`
   position: absolute;
-  height: 80px;
-  width: 80px;
   top: 6px;
   left: 6px;
 `
@@ -77,11 +76,11 @@ const UserProfilePopout = ({
       }}
     >
       <Banner />
-      <ProfilePictureContainer>
-        <UserProfilePicture>
-          <circle cx="40" cy="40" r="40" fill="red" />
-        </UserProfilePicture>
-      </ProfilePictureContainer>
+      <ProfilePictureBorder>
+        <ProfilePictureContainer>
+          <UserProfilePicture profileDiameter={80} />
+        </ProfilePictureContainer>
+      </ProfilePictureBorder>
       <InnerWrapper>
         <BoldText>{user?.username}</BoldText>
 

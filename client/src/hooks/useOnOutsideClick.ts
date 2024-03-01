@@ -1,5 +1,9 @@
 import { useEffect, useRef } from "react"
 
+/**
+ * detects whether user has clicked outside of the element that is connected to the ref
+ * if user clicks outside, run the callback function passed in
+ */
 const useOutsideClick = (callback: () => any) => {
   const ref = useRef<any>(null)
 
