@@ -1,4 +1,9 @@
 import styled from "styled-components"
+import Separator from "../../../Sidebar/components/Separator.tsx"
+import { useContext } from "react"
+import AuthContext from "../../../../Auth/AuthContext.ts"
+import VerticalSpacer from "../../../../../shared/components/VerticalSpacer.tsx"
+import LogoutButton from "../../../../Auth/LogoutButton.tsx"
 
 const Wrapper = styled.div<{ $popoutOpen: boolean }>`
   display: ${(props) => (props.$popoutOpen ? "flex" : "none")};
@@ -13,25 +18,73 @@ const Wrapper = styled.div<{ $popoutOpen: boolean }>`
   max-height: 800px;
 `
 
+const TopPart = styled.div`
+  height: 60px;
+  background-color: rgb(181, 135, 74);
+  border-radius: 8px 8px 0 0;
+`
+const ProfilePictureContainer = styled.div`
+  height: 92px;
+  width: 92px;
+  position: absolute;
+  left: 16px;
+  top: 10px;
+  border-radius: 50%;
+  background-color: rgb(35, 36, 40);
+`
+
+const UserProfilePicture = styled.svg`
+  position: absolute;
+  height: 80px;
+  width: 80px;
+  top: 6px;
+  left: 6px;
+`
+
 const InnerWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  margin: 16px;
+  margin: 58px 16px 16px 16px;
   border-radius: 8px;
   background-color: rgb(17, 18, 20);
   padding: 12px;
   max-height: 700px;
 `
 
+const BoldText = styled.div`
+  font-weight: 600;
+`
+
 const UserProfilePopout = ({ popoutOpen }: { popoutOpen: boolean }) => {
+  const { user } = useContext(AuthContext)
+
   return (
     <Wrapper $popoutOpen={popoutOpen}>
+      <TopPart />
+      <ProfilePictureContainer>
+        <UserProfilePicture>
+          <circle cx="40" cy="40" r="40" fill="red" />
+        </UserProfilePicture>
+      </ProfilePictureContainer>
       <InnerWrapper>
-        <div>asda</div>
-        <div>asda</div>
-        <div>asda</div>
-        <div>asda</div>
-        <div>asda</div>
+        <BoldText>{user?.username}</BoldText>
+
+        <VerticalSpacer height={12} />
+        <Separator width={"auto"} />
+        <VerticalSpacer height={12} />
+
+        <div style={{ fontSize: "12px" }}>
+          <BoldText style={{ marginBottom: "6px" }}>
+            DISCORD MEMBER SINCE
+          </BoldText>
+          Oct 20, 2020
+        </div>
+
+        <VerticalSpacer height={12} />
+        <Separator width={"auto"} />
+        <VerticalSpacer height={12} />
+       
+        <LogoutButton />
       </InnerWrapper>
     </Wrapper>
   )

@@ -11,6 +11,9 @@ const UserProfilePicture = styled.svg`
 
 const Wrapper = styled.div`
   position: relative;
+`
+
+const UserInfoWrapper = styled.div`
   display: flex;
   align-items: center;
   border-radius: 4px;
@@ -44,16 +47,18 @@ const Status = styled.div`
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
+  user-select: none;
 `
+
 
 const UserInfo = () => {
   const [popoutOpen, setPopoutOpen] = useState(false)
   const { user } = useContext(AuthContext)
 
   return (
-    <>
-      <Wrapper onClick={() => setPopoutOpen(!popoutOpen)}>
-        <UserProfilePopout popoutOpen={popoutOpen} />
+    <Wrapper>
+      <UserProfilePopout popoutOpen={popoutOpen} />
+      <UserInfoWrapper onClick={() => setPopoutOpen(!popoutOpen)}>
         <UserProfilePicture>
           <circle cx="16" cy="16" r="16" fill="red{/*rgb(49, 51, 56)*/}" />
         </UserProfilePicture>
@@ -61,8 +66,8 @@ const UserInfo = () => {
           <Username>{user?.username}</Username>
           <Status>Online</Status>
         </InfoDisplay>
-      </Wrapper>
-    </>
+      </UserInfoWrapper>
+    </Wrapper>
   )
 }
 
