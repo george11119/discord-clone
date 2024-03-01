@@ -1,5 +1,5 @@
 import styled from "styled-components"
-import UserDropdownMenu from "./UserDropdownMenu.tsx"
+import UserInfo from "./UserInfo.tsx"
 import UserBarButtons from "./UserBarButtons.tsx"
 
 const Wrapper = styled.div`
@@ -14,7 +14,7 @@ const Wrapper = styled.div`
 const UserBar = () => {
   return (
     <Wrapper>
-      <UserDropdownMenu />
+      <UserInfo />
       <UserBarButtons />
     </Wrapper>
   )

@@ -27,7 +27,7 @@ router.post("/", async (req, res) => {
     // gotta refetch this because the old user contained a passwordHash field
     // i dont want that returned in res.json
     const savedUser = await User.findOneBy({ id: user.id })
-    const token = jwtUtils.signToken({ userId: req.user?.id as string })
+    const token = jwtUtils.signToken({ userId: savedUser?.id as string })
 
     res.status(201).json({ token, user: savedUser })
   }

@@ -6,10 +6,10 @@ import Tooltip from "../../../../../shared/components/Tooltip.tsx"
 const UserBarButtons = () => {
   return (
     <>
-      <Tooltip tooltip="Mute" placement="top" fontSize={13}>
+      <Tooltip tooltip="Mute (Not implemented)" placement="top" fontSize={13}>
         <MicrophoneButton />
       </Tooltip>
-      <Tooltip tooltip="Deafen" placement="top" fontSize={13}>
+      <Tooltip tooltip="Deafen (Not implemented)" placement="top" fontSize={13}>
         <DeafenButton />
       </Tooltip>
       <Tooltip tooltip="User Settings" placement="top" fontSize={13}>
