@@ -4,9 +4,11 @@ import { useContext } from "react"
 import AuthContext from "../../../../Auth/AuthContext.ts"
 import VerticalSpacer from "../../../../../shared/components/VerticalSpacer.tsx"
 import LogoutButton from "../../../../Auth/LogoutButton.tsx"
+import { motion } from "framer-motion"
+import useOnOutsideClick from "../../../../../hooks/useOnOutsideClick.ts"
 
-const Wrapper = styled.div<{ $popoutOpen: boolean }>`
-  display: ${(props) => (props.$popoutOpen ? "flex" : "none")};
+const Wrapper = styled.div`
+  display: flex;
   position: absolute;
   top: 0;
   left: 0;
@@ -18,7 +20,7 @@ const Wrapper = styled.div<{ $popoutOpen: boolean }>`
   max-height: 800px;
 `
 
-const TopPart = styled.div`
+const Banner = styled.div`
   height: 60px;
   background-color: rgb(181, 135, 74);
   border-radius: 8px 8px 0 0;
@@ -55,12 +57,26 @@ const BoldText = styled.div`
   font-weight: 600;
 `
 
-const UserProfilePopout = ({ popoutOpen }: { popoutOpen: boolean }) => {
+const UserProfilePopout = ({
+  setPopoutOpen,
+}: {
+  setPopoutOpen: (popoutOpen: boolean) => void
+}) => {
   const { user } = useContext(AuthContext)
 
+  const ref = useOnOutsideClick(() => setPopoutOpen(false))
+
   return (
-    <Wrapper $popoutOpen={popoutOpen}>
-      <TopPart />
+    <Wrapper
+      ref={ref}
+      as={motion.div}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{
+        duration: 0.08,
+      }}
+    >
+      <Banner />
       <ProfilePictureContainer>
         <UserProfilePicture>
           <circle cx="40" cy="40" r="40" fill="red" />
@@ -83,7 +99,7 @@ const UserProfilePopout = ({ popoutOpen }: { popoutOpen: boolean }) => {
         <VerticalSpacer height={12} />
         <Separator width={"auto"} />
         <VerticalSpacer height={12} />
-       
+
         <LogoutButton />
       </InnerWrapper>
     </Wrapper>
