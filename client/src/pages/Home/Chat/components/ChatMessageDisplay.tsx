@@ -1,7 +1,7 @@
 import styled from "styled-components"
 import ChatMessage from "./ChatMessage.tsx"
 import VerticalSpacer from "../../../../shared/components/VerticalSpacer.tsx"
-import { useContext, useEffect } from "react"
+import { useContext, useEffect, useRef } from "react"
 import { MessagesContext } from "../ChatAreaContainer.tsx"
 import { message } from "../../../../../types.ts"
 import { formatDateTime } from "../../../../utils/dateTime.ts"
@@ -20,12 +20,19 @@ const Wrapper = styled.ul`
 const ChatMessageDisplay = () => {
   const { messages, setMessages } = useContext(MessagesContext)
 
+  const messagesEndRef = useRef<HTMLDivElement>(null)
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "instant" })
+  }
+
   useEffect(() => {
     const onMessageCreate = (res: { createdMessage: message }) => {
       const { createdMessage } = res
       setMessages(messages.concat(createdMessage))
     }
 
+    scrollToBottom()
     socket.on("message:create", onMessageCreate)
 
     return () => {
@@ -47,6 +54,7 @@ const ChatMessageDisplay = () => {
           )
         })}
         <VerticalSpacer height={30} />
+        <span ref={messagesEndRef}></span>
       </div>
     </Wrapper>
   )

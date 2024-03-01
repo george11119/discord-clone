@@ -78,6 +78,7 @@ const UserProfilePicture = ({
           y={0}
           mask={idString}
         >
+          {/*TODO Replace this with a img tag that contains user profile image*/}
           <div
             style={{
               height: profileDiameter,
