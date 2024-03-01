@@ -1,10 +1,7 @@
 import styled from "styled-components"
-// @ts-expect-error eslint stfu
-import GoogleIcon from "../assets/google_icon.svg"
-// @ts-expect-error eslint stfu
-import DiscordIcon from "../assets/discord_icon.svg"
-// @ts-expect-error eslint stfu
-import GithubIcon from "../assets/github_icon.svg"
+import GoogleIcon from "../assets/GoogleIcon.tsx"
+import DiscordIcon from "../assets/DiscordIcon.tsx"
+import GithubIcon from "../assets/GithubIcon.tsx"
 import config from "../../../config/config.ts"
 
 const Wrapper = styled.div<{ $isLoginPage: boolean }>`
@@ -57,15 +54,15 @@ const OAuthButtons = ({ isLoginPage }: { isLoginPage: boolean }) => {
         onClick={discordOAuthAction}
         style={{ backgroundColor: "rgb(88, 101, 242)", color: "white" }}
       >
-        <img src={DiscordIcon} alt="discord icon" />
+        <DiscordIcon />
         {buttonText} with Discord
       </Button>
       <Button $isLoginPage={isLoginPage} onClick={googleOAuthAction}>
-        <img src={GoogleIcon} alt="google icon" />
+        <GoogleIcon />
         {buttonText} with Google
       </Button>
       <Button $isLoginPage={isLoginPage} onClick={githubOAuthAction}>
-        <img src={GithubIcon} alt="github icon" />
+        <GithubIcon />
         {buttonText} with Github
       </Button>
       {isLoginPage && (

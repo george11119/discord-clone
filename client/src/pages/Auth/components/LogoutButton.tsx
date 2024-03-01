@@ -1,5 +1,5 @@
 import { useContext } from "react"
-import AuthContext from "./AuthContext.ts"
+import AuthContext from "../AuthContext.ts"
 import styled from "styled-components"
 
 const Button = styled.button`

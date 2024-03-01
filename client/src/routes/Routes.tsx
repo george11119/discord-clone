@@ -5,7 +5,7 @@ import AuthLayout from "../pages/Layouts/AuthLayout.tsx"
 import LoginPage from "../pages/Auth/Login/LoginPage.tsx"
 import SignupPage from "../pages/Auth/Signup/SignupPage.tsx"
 import { AnimatePresence } from "framer-motion"
-import OAuthRedirect from "../pages/Auth/OAuthRedirect.tsx"
+import OAuthRedirect from "../pages/Auth/components/OAuthRedirect.tsx"
 
 const Routes = () => {
   const router = createBrowserRouter([
