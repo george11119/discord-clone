@@ -71,14 +71,21 @@ const UserProfilePicture = ({
             ry={profileDiameter / 4}
           ></rect>
         </mask>
-        {/*TODO replace with foreign object profile picture*/}
-        <circle
-          cx={profileDiameter / 2}
-          cy={profileDiameter / 2}
-          r={profileDiameter / 2}
-          fill="red"
+        <foreignObject
+          width={profileDiameter}
+          height={profileDiameter}
+          x={0}
+          y={0}
           mask={idString}
-        />
+        >
+          <div
+            style={{
+              height: profileDiameter,
+              width: profileDiameter,
+              backgroundColor: "yellow",
+            }}
+          ></div>
+        </foreignObject>
       </svg>
       <Tooltip tooltip="Do not disturb" placement="top" fontSize={14}>
         <StatusIcon
