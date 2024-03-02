@@ -6,6 +6,7 @@ import bcrypt from "bcrypt"
 import { db } from "./db"
 import { Message } from "../models/message"
 import { Channel } from "../models/channel"
+import { UserServers } from "../models/userServers"
 
 const seedDatabase = async () => {
   await User.delete({})
@@ -19,14 +20,14 @@ const seedDatabase = async () => {
     email: "test@test.com",
   })
 
-  // user.servers = []
-  // const server1 = await Server.save({ name: "Server 1" })
-  // const server2 = await Server.save({ name: "Server 2" })
-  //
-  // user.servers.push(server1)
-  // user.servers.push(server2)
-  //
-  // logger.info(user.servers)
+  const server1 = await Server.save({ name: "Server 1" })
+  const server2 = await Server.save({ name: "Server 2" })
+
+  const userServer1 = await UserServers.save({ user: user, server: server1 })
+  const userServer2 = await UserServers.save({ user: user, server: server2 })
+
+  logger.info(userServer1)
+  logger.info(userServer2)
 }
 
 const main = async () => {

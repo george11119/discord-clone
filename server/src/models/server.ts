@@ -8,6 +8,7 @@ import {
   Column,
 } from "typeorm"
 import { Channel } from "./channel"
+import { UserServers } from "./userServers"
 
 @Entity()
 export class Server extends BaseEntity {
@@ -25,4 +26,7 @@ export class Server extends BaseEntity {
 
   @OneToMany(() => Channel, (channel) => channel.server)
   channels: Channel[]
+
+  @OneToMany(() => UserServers, (userServers) => userServers.server)
+  userServers: UserServers[]
 }

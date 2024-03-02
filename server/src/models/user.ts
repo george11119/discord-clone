@@ -5,8 +5,10 @@ import {
   BaseEntity,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
 } from "typeorm"
 import { IsEmail, Length } from "class-validator"
+import { UserServers } from "./userServers"
 
 @Entity()
 export class User extends BaseEntity {
@@ -29,4 +31,7 @@ export class User extends BaseEntity {
 
   @UpdateDateColumn()
   updatedAt: Date
+
+  @OneToMany(() => UserServers, (userServers) => userServers.user)
+  userServers: UserServers[]
 }
