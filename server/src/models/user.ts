@@ -6,9 +6,12 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   OneToMany,
+  ManyToMany,
 } from "typeorm"
 import { IsEmail, Length } from "class-validator"
 import { UserServers } from "./userServers"
+import { Server } from "./server"
+import { JoinTable } from "typeorm/browser"
 
 @Entity()
 export class User extends BaseEntity {
@@ -32,6 +35,8 @@ export class User extends BaseEntity {
   @UpdateDateColumn()
   updatedAt: Date
 
-  @OneToMany(() => UserServers, (userServers) => userServers.user)
+  @OneToMany(() => UserServers, (userServers) => userServers.user, {
+    onDelete: "CASCADE",
+  })
   userServers: UserServers[]
 }

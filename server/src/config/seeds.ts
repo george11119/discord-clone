@@ -9,6 +9,7 @@ import { Channel } from "../models/channel"
 import { UserServers } from "../models/userServers"
 
 const seedDatabase = async () => {
+  await UserServers.delete({})
   await User.delete({})
   await Server.delete({})
   await Message.delete({})
@@ -23,11 +24,21 @@ const seedDatabase = async () => {
   const server1 = await Server.save({ name: "Server 1" })
   const server2 = await Server.save({ name: "Server 2" })
 
-  const userServer1 = await UserServers.save({ user: user, server: server1 })
-  const userServer2 = await UserServers.save({ user: user, server: server2 })
+  await UserServers.save({ user: user, server: server1 })
+  await UserServers.save({ user: user, server: server2 })
 
-  logger.info(userServer1)
-  logger.info(userServer2)
+  const u = await User.findOne({
+    where: { id: user.id },
+    relations: {
+      userServers: {
+        server: true,
+      },
+    },
+  })
+
+  const userServers = u?.userServers.forEach(({ server }) =>
+    logger.info(server),
+  )
 }
 
 const main = async () => {

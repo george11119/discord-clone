@@ -27,6 +27,8 @@ export class Server extends BaseEntity {
   @OneToMany(() => Channel, (channel) => channel.server)
   channels: Channel[]
 
-  @OneToMany(() => UserServers, (userServers) => userServers.server)
+  @OneToMany(() => UserServers, (userServers) => userServers.server, {
+    onDelete: "CASCADE",
+  })
   userServers: UserServers[]
 }

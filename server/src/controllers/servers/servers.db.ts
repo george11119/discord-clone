@@ -1,4 +1,3 @@
-import { Server } from "../../models/server"
 import { User } from "../../models/user"
 
 const getServers = async (userId: string) => {
