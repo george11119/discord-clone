@@ -5,7 +5,11 @@ import {
   BaseEntity,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
+  ManyToOne,
 } from "typeorm"
+import { Message } from "./message"
+import { Server } from "./server"
 
 @Entity()
 export class Channel extends BaseEntity {
@@ -20,4 +24,10 @@ export class Channel extends BaseEntity {
 
   @UpdateDateColumn()
   updatedAt: Date
+
+  @OneToMany(() => Message, (message) => message.channel)
+  messages: Message[]
+
+  @ManyToOne(() => Server, (server) => server.channels, { onDelete: "CASCADE" })
+  server: Server
 }

@@ -28,30 +28,39 @@
 
 ```mermaid
 erDiagram
-  user ||--|{ message: has_many_belongs_to
-  user {
-    int id PK
-    string username
-    string email
-    string password
-  }
+    user ||--|{ message: has_many_belongs_to
+    user {
+        int id PK
+        string username
+        string email
+        string password
+    }
 
-  server ||--|{ channel: has_many_belongs_to
-  server {
-    int id PK
-  }
+    user_server |{--|{ user: many_to_many
+    user_server |{--|{ server: many_to_many
+    user_server {
+        int id PK
+        int user_id FK
+        int server_id FK
+    }
 
-  channel ||--|{ message: has_many_belongs_to
-  channel {
-    int id PK
-    string name
-    int server_id FK
-  }
+    server ||--|{ channel: has_many_belongs_to
+    server {
+        int id PK
+        string name
+    }
 
-  message {
-    int id PK
-    string text
-    int user_id FK
-    int channel_id FK
-  }
+    channel ||--|{ message: has_many_belongs_to
+    channel {
+        int id PK
+        string name
+        int server_id FK
+    }
+
+    message {
+        int id PK
+        string text
+        int user_id FK
+        int channel_id FK
+    }
 ```

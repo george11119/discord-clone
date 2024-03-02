@@ -19,7 +19,7 @@ export const db = new DataSource({
   username: connectionOptions.user,
   password: connectionOptions.password,
   database: connectionOptions.database || "",
-  entities: [__dirname + "./../models/*.{js,ts}"],
+  entities: [__dirname + "/../models/*.{js,ts}"],
   logging: false,
   synchronize: true,
 })

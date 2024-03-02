@@ -2,6 +2,12 @@ import styled from "styled-components"
 import { motion } from "framer-motion"
 import Tooltip from "../../../../shared/components/Tooltip.tsx"
 import Logo from "../../../../shared/svg/Logo.tsx"
+import { Link } from "react-router-dom"
+
+const LinkWrapper = styled(Link)`
+  text-decoration: none;
+  color: inherit;
+`
 
 const Wrapper = styled.div`
   height: 48px;
@@ -31,20 +37,22 @@ const Icon = ({
   return (
     <div>
       <Tooltip tooltip={tooltip ? tooltip : name} placement="right">
-        <Wrapper
-          as={motion.div}
-          whileHover={{
-            backgroundColor: "rgb(88, 101, 242)",
-            borderRadius: "18px",
-            transition: { duration: 0.15 },
-          }}
-          whileTap={{
-            translateY: 1.5,
-            transition: { duration: 0 },
-          }}
-        >
-          {isIcon ? <Logo /> : firstLetter}
-        </Wrapper>
+        <LinkWrapper to={`/?asdf=${firstLetter}`}>
+          <Wrapper
+            as={motion.div}
+            whileHover={{
+              backgroundColor: "rgb(88, 101, 242)",
+              borderRadius: "18px",
+              transition: { duration: 0.15 },
+            }}
+            whileTap={{
+              translateY: 1.5,
+              transition: { duration: 0 },
+            }}
+          >
+            {isIcon ? <Logo /> : firstLetter}
+          </Wrapper>
+        </LinkWrapper>
       </Tooltip>
     </div>
   )

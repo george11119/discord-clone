@@ -1,21 +1,22 @@
 import {
   Entity,
   PrimaryGeneratedColumn,
-  Column,
   BaseEntity,
   CreateDateColumn,
   UpdateDateColumn,
-  ManyToOne,
+  OneToMany,
+  Column, ManyToMany,
 } from "typeorm"
 import { Channel } from "./channel"
+import {User} from "./user"
 
 @Entity()
-export class Message extends BaseEntity {
+export class Server extends BaseEntity {
   @PrimaryGeneratedColumn("uuid")
   id: string
 
   @Column()
-  content: string
+  name: string
 
   @CreateDateColumn()
   createdAt: Date
@@ -23,8 +24,9 @@ export class Message extends BaseEntity {
   @UpdateDateColumn()
   updatedAt: Date
 
-  @ManyToOne(() => Channel, (channel) => channel.messages, {
-    onDelete: "CASCADE",
-  })
-  channel: Channel
+  @OneToMany(() => Channel, (channel) => channel.server)
+  channels: Channel[]
+
+  @ManyToMany(() => User, (user) => user.servers)
+  users: User[]
 }

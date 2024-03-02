@@ -8,7 +8,7 @@ const Wrapper = styled.nav`
   width: 72px;
   height: 100vh;
   display: flex;
-  box-sizing: border-box; // wtf this 
+  box-sizing: border-box; // wtf this
   flex-direction: column;
   align-items: center;
   gap: 8px;
@@ -23,29 +23,9 @@ const Sidebar = () => {
     <Wrapper>
       <Icon name={"group chat 1"} isIcon={true} />
       <Separator />
-      <Icon
-        name={
-          "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iste, ullam?"
-        }
-      />
       <Icon name={"AAAA"} />
       <Icon name={"BBBB"} />
       <Icon name={"CCCC"} />
-      <Icon name={"DDDD"} />
-      <Icon name={"EEEE"} />
-      <Icon name={"FFFF"} />
-      <Icon name={"GGGG"} />
-      <Icon name={"HHHH"} />
-      <Icon name={"JJJ"} />
-      <Icon name={"KKKK"} />
-      <Icon name={"LLLL"} />
-      <Icon name={"MMMM"} />
-      <Icon name={"NNNN"} />
-      <Icon name={"OOOO"} />
-      <Icon name={"PPPP"} />
-      <Icon name={"QQQQ"} />
-      <Icon name={"league server"} />
-      <Icon name={"homework server"} />
       <VerticalSpacer height={12} />
     </Wrapper>
   )
