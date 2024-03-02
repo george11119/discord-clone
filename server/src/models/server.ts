@@ -5,10 +5,9 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   OneToMany,
-  Column, ManyToMany,
+  Column,
 } from "typeorm"
 import { Channel } from "./channel"
-import {User} from "./user"
 
 @Entity()
 export class Server extends BaseEntity {
@@ -26,7 +25,4 @@ export class Server extends BaseEntity {
 
   @OneToMany(() => Channel, (channel) => channel.server)
   channels: Channel[]
-
-  @ManyToMany(() => User, (user) => user.servers)
-  users: User[]
 }

@@ -16,16 +16,17 @@ const seedDatabase = async () => {
   const user = await User.save({
     username: "testusername",
     passwordHash: await bcrypt.hash("password", 10), // password is "password"
-    email: "testuser@gmail.com",
+    email: "test@test.com",
   })
 
+  // user.servers = []
   // const server1 = await Server.save({ name: "Server 1" })
   // const server2 = await Server.save({ name: "Server 2" })
   //
   // user.servers.push(server1)
   // user.servers.push(server2)
-
-  logger.info(user.servers)
+  //
+  // logger.info(user.servers)
 }
 
 const main = async () => {

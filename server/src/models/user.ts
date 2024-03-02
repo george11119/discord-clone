@@ -5,10 +5,8 @@ import {
   BaseEntity,
   CreateDateColumn,
   UpdateDateColumn,
-  ManyToMany,
 } from "typeorm"
 import { IsEmail, Length } from "class-validator"
-import { Server } from "./server"
 
 @Entity()
 export class User extends BaseEntity {
@@ -31,7 +29,4 @@ export class User extends BaseEntity {
 
   @UpdateDateColumn()
   updatedAt: Date
-
-  @ManyToMany(() => Server, (server) => server.users)
-  servers: Server[]
 }
