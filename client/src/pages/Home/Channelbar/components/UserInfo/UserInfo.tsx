@@ -6,7 +6,6 @@ import UserProfilePicture from "../../../../../shared/components/UserProfilePict
 
 const ProfilePictureContainer = styled.div`
   flex: 0 0 auto;
-  margin-left: 4px;
 `
 
 const Wrapper = styled.div`
@@ -17,7 +16,7 @@ const UserInfoWrapper = styled.div`
   display: flex;
   align-items: center;
   border-radius: 4px;
-  padding: 4px 8px 4px 0;
+  padding: 1px 4px 1px 0;
   line-height: 16px;
 
   &:hover {

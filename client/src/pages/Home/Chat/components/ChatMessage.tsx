@@ -11,12 +11,13 @@ const Wrapper = styled.li`
   }
 `
 
-const Img = styled.img`
+const Img = styled.div`
   height: 40px;
   width: 40px;
   border-radius: 50%;
   margin-right: 16px;
   margin-top: 2px;
+  background-color: yellow;
 `
 
 const DateWrapper = styled.span`
@@ -40,10 +41,7 @@ const ChatMessage = ({
 }) => {
   return (
     <Wrapper>
-      <Img
-        src="https://cdn.discordapp.com/avatars/902798265907568691/d50e04c7bb07fdb078cbdb9b7336315f.webp?size=100"
-        alt="discord profile picture"
-      />
+      <Img></Img>
       <div>
         <span>{sender}</span>
         <DateWrapper>{createdAt}</DateWrapper>

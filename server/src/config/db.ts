@@ -1,9 +1,16 @@
 import { DataSource } from "typeorm"
 import config from "./config"
 import * as PostgresStringParser from "pg-connection-string"
+import * as pg from "pg"
 
 const databaseUrl = config.DATABASE_URL || ""
 const connectionOptions = PostgresStringParser.parse(databaseUrl)
+
+pg.defaults.parseInputDatesAsUTC = true
+pg.types.setTypeParser(
+  pg.types.builtins.TIMESTAMP,
+  (val: string) => new Date(`${val}Z`),
+)
 
 export const db = new DataSource({
   type: "postgres",
