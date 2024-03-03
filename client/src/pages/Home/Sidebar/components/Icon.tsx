@@ -7,6 +7,7 @@ import { Link } from "react-router-dom"
 const LinkWrapper = styled(Link)`
   text-decoration: none;
   color: inherit;
+  border-radius: 50%;
 `
 
 const Wrapper = styled.div`
@@ -26,19 +27,22 @@ const Wrapper = styled.div`
 const Icon = ({
   name,
   tooltip,
-  isIcon,
+  isHomeIcon,
+  link,
 }: {
   name: string
+  link: string
   tooltip?: string
-  isIcon?: boolean
+  isHomeIcon?: boolean
 }) => {
   const firstLetter: string = name[0].toUpperCase()
 
   return (
     <div>
       <Tooltip tooltip={tooltip ? tooltip : name} placement="right">
-        <LinkWrapper to={`/?asdf=${firstLetter}`}>
+        <LinkWrapper to={`/channels/${link}`}>
           <Wrapper
+            tabIndex={-1}
             as={motion.div}
             whileHover={{
               backgroundColor: "rgb(88, 101, 242)",
@@ -50,7 +54,7 @@ const Icon = ({
               transition: { duration: 0 },
             }}
           >
-            {isIcon ? <Logo /> : firstLetter}
+            {isHomeIcon ? <Logo /> : firstLetter}
           </Wrapper>
         </LinkWrapper>
       </Tooltip>

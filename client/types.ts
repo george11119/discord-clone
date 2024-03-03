@@ -12,3 +12,10 @@ export type User = {
   createdAt: Date
   updatedAt: Date
 }
+
+export type Server = {
+  id: string
+  name: string
+  createdAt: Date
+  updatedAt: Date
+}

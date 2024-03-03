@@ -2,6 +2,11 @@ import styled from "styled-components"
 import Icon from "./components/Icon.tsx"
 import Separator from "./components/Separator.tsx"
 import VerticalSpacer from "../../../shared/components/VerticalSpacer.tsx"
+import { useEffect, useState } from "react"
+import ServerService from "../../../services/serverService.ts"
+import { Server } from "../../../../types.ts"
+import HomeIcon from "./components/HomeIcon.tsx"
+import ServerIcon from "./components/ServerIcon.tsx"
 
 const Wrapper = styled.nav`
   background: rgb(30, 31, 34);
@@ -19,13 +24,21 @@ const Wrapper = styled.nav`
 `
 
 const Sidebar = () => {
+  const [servers, setServers] = useState<Server[]>([])
+
+  useEffect(() => {
+    ServerService.get().then((servers) => {
+      setServers(servers)
+    })
+  }, [])
+
   return (
     <Wrapper>
-      <Icon name={"group chat 1"} isIcon={true} />
+      <HomeIcon />
       <Separator />
-      <Icon name={"AAAA"} />
-      <Icon name={"BBBB"} />
-      <Icon name={"CCCC"} />
+      {servers.map((server) => {
+        return <ServerIcon server={server} />
+      })}
       <VerticalSpacer height={12} />
     </Wrapper>
   )

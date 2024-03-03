@@ -17,7 +17,7 @@ const Tooltip = ({
 
   return (
     <>
-      <a
+      <div
         data-tooltip-id={tooltipId}
         data-tooltip-content={tooltip}
         onMouseEnter={() => setIsOpen(true)}
@@ -25,7 +25,7 @@ const Tooltip = ({
         onClick={() => setIsOpen(false)}
       >
         {children}
-      </a>
+      </div>
       <ReactTooltip
         className="tooltip"
         id={tooltipId}

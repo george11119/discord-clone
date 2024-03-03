@@ -1,20 +1,19 @@
-import axios from "axios"
 import { message } from "../../types.ts"
 import { socket } from "../config/socket.ts"
-import config from "../config/config.ts"
+import apiCaller, { apiConfig } from "./apiCaller.ts"
 
-const url = `${config.API_ENDPOINT}/messages`
+const url = "/messages"
 
-const getMessages = async (): Promise<message[]> => {
-  const res = await axios.get(url)
+const get = async (): Promise<message[]> => {
+  const res = await apiCaller.get(url, apiConfig)
   return res.data
 }
 
-const createMessage = (messageObject: { content: string }) => {
+const create = (messageObject: { content: string }) => {
   socket.emit("message:create", messageObject)
 }
 
 export default {
-  getMessages,
-  createMessage,
+  get,
+  create,
 }

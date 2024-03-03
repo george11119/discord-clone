@@ -26,7 +26,7 @@ const ChatAreaContainer = () => {
   const [messages, setMessages] = useState<message[]>([])
 
   useEffect(() => {
-    messageService.getMessages().then((messages) => {
+    messageService.get().then((messages) => {
       setMessages(messages)
     })
   }, [])

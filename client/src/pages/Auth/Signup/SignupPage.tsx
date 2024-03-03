@@ -37,7 +37,7 @@ const SignupPage = () => {
     password: string,
     email: string,
   ) => {
-    const res = await userService.createUser({ username, password, email })
+    const res = await userService.create({ username, password, email })
     localStorage.setItem("discord-clone-jwt-token", res.token)
     checkLoginState()
   }

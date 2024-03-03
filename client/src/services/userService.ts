@@ -1,17 +1,16 @@
-import axios from "axios"
-import config from "../config/config.ts"
+import apiCaller from "./apiCaller.ts"
 
-const url = `${config.SERVER_URL}/api/users`
+const url = "/users"
 
-const createUser = async (userParams: {
+const create = async (userParams: {
   username: string
   email: string
   password: string
 }) => {
-  const res = await axios.post(url, userParams)
+  const res = await apiCaller.post(url, userParams)
   return res.data
 }
 
 export default {
-  createUser,
+  create,
 }

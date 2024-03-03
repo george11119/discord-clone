@@ -1,10 +1,9 @@
-import axios from "axios"
-import config from "../config/config.ts"
+import apiCaller from "./apiCaller.ts"
 
-const url = `${config.SERVER_URL}/api/auth`
+const url = "/auth"
 
 const login = async (userParams: { email: string; password: string }) => {
-  const res = await axios.post(`${url}/login`, userParams)
+  const res = await apiCaller.post(`${url}/login`, userParams)
   return res.data
 }
 
