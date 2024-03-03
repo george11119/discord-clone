@@ -17,6 +17,8 @@ import messageService from "./controllers/messages/messages.socket"
 import { requestLogger } from "./middleware/requestLogger"
 import { unknownEndpoint } from "./middleware/unknownEndpoint"
 import { errorHandler } from "./middleware/errorHandler"
+import { tokenExtractor } from "./middleware/tokenExtractor"
+import { authenticatedValidator } from "./middleware/authenticatedValidator"
 import logger from "./utils/logger"
 
 db.initialize()
@@ -44,6 +46,7 @@ app.use(
     credentials: true,
   }),
 )
+app.use(tokenExtractor)
 app.use(requestLogger)
 
 // test route
@@ -51,8 +54,12 @@ app.get("/api", (req, res) => {
   res.send("working")
 })
 
-// routes
+// routes that dont require login
 app.use("/api/auth", authRouter)
+
+app.use(authenticatedValidator)
+
+// routes that require login
 app.use("/api/messages", messageRouter)
 app.use("/api/users", usersRouter)
 app.use("/api/servers", serverRouter)

@@ -21,11 +21,10 @@ const seedDatabase = async () => {
     email: "test@test.com",
   })
 
-  const server1 = await Server.save({ name: "Server 1" })
-  const server2 = await Server.save({ name: "Server 2" })
-
-  await UserServers.save({ user: user, server: server1 })
-  await UserServers.save({ user: user, server: server2 })
+  for (let i = 1; i <= 5; i++) {
+    const server = await Server.save({ name: `Server ${i}` })
+    await UserServers.save({ user, server })
+  }
 
   const u = await User.findOne({
     where: { id: user.id },

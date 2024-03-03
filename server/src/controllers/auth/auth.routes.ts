@@ -1,7 +1,7 @@
 import passport from "passport"
 import express, { Request, Response } from "express"
 import config from "../../config/config"
-import tokenExtractor from "../../middleware/tokenExtractor"
+import { tokenExtractor } from "../../middleware/tokenExtractor"
 import { User } from "../../models/user"
 import jwtUtils from "../../utils/jwtUtils"
 
