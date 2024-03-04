@@ -12,6 +12,7 @@ import authRouter from "./controllers/auth/auth.routes"
 import messageRouter from "./controllers/messages/messages.routes"
 import usersRouter from "./controllers/users/users.routes"
 import serverRouter from "./controllers/servers/server.routes"
+import channelsRouter from "./controllers/channels/channels.routes"
 import messageService from "./controllers/messages/messages.socket"
 
 import { requestLogger } from "./middleware/requestLogger"
@@ -63,6 +64,7 @@ app.use(authenticatedValidator)
 app.use("/api/messages", messageRouter)
 app.use("/api/users", usersRouter)
 app.use("/api/servers", serverRouter)
+app.use("/api/channels", channelsRouter)
 
 app.use(unknownEndpoint)
 app.use(errorHandler)

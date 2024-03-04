@@ -1,4 +1,4 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom"
+import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom"
 import Home from "../pages/Home/Home.tsx"
 import RootLayout from "../pages/Layouts/RootLayout.tsx"
 import AuthLayout from "../pages/Layouts/AuthLayout.tsx"
@@ -11,8 +11,15 @@ const Routes = () => {
   const router = createBrowserRouter([
     {
       path: "/",
+      element: <Navigate to="/channels/@me" replace={true} />,
+    },
+    {
+      path: "/channels",
       element: <RootLayout />,
-      children: [{ index: true, element: <Home /> }],
+      children: [
+        { path: "@me", element: <Home /> },
+        { path: ":serverId", element: <Home /> },
+      ],
     },
     {
       path: "jwt",

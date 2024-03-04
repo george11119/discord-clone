@@ -1,5 +1,4 @@
 import styled from "styled-components"
-import Icon from "./components/Icon.tsx"
 import Separator from "./components/Separator.tsx"
 import VerticalSpacer from "../../../shared/components/VerticalSpacer.tsx"
 import { useEffect, useState } from "react"
@@ -37,7 +36,7 @@ const Sidebar = () => {
       <HomeIcon />
       <Separator />
       {servers.map((server) => {
-        return <ServerIcon server={server} />
+        return <ServerIcon key={server.id} server={server} />
       })}
       <VerticalSpacer height={12} />
     </Wrapper>
