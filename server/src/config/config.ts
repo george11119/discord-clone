@@ -9,7 +9,10 @@ const config = {
   API_ENDPOINT: process.env.SERVER_URL
     ? `${process.env.SERVER_URL}/api`
     : "http://localhost:3001/api",
-  DATABASE_URL: process.env.DATABASE_URL,
+  DATABASE_URL:
+    process.env.NODE_ENV === "test"
+      ? process.env.TEST_DATABASE_URL
+      : process.env.DATABASE_URL,
   JWT_SECRET: process.env.JWT_SECRET as string,
   GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
   GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
