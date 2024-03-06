@@ -4,11 +4,8 @@ import { Server } from "../models/server"
 import { User } from "../models/user"
 import bcrypt from "bcrypt"
 import { db } from "./db"
-import { Message } from "../models/message"
 import { Channel } from "../models/channel"
 import { UserServers } from "../models/userServers"
-import { server } from "../app"
-import { getRepository } from "typeorm"
 
 const seedDatabase = async () => {
   const user1 = await User.save({
@@ -41,19 +38,6 @@ const seedDatabase = async () => {
 
     await channel.save()
   }
-
-  const servers = await db.query(
-    `
-        SELECT "server".*
-        FROM "user"
-                 INNER JOIN "user_servers" ON "user"."id" = "user_servers"."userId"
-                 INNER JOIN "server" ON "user_servers"."serverId" = "server"."id"
-        WHERE "user"."id" = $1
-    `,
-    [user1.id],
-  )
-
-  console.log(servers)
 }
 
 const main = async () => {
