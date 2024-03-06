@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "NODE_ENV=test jest --runInBand --verbose --forceExit",
+    "test": "NODE_ENV=test jest --runInBand --verbose",
     "build": "npx tsc",
     "start": "NODE_ENV=production node build/index.js",
     "dev": "NODE_ENV=development nodemon src/index.ts",

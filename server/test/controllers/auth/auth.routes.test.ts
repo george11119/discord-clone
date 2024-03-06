@@ -1,28 +1,15 @@
-import {
-  expect,
-  it,
-  describe,
-  beforeAll,
-  afterAll,
-  beforeEach,
-} from "@jest/globals"
-import { db } from "../../../src/config/db"
+import { expect, it, describe, beforeEach } from "@jest/globals"
 import bcrypt from "bcrypt"
 import { User } from "../../../src/models/user"
 import supertest from "supertest"
 import { server } from "../../../src/app"
 import jwtUtils from "../../../src/utils/jwtUtils"
+import { dbSetupAndTeardown } from "../../helpers"
+
+dbSetupAndTeardown()
 
 const api = supertest(server)
 const url = "/api/auth"
-
-beforeAll(async () => {
-  await db.initialize()
-})
-
-afterAll(async () => {
-  if (db.isInitialized) await db.destroy()
-})
 
 describe(`POST ${url}/login`, () => {
   beforeEach(async () => {
@@ -70,7 +57,7 @@ describe(`POST ${url}/login`, () => {
   })
 })
 
-describe(`${url}/logged_in`, () => {
+describe(`GET ${url}/logged_in`, () => {
   beforeEach(async () => {
     await User.delete({})
 

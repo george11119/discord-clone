@@ -1,29 +1,16 @@
-import {
-  describe,
-  it,
-  expect,
-  beforeAll,
-  afterAll,
-  beforeEach,
-} from "@jest/globals"
+import { describe, it, expect, beforeEach } from "@jest/globals"
 import supertest from "supertest"
 import { server } from "../../../src/app"
 import { User } from "../../../src/models/user"
 import bcrypt from "bcrypt"
-import { db } from "../../../src/config/db"
+import { dbSetupAndTeardown } from "../../helpers"
 
 const api = supertest(server)
 const url = "/api/users"
 
+dbSetupAndTeardown()
+
 describe(`POST ${url}`, () => {
-  beforeAll(async () => {
-    await db.initialize()
-  })
-
-  afterAll(async () => {
-    if (db.isInitialized) await db.destroy()
-  })
-
   beforeEach(async () => {
     await User.delete({})
 

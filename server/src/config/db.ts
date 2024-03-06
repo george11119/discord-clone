@@ -2,6 +2,7 @@ import { DataSource } from "typeorm"
 import config from "./config"
 import * as PostgresStringParser from "pg-connection-string"
 import * as pg from "pg"
+import logger from "../utils/logger"
 
 const databaseUrl = config.DATABASE_URL || ""
 const connectionOptions = PostgresStringParser.parse(databaseUrl)
@@ -23,3 +24,14 @@ export const db = new DataSource({
   logging: false,
   synchronize: true,
 })
+
+export const initializeDatabase = async () => {
+  try {
+    if (process.env.NODE_ENV !== "test") {
+      await db.initialize()
+      logger.info("Database initialized")
+    }
+  } catch (e) {
+    logger.error("Database initialization error", e)
+  }
+}

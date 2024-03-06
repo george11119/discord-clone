@@ -3,7 +3,7 @@ import cors from "cors"
 import "express-async-errors"
 import { createServer } from "http"
 import { Server } from "socket.io"
-import { db } from "./config/db"
+import { initializeDatabase } from "./config/db"
 import config from "./config/config"
 import passport from "passport"
 
@@ -11,7 +11,7 @@ import "./config/passportConfig"
 import authRouter from "./controllers/auth/auth.routes"
 import messageRouter from "./controllers/messages/messages.routes"
 import usersRouter from "./controllers/users/users.routes"
-import serverRouter from "./controllers/servers/server.routes"
+import serverRouter from "./controllers/servers/servers.routes"
 import channelsRouter from "./controllers/channels/channels.routes"
 import messageService from "./controllers/messages/messages.socket"
 
@@ -20,15 +20,8 @@ import { unknownEndpoint } from "./middleware/unknownEndpoint"
 import { errorHandler } from "./middleware/errorHandler"
 import { tokenExtractor } from "./middleware/tokenExtractor"
 import { authenticatedValidator } from "./middleware/authenticatedValidator"
-import logger from "./utils/logger"
 
-db.initialize()
-  .then(() => {
-    logger.info("Database initialized")
-  })
-  .catch((e) => {
-    logger.error("Database initialization error", e)
-  })
+initializeDatabase()
 
 const app = express()
 export const server = createServer(app)
