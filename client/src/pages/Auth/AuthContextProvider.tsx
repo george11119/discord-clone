@@ -6,6 +6,7 @@ import config from "../../config/config.ts"
 const AuthContextProvider = ({ children }: { children: ReactNode }) => {
   const [loggedIn, setLoggedIn] = useState(false)
   const [user, setUser] = useState(null)
+  const [token, setToken] = useState<string | null>(null)
 
   const checkLoginState = useCallback(async () => {
     const token = localStorage.getItem("discord-clone-jwt-token")
@@ -18,6 +19,7 @@ const AuthContextProvider = ({ children }: { children: ReactNode }) => {
 
       setLoggedIn(loggedIn)
       user && setUser(user)
+      token && user && setToken(token)
     } catch (e) {
       console.log(e)
     }
@@ -28,7 +30,7 @@ const AuthContextProvider = ({ children }: { children: ReactNode }) => {
   }, [checkLoginState])
 
   return (
-    <AuthContext.Provider value={{ loggedIn, checkLoginState, user }}>
+    <AuthContext.Provider value={{ loggedIn, checkLoginState, user, token }}>
       {children}
     </AuthContext.Provider>
   )

@@ -1,11 +1,12 @@
 import styled from "styled-components"
 import Separator from "./components/Separator.tsx"
 import VerticalSpacer from "../../../shared/components/VerticalSpacer.tsx"
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import ServerService from "../../../services/serverService.ts"
 import { Server } from "../../../../types.ts"
 import HomeIcon from "./components/HomeIcon.tsx"
 import ServerIcon from "./components/ServerIcon.tsx"
+import AuthContext from "../../Auth/AuthContext.ts"
 
 const Wrapper = styled.nav`
   background: rgb(30, 31, 34);
@@ -23,10 +24,11 @@ const Wrapper = styled.nav`
 `
 
 const Sidebar = () => {
+  const { token } = useContext(AuthContext)
   const [servers, setServers] = useState<Server[]>([])
 
   useEffect(() => {
-    ServerService.get().then((servers) => {
+    ServerService.get(token as string).then((servers) => {
       setServers(servers)
     })
   }, [])

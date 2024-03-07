@@ -2,9 +2,10 @@ import styled from "styled-components"
 import ChannelListItem from "./ChannelListItem.tsx"
 import ChannelListCategory from "./ChannelListCategory.tsx"
 import { useParams } from "react-router-dom"
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { Channel } from "../../../../../../types.ts"
 import channelService from "../../../../../services/channelService.ts"
+import AuthContext from "../../../../Auth/AuthContext.ts"
 
 const Wrapper = styled.ul`
   list-style: none;
@@ -14,6 +15,7 @@ const Wrapper = styled.ul`
 `
 
 const ChannelList = () => {
+  const { token } = useContext(AuthContext)
   const [channels, setChannels] = useState<Channel[]>([])
   const { serverId } = useParams()
 
@@ -23,7 +25,9 @@ const ChannelList = () => {
       return
     }
 
-    channelService.get(serverId).then((data) => setChannels(data.channels))
+    channelService
+      .get(token as string, serverId)
+      .then((data) => setChannels(data.channels))
   }, [serverId])
 
   return (

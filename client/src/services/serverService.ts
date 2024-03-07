@@ -3,9 +3,9 @@ import { Server } from "../../types.ts"
 
 const url = "/servers"
 
-const get = async (): Promise<Server[]> => {
-  const res = await apiCaller.get(url, apiConfig)
-  return res.data
+const get = async (token: string): Promise<Server[]> => {
+  const res = await apiCaller.get(url, apiConfig(token))
+  return res.data.servers
 }
 
 export default {

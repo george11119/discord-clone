@@ -2,8 +2,8 @@ import styled from "styled-components"
 import Header from "./components/Header.tsx"
 import ChatMessageDisplay from "./components/ChatMessageDisplay.tsx"
 import MessageInput from "./components/MessageInput.tsx"
-import { createContext, useEffect, useState } from "react"
-import messageService from "../../../services/messageService.ts"
+import { createContext, useState } from "react"
+// import messageService from "../../../services/messageService.ts"
 import { message } from "../../../../types.ts"
 
 const Wrapper = styled.div`
@@ -24,13 +24,13 @@ export const MessagesContext = createContext<{
 
 const ChatAreaContainer = () => {
   const [messages, setMessages] = useState<message[]>([])
-
-  useEffect(() => {
-    messageService.get().then((messages) => {
-      setMessages(messages)
-    })
-  }, [])
-
+  //
+  // useEffect(() => {
+  //   messageService.get().then((messages) => {
+  //     setMessages(messages)
+  //   })
+  // }, [])
+  //
   return (
     <MessagesContext.Provider value={{ messages, setMessages }}>
       <Wrapper>
