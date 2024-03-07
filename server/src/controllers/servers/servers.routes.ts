@@ -5,7 +5,7 @@ const router = express.Router()
 
 router.get("/", async (req, res) => {
   const servers = await ServersController.getServers(req.user?.id as string)
-  res.json(servers)
+  res.json({ servers })
 })
 
 export default router

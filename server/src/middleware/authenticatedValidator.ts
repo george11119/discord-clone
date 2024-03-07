@@ -14,9 +14,7 @@ export const authenticatedValidator = async (
   }
 
   const user = await User.findOneBy({ id: decodedToken.userId })
-  if (user !== null) {
-    req.user = user
-  }
+  req.user = user ? user : undefined
 
   next()
 }

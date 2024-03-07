@@ -26,17 +26,19 @@ const seedDatabase = async () => {
   }
 
   for (let i = 1; i <= 3; i++) {
-    const server = await Server.save({ name: `User 2's Server ${i}` })
-    await UserServers.save({ user: user2, server })
-  }
-
-  for (let i = 1; i <= 3; i++) {
-    const server = await Server.findOne({ where: { name: "Server 1" } })
+    const server = await Server.findOne({
+      where: { name: "User 1's Server 1" },
+    })
     const channel = Channel.create({ name: `Channel ${i}` })
 
     if (server) channel.server = server
 
     await channel.save()
+  }
+
+  for (let i = 1; i <= 3; i++) {
+    const server = await Server.save({ name: `User 2's Server ${i}` })
+    await UserServers.save({ user: user2, server })
   }
 }
 

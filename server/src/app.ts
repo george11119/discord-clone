@@ -40,19 +40,19 @@ app.use(
     credentials: true,
   }),
 )
+app.use(tokenExtractor)
 app.use(requestLogger)
 
 // test route
-app.get("/api", (req, res) => {
-  res.send("working")
-})
+app.get("/api", (req, res) => res.json({ status: "Running" }))
 
 // routes that dont require login
 app.use("/api/auth", authRouter)
+app.use("/api/users", usersRouter)
 
+app.use(authenticatedValidator)
 // routes that require login
 app.use("/api/messages", messageRouter)
-app.use("/api/users", usersRouter)
 app.use("/api/servers", serverRouter)
 app.use("/api/channels", channelsRouter)
 
