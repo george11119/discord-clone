@@ -2,26 +2,39 @@ import styled from "styled-components"
 import { motion } from "framer-motion"
 import Tooltip from "../../../../shared/components/Tooltip.tsx"
 import Logo from "../../../../shared/svg/Logo.tsx"
-import { Link } from "react-router-dom"
+import { NavLink } from "react-router-dom"
 
-const LinkWrapper = styled(Link)`
+const LinkWrapper = styled(NavLink)`
   text-decoration: none;
   color: inherit;
   border-radius: 50%;
+  user-select: none;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 18px;
+  background: rgb(49, 51, 56);
+  height: 48px;
+  width: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:active {
+    transform: translateY(1px);
+  }
 `
 
 const Wrapper = styled.div`
   height: 48px;
   width: 48px;
-  background: rgb(49, 51, 56);
+  border-radius: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 24px;
-  font-weight: 500;
-  font-size: 18px;
-  cursor: pointer;
-  user-select: none;
+
+  &:active {
+    transform: translateY(1px);
+  }
 `
 
 const Icon = ({
@@ -37,21 +50,24 @@ const Icon = ({
 }) => {
   const firstLetter: string = name[0].toUpperCase()
 
+  const activeStyle = {
+    backgroundColor: "rgb(88, 101, 242)",
+    borderRadius: "18px",
+  }
+
   return (
     <div>
       <Tooltip tooltip={tooltip ? tooltip : name} placement="right">
-        <LinkWrapper to={`/channels/${link}`}>
+        <LinkWrapper
+          style={({ isActive }) => (isActive ? activeStyle : {})}
+          to={`/channels/${link}`}
+        >
           <Wrapper
-            tabIndex={-1}
             as={motion.div}
             whileHover={{
               backgroundColor: "rgb(88, 101, 242)",
               borderRadius: "18px",
               transition: { duration: 0.15 },
-            }}
-            whileTap={{
-              translateY: 1.5,
-              transition: { duration: 0 },
             }}
           >
             {isHomeIcon ? <Logo /> : firstLetter}

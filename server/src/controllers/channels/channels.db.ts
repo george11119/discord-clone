@@ -1,20 +1,17 @@
-import { Server } from "../../models/server"
+import { db } from "../../config/db"
 
 const getChannels = async (userId: string, serverId: string) => {
-  try {
-    const server = await Server.findOne({
-      where: { id: serverId },
-      relations: {
-        channels: true,
-      },
-    })
+  const channels = db.query(
+    `
+        SELECT "channel".*
+        FROM "server"
+                 JOIN "channel" ON "server"."id" = "channel"."serverId"
+        WHERE "channel"."serverId" = $1
+    `,
+    [serverId],
+  )
 
-    return server ? server.channels : []
-  } catch (e: any) {
-    if (e.name === "QueryFailedError") {
-      return null
-    }
-  }
+  return channels
 }
 
 export default {

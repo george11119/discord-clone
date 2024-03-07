@@ -19,6 +19,7 @@ const Routes = () => {
       children: [
         { path: "@me", element: <Home /> },
         { path: ":serverId", element: <Home /> },
+        { path: ":serverId/:channelId", element: <Home /> },
       ],
     },
     {

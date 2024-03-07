@@ -7,7 +7,7 @@ import { Channel } from "../../../../../../types.ts"
 import channelService from "../../../../../services/channelService.ts"
 import AuthContext from "../../../../Auth/AuthContext.ts"
 
-const Wrapper = styled.ul`
+const Wrapper = styled.div`
   list-style: none;
   margin: 0 8px;
   color: rgb(148, 155, 164);
@@ -34,7 +34,7 @@ const ChannelList = () => {
     <Wrapper>
       <ChannelListCategory title={"General"} />
       {channels.map((channel) => {
-        return <ChannelListItem key={channel.id} name={channel.name} />
+        return <ChannelListItem key={channel.id} channel={channel} />
       })}
     </Wrapper>
   )

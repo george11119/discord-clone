@@ -1,7 +1,12 @@
 import styled from "styled-components"
 import Hashtag from "../../../../../shared/svg/Hashtag.tsx"
+import { Channel } from "../../../../../../types.ts"
+import { NavLink } from "react-router-dom"
 
-const Wrapper = styled.li`
+const LinkWrapper = styled(NavLink)`
+  text-decoration: none;
+  color: inherit;
+
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -11,19 +16,27 @@ const Wrapper = styled.li`
   border-radius: 4px;
   margin: 1px 0;
   padding: 0 12px;
-  font-size: 16px;
+  font-size: 14px;
 
   &:hover {
-    background-color: #35373c;
-    color: rgb(219, 222, 225);
+    background-color: rgba(78, 80, 88, 0.6);
+    color: rgb(229, 232, 235);
   }
 `
-const ChannelListItem = ({ name }: { name: string }) => {
+
+const ChannelListItem = ({ channel }: { channel: Channel }) => {
+  const activeStyle = {
+    backgroundColor: "rgba(78, 80, 88, 0.6)",
+    color: "rgb(229, 232, 235)",
+  }
   return (
-    <Wrapper>
+    <LinkWrapper
+      style={({ isActive }) => (isActive ? activeStyle : {})}
+      to={`/channels/${channel.serverId}/${channel.id}`}
+    >
       <Hashtag size={20} />
-      {name}
-    </Wrapper>
+      {channel.name}
+    </LinkWrapper>
   )
 }
 
