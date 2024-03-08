@@ -9,6 +9,7 @@ import {
 } from "typeorm"
 import { IsEmail, Length } from "class-validator"
 import { UserServers } from "./userServers"
+import { Message } from "./message"
 
 @Entity()
 export class User extends BaseEntity {
@@ -34,4 +35,7 @@ export class User extends BaseEntity {
 
   @OneToMany(() => UserServers, (userServers) => userServers.user)
   userServers: UserServers[]
+
+  @OneToMany(() => Message, (message) => message.user)
+  messages: Message[]
 }

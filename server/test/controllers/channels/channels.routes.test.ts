@@ -1,10 +1,9 @@
 import supertest from "supertest"
 import { server } from "../../../src/app"
-import { dbSetupAndTeardown, generateUser } from "../../helpers"
+import testHelpers, { dbSetupAndTeardown } from "../../helpers"
 import { beforeEach, describe, expect, it } from "@jest/globals"
 import { User } from "../../../src/models/user"
 import { Server } from "../../../src/models/server"
-import { UserServers } from "../../../src/models/userServers"
 import { Channel } from "../../../src/models/channel"
 import jwtUtils from "../../../src/utils/jwtUtils"
 
@@ -15,45 +14,48 @@ dbSetupAndTeardown()
 
 describe(`${url}`, () => {
   beforeEach(async () => {
-    await UserServers.delete({})
     await Server.delete({})
     await User.delete({})
     await Channel.delete({})
 
     // user 1 creation
-    const user1 = await generateUser({
+    const user1 = await testHelpers.generateUser({
       username: "testusername1",
       password: "password", // password is "password"
       email: "test1@test.com",
     })
 
-    const user1Server = await Server.save({ name: "User 1's Server" })
-    await UserServers.save({ user: user1, server: user1Server })
+    const user1Server = await testHelpers.generateServer({
+      user: user1,
+      name: "User 1's Server",
+    })
 
     // user 1 owns a server with 2 channels
     for (let i = 1; i <= 2; i++) {
-      const channel = Channel.create({ name: `Channel ${i}` })
-
-      if (user1Server) channel.server = user1Server
-      await channel.save()
+      await testHelpers.generateChannel({
+        name: `Channel ${i}`,
+        server: user1Server,
+      })
     }
 
     // user 2 creation
-    const user2 = await generateUser({
+    const user2 = await testHelpers.generateUser({
       username: "testusername2",
       password: "password", // password is "password"
       email: "test2@test.com",
     })
 
-    const user2Server = await Server.save({ name: "User 2's Server" })
-    await UserServers.save({ user: user2, server: user2Server })
+    const user2Server = await testHelpers.generateServer({
+      user: user2,
+      name: "User 2's Server",
+    })
 
     // user 2 owns a server with 4 channels
     for (let i = 1; i <= 4; i++) {
-      const channel = Channel.create({ name: `Channel ${i}` })
-
-      if (user2Server) channel.server = user2Server
-      await channel.save()
+      await testHelpers.generateChannel({
+        name: `Channel ${i}`,
+        server: user2Server,
+      })
     }
   })
 

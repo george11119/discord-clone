@@ -3,7 +3,7 @@ import { User } from "../../../src/models/user"
 import supertest from "supertest"
 import { server } from "../../../src/app"
 import jwtUtils from "../../../src/utils/jwtUtils"
-import { dbSetupAndTeardown, generateUser } from "../../helpers"
+import testHelpers, { dbSetupAndTeardown } from "../../helpers"
 
 dbSetupAndTeardown()
 
@@ -14,7 +14,7 @@ describe(`${url}`, () => {
   beforeEach(async () => {
     await User.delete({})
 
-    await generateUser({
+    await testHelpers.generateUser({
       username: "testusername",
       email: "test@test.com",
       password: "password",

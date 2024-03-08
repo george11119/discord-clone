@@ -8,6 +8,7 @@ import {
   ManyToOne,
 } from "typeorm"
 import { Channel } from "./channel"
+import { User } from "./user"
 
 @Entity()
 export class Message extends BaseEntity {
@@ -27,4 +28,7 @@ export class Message extends BaseEntity {
     onDelete: "CASCADE",
   })
   channel: Channel
+
+  @ManyToOne(() => User, (user) => user.messages)
+  user: User
 }

@@ -1,10 +1,9 @@
 import { beforeEach, describe, expect, it } from "@jest/globals"
 import supertest from "supertest"
 import { server } from "../../../src/app"
-import { dbSetupAndTeardown, generateUser } from "../../helpers"
+import testHelpers, { dbSetupAndTeardown } from "../../helpers"
 import { User } from "../../../src/models/user"
 import { Server } from "../../../src/models/server"
-import { UserServers } from "../../../src/models/userServers"
 import jwtUtils from "../../../src/utils/jwtUtils"
 
 const api = supertest(server)
@@ -15,11 +14,10 @@ dbSetupAndTeardown()
 describe(`${url}`, () => {
   describe(`GET ${url}`, () => {
     beforeEach(async () => {
-      await UserServers.delete({})
       await User.delete({})
       await Server.delete({})
 
-      const user1 = await generateUser({
+      const user1 = await testHelpers.generateUser({
         username: "user1",
         password: "password",
         email: "user1@test.com",
@@ -27,11 +25,13 @@ describe(`${url}`, () => {
 
       // user1 is in 2 servers
       for (let i = 1; i <= 2; i++) {
-        const server = await Server.save({ name: `user1's server ${i}` })
-        await UserServers.save({ user: user1, server })
+        await testHelpers.generateServer({
+          name: `user1's server ${i}`,
+          user: user1,
+        })
       }
 
-      const user2 = await generateUser({
+      const user2 = await testHelpers.generateUser({
         username: "user2",
         password: "password",
         email: "user2@test.com",
@@ -39,8 +39,10 @@ describe(`${url}`, () => {
 
       // user2 is in 4 servers
       for (let i = 1; i <= 4; i++) {
-        const server = await Server.save({ name: `user2's server ${i}` })
-        await UserServers.save({ user: user2, server })
+        await testHelpers.generateServer({
+          name: `user2's server ${i}`,
+          user: user2,
+        })
       }
     })
 

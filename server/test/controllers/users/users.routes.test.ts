@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach } from "@jest/globals"
 import supertest from "supertest"
 import { server } from "../../../src/app"
 import { User } from "../../../src/models/user"
-import { dbSetupAndTeardown, generateUser } from "../../helpers"
+import testHelpers, { dbSetupAndTeardown } from "../../helpers"
 
 const api = supertest(server)
 const url = "/api/users"
@@ -14,7 +14,7 @@ describe(`${url}`, () => {
     beforeEach(async () => {
       await User.delete({})
 
-      await generateUser({
+      await testHelpers.generateUser({
         username: "existinguser",
         password: "password",
         email: "existinguser@test.com",
