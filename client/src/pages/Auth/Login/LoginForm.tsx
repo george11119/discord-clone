@@ -50,6 +50,7 @@ const LoginForm = ({
           showErrorText={isError}
           errorText="Invalid email or password"
           required={true}
+          data-testid="email-input"
         />
         <FormInput
           name="password"
@@ -59,6 +60,7 @@ const LoginForm = ({
           showErrorText={isError}
           errorText="Invalid email or password"
           required={true}
+          data-testid="password-input"
         />
         <Button type="submit" text="Log in" isLoading={isLoading} />
       </Form>

@@ -8,7 +8,7 @@ import config from "./config/config"
 import passport from "passport"
 
 import "./config/passportConfig"
-import testRouter from "./controllers/test/test.routes"
+import testingRouter from "./controllers/testing/testing.routes"
 import authRouter from "./controllers/auth/auth.routes"
 import messageRouter from "./controllers/messages/messages.routes"
 import usersRouter from "./controllers/users/users.routes"
@@ -54,7 +54,7 @@ app.use("/api/users", usersRouter)
 // routes to be used when testing
 if (process.env.NODE_ENV === "test") {
   logger.info("Using development routes")
-  app.use("/api/test", testRouter)
+  app.use("/api/testing", testingRouter)
 }
 
 // routes that require login
