@@ -1,7 +1,7 @@
 import { db } from "../../config/db"
 
 const getChannels = async (userId: string, serverId: string) => {
-  const channels = db.query(
+  const channels = await db.query(
     `
         SELECT "channel".*
         FROM "server"

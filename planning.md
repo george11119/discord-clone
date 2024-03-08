@@ -24,7 +24,7 @@
       <li>Write integration and e2e tests for server stuff</li>
       <li>Write integration and e2e tests for channel stuff</li>
     </ul>
-    <li>fix frontend</li>
+    <li>fix frontend - DONE</li>
     <ul>
       <li>Create a user direct message home page</li>
     </ul>
