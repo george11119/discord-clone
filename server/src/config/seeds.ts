@@ -3,7 +3,7 @@ import logger from "../utils/logger"
 import { Server } from "../models/server"
 import { User } from "../models/user"
 import bcrypt from "bcrypt"
-import { db } from "./db"
+import { clearDatabase, db } from "./db"
 import { Channel } from "../models/channel"
 import { UserServers } from "../models/userServers"
 
@@ -43,13 +43,13 @@ const seedDatabase = async () => {
 }
 
 const main = async () => {
-  await db.initialize()
-  await db.dropDatabase()
-  await db.destroy()
-
   logger.info("Initializing database")
   await db.initialize()
   logger.info("Database initialized")
+
+  logger.info("Wiping out old data")
+  await clearDatabase()
+  logger.info("previous data deleted")
 
   logger.info("Starting database seed")
   await seedDatabase()

@@ -1,5 +1,5 @@
 import { afterAll, beforeAll } from "@jest/globals"
-import { db } from "../src/config/db"
+import { clearDatabase, db } from "../src/config/db"
 import bcrypt from "bcrypt"
 import { User } from "../src/models/user"
 
@@ -11,7 +11,7 @@ export const dbSetupAndTeardown = () => {
 
   afterAll(async () => {
     // clear out database and close database connection
-    await db.dropDatabase()
+    await clearDatabase()
     await db.destroy()
   })
 }

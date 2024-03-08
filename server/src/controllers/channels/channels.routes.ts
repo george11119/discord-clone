@@ -1,10 +1,11 @@
 import express from "express"
 import ChannelsController from "./channels.db"
 import { UserServers } from "../../models/userServers"
+import { authenticatedValidator } from "../../middleware/authenticatedValidator"
 
 const router = express.Router()
 
-router.get("/:serverId", async (req, res) => {
+router.get("/:serverId", authenticatedValidator, async (req, res) => {
   const { serverId } = req.params
 
   // to check if current logged in user is in the server they want channels for

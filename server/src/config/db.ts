@@ -25,9 +25,23 @@ export const db = new DataSource({
   synchronize: true,
 })
 
+export const clearDatabase = async () => {
+  const table_names = await db.query(`
+      SELECT table_name
+      FROM information_schema.tables
+      WHERE table_schema = 'public'
+        AND table_type = 'BASE TABLE'
+  `)
+
+  for (const { table_name } of table_names) {
+    await db.query(`TRUNCATE TABLE "${table_name}" CASCADE`)
+  }
+}
+
 export const initializeDatabase = async () => {
   try {
-    if (process.env.NODE_ENV !== "test") {
+    // dont run in jest tests
+    if (process.env.JEST !== "true") {
       await db.initialize()
       logger.info("Database initialized")
     }

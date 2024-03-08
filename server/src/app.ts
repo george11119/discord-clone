@@ -8,6 +8,7 @@ import config from "./config/config"
 import passport from "passport"
 
 import "./config/passportConfig"
+import testRouter from "./controllers/test/test.routes"
 import authRouter from "./controllers/auth/auth.routes"
 import messageRouter from "./controllers/messages/messages.routes"
 import usersRouter from "./controllers/users/users.routes"
@@ -19,7 +20,7 @@ import { requestLogger } from "./middleware/requestLogger"
 import { unknownEndpoint } from "./middleware/unknownEndpoint"
 import { errorHandler } from "./middleware/errorHandler"
 import { tokenExtractor } from "./middleware/tokenExtractor"
-import { authenticatedValidator } from "./middleware/authenticatedValidator"
+import logger from "./utils/logger"
 
 initializeDatabase()
 
@@ -50,7 +51,12 @@ app.get("/api", (req, res) => res.json({ status: "Running" }))
 app.use("/api/auth", authRouter)
 app.use("/api/users", usersRouter)
 
-app.use(authenticatedValidator)
+// routes to be used when testing
+if (process.env.NODE_ENV === "test") {
+  logger.info("Using development routes")
+  app.use("/api/test", testRouter)
+}
+
 // routes that require login
 app.use("/api/messages", messageRouter)
 app.use("/api/servers", serverRouter)
