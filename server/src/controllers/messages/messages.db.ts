@@ -1,7 +1,15 @@
 import { Message } from "../../models/message"
 
-const getAllMessages = async (): Promise<Message[]> => {
-  const messages = await Message.find()
+const getAllMessages = async ({
+  channelId,
+}: {
+  channelId: string
+}): Promise<Message[]> => {
+  const messages = await Message.createQueryBuilder("message")
+    .leftJoinAndSelect("message.user", "user")
+    .where("message.channelId = :channelId", { channelId })
+    .getMany()
+
   return messages
 }
 

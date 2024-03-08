@@ -1,20 +1,18 @@
 import express from "express"
 import ChannelsController from "./channels.db"
-import { UserServers } from "../../models/userServers"
 import { authenticatedValidator } from "../../middleware/authenticatedValidator"
+import { isUserInServer } from "../helpers"
 
 const router = express.Router()
 
 router.get("/:serverId", authenticatedValidator, async (req, res) => {
   const { serverId } = req.params
+  const userId = req.user?.id as string
 
   // to check if current logged in user is in the server they want channels for
-  const userServer = await UserServers.findOneBy({
-    serverId,
-    userId: req.user?.id,
-  })
+  const userIsInServer = await isUserInServer({ serverId, userId })
 
-  if (!userServer) {
+  if (!userIsInServer) {
     res.status(401).json({
       message: "You are not allowed to access the channels in this server",
     })

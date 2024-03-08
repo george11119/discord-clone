@@ -6,6 +6,7 @@ import bcrypt from "bcrypt"
 import { clearDatabase, db } from "./db"
 import { Channel } from "../models/channel"
 import { UserServers } from "../models/userServers"
+import { Message } from "../models/message"
 
 const seedDatabase = async () => {
   const user1 = await User.save({
@@ -39,6 +40,17 @@ const seedDatabase = async () => {
   for (let i = 1; i <= 3; i++) {
     const server = await Server.save({ name: `User 2's Server ${i}` })
     await UserServers.save({ user: user2, server })
+  }
+
+  const server = await Server.findOne({
+    where: { name: "User 1's Server 1" },
+    relations: { channels: true },
+  })
+
+  const channel = server?.channels[0]
+
+  for (let i = 1; i <= 10; i++) {
+    await Message.save({ content: `Hello ${i}`, user: user1, channel })
   }
 }
 

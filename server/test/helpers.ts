@@ -5,6 +5,7 @@ import { User } from "../src/models/user"
 import { Server } from "../src/models/server"
 import { UserServers } from "../src/models/userServers"
 import { Channel } from "../src/models/channel"
+import { Message } from "../src/models/message"
 
 export const dbSetupAndTeardown = () => {
   beforeAll(async () => {
@@ -66,10 +67,29 @@ const generateChannel = async ({
   return newChannel
 }
 
+const generateMessage = async ({
+  content,
+  user,
+  channel,
+}: {
+  content: string
+  user: User
+  channel: Channel
+}): Promise<Message> => {
+  const newMessage = await Message.save({
+    content,
+    user,
+    channel,
+  })
+
+  return newMessage
+}
+
 const testHelpers = {
   generateUser,
   generateServer,
   generateChannel,
+  generateMessage,
 }
 
 export default testHelpers

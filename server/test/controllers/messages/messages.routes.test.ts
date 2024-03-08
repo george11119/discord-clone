@@ -36,6 +36,14 @@ describe(`${url}`, () => {
       server: user1Server,
     })
 
+    for (let i = 1; i <= 5; i++) {
+      await testHelpers.generateMessage({
+        content: `Hello ${i}`,
+        user: user1,
+        channel: channel1,
+      })
+    }
+
     const user2 = await testHelpers.generateUser({
       username: "testusername2",
       password: "password",
