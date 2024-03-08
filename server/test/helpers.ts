@@ -66,8 +66,10 @@ const generateChannel = async ({
   return newChannel
 }
 
-export default {
+const testHelpers = {
   generateUser,
   generateServer,
   generateChannel,
 }
+
+export default testHelpers

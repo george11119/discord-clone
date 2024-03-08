@@ -91,6 +91,9 @@ describe(`${url}`, () => {
 
       const { channels } = res.body
       expect(channels.length).toBe(2)
+
+      const [channel] = channels
+      expect(channel.name).toBeTruthy()
     })
   })
 })

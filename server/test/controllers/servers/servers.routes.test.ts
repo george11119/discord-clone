@@ -62,6 +62,9 @@ describe(`${url}`, () => {
 
       const { servers } = res.body
       expect(servers.length).toBe(2)
+
+      const [server] = servers
+      expect(server.name).toBeTruthy()
     })
 
     it("Only returns the servers that the user is currently in", async () => {
