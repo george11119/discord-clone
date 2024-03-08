@@ -32,8 +32,6 @@ export class User extends BaseEntity {
   @UpdateDateColumn()
   updatedAt: Date
 
-  @OneToMany(() => UserServers, (userServers) => userServers.user, {
-    onDelete: "CASCADE",
-  })
+  @OneToMany(() => UserServers, (userServers) => userServers.user)
   userServers: UserServers[]
 }

@@ -19,9 +19,13 @@ export class UserServers extends BaseEntity {
   @Column()
   serverId: string
 
-  @ManyToOne(() => User, (user) => user.userServers)
+  @ManyToOne(() => User, (user) => user.userServers, {
+    onDelete: "CASCADE",
+  })
   user: User
 
-  @ManyToOne(() => Server, (server) => server.userServers)
+  @ManyToOne(() => Server, (server) => server.userServers, {
+    onDelete: "CASCADE",
+  })
   server: Server
 }
