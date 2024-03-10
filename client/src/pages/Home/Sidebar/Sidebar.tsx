@@ -6,6 +6,7 @@ import ServerService from "../../../services/serverService.ts"
 import { Server } from "../../../../types.ts"
 import HomeIcon from "./components/HomeIcon.tsx"
 import ServerIcon from "./components/ServerIcon.tsx"
+import CreateServerIcon from "./components/CreateServerIcon.tsx"
 import AuthContext from "../../Auth/AuthContext.ts"
 
 const Wrapper = styled.nav`
@@ -40,6 +41,7 @@ const Sidebar = () => {
       {servers.map((server) => {
         return <ServerIcon key={server.id} server={server} />
       })}
+      <CreateServerIcon />
       <VerticalSpacer height={12} />
     </Wrapper>
   )

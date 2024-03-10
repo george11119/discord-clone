@@ -1,10 +1,10 @@
 import styled from "styled-components"
 import { motion } from "framer-motion"
 import Tooltip from "../../../../shared/components/Tooltip.tsx"
-import Logo from "../../../../shared/svg/Logo.tsx"
-import { NavLink } from "react-router-dom"
+import { matchPath, NavLink, useLocation } from "react-router-dom"
+import { ReactNode } from "react"
 
-const LinkWrapper = styled(NavLink)`
+export const LinkWrapper = styled(NavLink)`
   text-decoration: none;
   color: inherit;
   border-radius: 50%;
@@ -40,18 +40,23 @@ const Wrapper = styled.div`
 const Icon = ({
   name,
   tooltip,
-  isHomeIcon,
   link,
+  icon,
+  hoverColor = "rgb(88, 101, 242)",
+  onClick,
 }: {
   name: string
   link: string
   tooltip?: string
-  isHomeIcon?: boolean
+  icon?: ReactNode
+  hoverColor?: string
+  onClick?: () => void
 }) => {
-  const firstLetter: string = name[0].toUpperCase()
+  const { pathname } = useLocation()
+  const isActive = matchPath(link, pathname)
 
   const activeStyle = {
-    backgroundColor: "rgb(88, 101, 242)",
+    backgroundColor: hoverColor,
     borderRadius: "18px",
   }
 
@@ -59,18 +64,23 @@ const Icon = ({
     <div>
       <Tooltip tooltip={tooltip ? tooltip : name} placement="right">
         <LinkWrapper
-          style={({ isActive }) => (isActive ? activeStyle : {})}
-          to={`/channels/${link}`}
+          to={`${link}`}
+          style={isActive ? activeStyle : {}}
+          onClick={onClick}
         >
           <Wrapper
             as={motion.div}
-            whileHover={{
-              backgroundColor: "rgb(88, 101, 242)",
-              borderRadius: "18px",
-              transition: { duration: 0.15 },
-            }}
+            whileHover={
+              isActive
+                ? {}
+                : {
+                    backgroundColor: hoverColor,
+                    borderRadius: "18px",
+                    transition: { duration: 0.15 },
+                  }
+            }
           >
-            {isHomeIcon ? <Logo /> : firstLetter}
+            {icon ? icon : name[0].toUpperCase()}
           </Wrapper>
         </LinkWrapper>
       </Tooltip>
