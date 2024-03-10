@@ -3,6 +3,11 @@ import { User } from "../../models/user"
 import { Server } from "../../models/server"
 import { UserServers } from "../../models/userServers"
 
+const getServer = async (serverId: string) => {
+  const server = await Server.findOne({ where: { id: serverId } })
+  return server
+}
+
 const getServers = async (userId: string) => {
   const servers = await db.query(
     `
@@ -25,7 +30,29 @@ const createServer = async ({ user, name }: { user: User; name: string }) => {
   return newServer
 }
 
+const updateServer = async ({
+  name,
+  serverId,
+}: {
+  name: string
+  serverId: string
+}) => {
+  const updatedServer = (
+    await db
+      .createQueryBuilder()
+      .update(Server)
+      .set({ name })
+      .where("id = :serverId", { serverId })
+      .returning("*")
+      .execute()
+  ).raw[0]
+
+  return updatedServer
+}
+
 export default {
+  getServer,
   getServers,
   createServer,
+  updateServer,
 }

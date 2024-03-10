@@ -1,6 +1,7 @@
 import express from "express"
 import ServersController from "./servers.db"
 import { authenticatedValidator } from "../../middleware/authenticatedValidator"
+import { isUserInServer } from "../helpers"
 
 const router = express.Router()
 
@@ -20,6 +21,32 @@ router.post("/", authenticatedValidator, async (req, res) => {
   const newServer = await ServersController.createServer({ name, user })
 
   res.status(201).json(newServer)
+})
+
+router.patch("/:serverId", authenticatedValidator, async (req, res) => {
+  const { name } = req.body
+  const { serverId } = req.params
+
+  const server = await ServersController.getServer(serverId)
+
+  if (!server) {
+    return res.status(404).json({ message: "Server does not exist" })
+  }
+
+  const userIsInServer = await isUserInServer({
+    serverId,
+    userId: req.user?.id as string,
+  })
+
+  if (!userIsInServer) {
+    return res.status(401).json({
+      message: "You are not allowed to update this server",
+    })
+  }
+
+  const updatedServer = await ServersController.updateServer({ name, serverId })
+
+  res.json(updatedServer)
 })
 
 export default router

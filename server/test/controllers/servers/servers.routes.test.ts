@@ -97,7 +97,7 @@ describe(`${url}`, () => {
     })
   })
 
-  describe.only(`POST ${url}`, () => {
+  describe(`POST ${url}`, () => {
     it("Doesnt allow a unauthenticated user to create a new server", async () => {
       const payload = { name: "New server" }
 
@@ -133,6 +133,80 @@ describe(`${url}`, () => {
         },
       })
       expect(userServer).toBeTruthy()
+    })
+  })
+
+  describe(`PATCH ${url}/:serverId`, () => {
+    it("Returns 400 if invalid serverId is given", async () => {
+      const user1 = await User.findOneBy({ username: "user1" })
+      const token = jwtUtils.signToken({ userId: user1?.id as string })
+      const payload = { name: "Updated server name" }
+
+      await api
+        .patch(`${url}/asdf`)
+        .send(payload)
+        .set("authorization", `Bearer ${token}`)
+        .expect(400)
+    })
+
+    it("Returns 401 if user is not logged in", async () => {
+      const server = await Server.findOne({
+        where: { name: "user1's server 1" },
+      })
+      const payload = { name: "Updated server name" }
+
+      await api
+        .patch(`${url}/${server?.id}`)
+        .send(payload)
+        .expect(401)
+    })
+
+    it("Returns 401 if user is not in the server they are trying to update", async () => {
+      const user1 = await User.findOneBy({ username: "user1" })
+      const token = jwtUtils.signToken({ userId: user1?.id as string })
+      const payload = { name: "Updated server name" }
+
+      const server = await Server.findOne({
+        where: { name: "user2's server 1" },
+      })
+
+      await api
+        .patch(`${url}/${server?.id}`)
+        .send(payload)
+        .set("authorization", `Bearer ${token}`)
+        .expect(401)
+    })
+
+    it("Returns 404 if no server is found", async () => {
+      const user1 = await User.findOneBy({ username: "user1" })
+      const token = jwtUtils.signToken({ userId: user1?.id as string })
+      const payload = { name: "Updated server name" }
+
+      await api
+        .patch(`${url}/d063e5e8-446a-480f-bc8b-83c0ad33f1a8`)
+        .send(payload)
+        .set("authorization", `Bearer ${token}`)
+        .expect(404)
+    })
+
+    it("Updates server if server is found and user is in the server", async () => {
+      const user1 = await User.findOneBy({ username: "user1" })
+      const token = jwtUtils.signToken({ userId: user1?.id as string })
+      const payload = { name: "Updated server name" }
+
+      const server = await Server.findOne({
+        where: { name: "user1's server 1" },
+      })
+
+      const res = await api
+        .patch(`${url}/${server?.id}`)
+        .send(payload)
+        .set("authorization", `Bearer ${token}`)
+        .expect(200)
+        .expect("Content-Type", /application\/json/)
+
+      const updatedServer = res.body
+      expect(updatedServer.name).toBe("Updated server name")
     })
   })
 })
