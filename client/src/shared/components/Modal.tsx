@@ -3,43 +3,48 @@ import styled from "styled-components"
 import { motion } from "framer-motion"
 
 const Wrapper = styled.div`
-  height: 100px;
-  width: 100px;
-  background-color: red;
+  width: 440px;
+  height: 404px;
+  background-color: rgb(49, 51, 56);
+  box-shadow: rgba(30, 31, 34, 0.6) 0px 0px 0px 1px, rgba(0, 0, 0, 0.2) 0px 2px 10px 0px;
+  border-radius: 4px
 `
 
-const dropIn = {
+const modalAnimation = {
   hidden: {
-    y: "-100vh",
+    transform: "scale(0)",
     opacity: 0,
+    transition: {
+      delay: 0.25,
+    },
   },
   visible: {
-    y: 0,
+    transform: " scale(1)",
+    opacity: 1,
+    transition: {
+      duration: 0.25,
+    },
   },
   exit: {
-    y: "100vh",
+    transform: "scale(0)",
     opacity: 0,
+    transition: {
+      duration: 0.25,
+    },
   },
 }
 
-const Modal = ({
-  handleClose,
-  text,
-}: {
-  handleClose: () => void
-  text: string
-}) => {
+const Modal = ({ handleClose }: { handleClose: () => void }) => {
   return (
     <Backdrop onClick={handleClose}>
       <Wrapper
         as={motion.div}
         onClick={(e) => e.stopPropagation()}
-        variants={dropIn}
+        variants={modalAnimation}
         initial="hidden"
         animate="visible"
         exit="exit"
       >
-        <p>{text}</p>
         <button onClick={handleClose}>close</button>
       </Wrapper>
     </Backdrop>

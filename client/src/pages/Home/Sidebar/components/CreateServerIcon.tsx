@@ -17,7 +17,11 @@ const CreateServerIcon = () => {
         onClick={() => (modalOpen ? close() : open())}
       />
       <AnimatePresence initial={false} mode="wait" onExitComplete={() => null}>
-        {modalOpen && <Modal handleClose={close} text="hello world" />}
+        {modalOpen && (
+          <Modal
+            handleClose={close}
+          />
+        )}
       </AnimatePresence>
     </>
   )
