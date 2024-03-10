@@ -9,4 +9,17 @@ router.get("/", authenticatedValidator, async (req, res) => {
   res.json({ servers })
 })
 
+router.post("/", authenticatedValidator, async (req, res) => {
+  const { name } = req.body
+  const user = req.user
+
+  if (!user) {
+    return res.json({ message: "You must be logged in to create a server" })
+  }
+
+  const newServer = await ServersController.createServer({ name, user })
+
+  res.status(201).json(newServer)
+})
+
 export default router

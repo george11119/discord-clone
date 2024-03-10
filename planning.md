@@ -39,9 +39,8 @@
             <li>Add socket operations to messages</li>
         </ul>
         <li>Add authentication to socket connection</li>
-        <ul>
-            <li>Create a user direct message home page</li>
-        </ul>
+        <li>Get servers, channels, and user to load before showing page</li>
+        <li>Create a user direct message home page</li>
         <li>Add react query to cache responses</li>
         <li>Add ways to invite people into server</li>
         <li>Add pagination fetching for messages in channels</li>

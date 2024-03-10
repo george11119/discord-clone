@@ -1,4 +1,7 @@
 import { db } from "../../config/db"
+import { User } from "../../models/user"
+import { Server } from "../../models/server"
+import { UserServers } from "../../models/userServers"
 
 const getServers = async (userId: string) => {
   const servers = await db.query(
@@ -15,6 +18,14 @@ const getServers = async (userId: string) => {
   return servers
 }
 
+const createServer = async ({ user, name }: { user: User; name: string }) => {
+  const newServer = await Server.save({ name })
+  await UserServers.save({ user, server: newServer })
+
+  return newServer
+}
+
 export default {
   getServers,
+  createServer,
 }
