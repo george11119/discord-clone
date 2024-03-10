@@ -50,9 +50,14 @@ const updateServer = async ({
   return updatedServer
 }
 
+const deleteServer = async ({ serverId }: { serverId: string }) => {
+  await Server.delete({ id: serverId })
+}
+
 export default {
   getServer,
   getServers,
   createServer,
   updateServer,
+  deleteServer,
 }

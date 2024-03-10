@@ -209,4 +209,68 @@ describe(`${url}`, () => {
       expect(updatedServer.name).toBe("Updated server name")
     })
   })
+
+  describe(`DELETE ${url}/:serverId`, () => {
+    it("Returns 400 if invalid serverId is given", async () => {
+      const user1 = await User.findOneBy({ username: "user1" })
+      const token = jwtUtils.signToken({ userId: user1?.id as string })
+
+      await api
+        .delete(`${url}/asdf`)
+        .set("authorization", `Bearer ${token}`)
+        .expect(400)
+    })
+
+    it("Returns 401 if user is not logged in", async () => {
+      const server = await Server.findOne({
+        where: { name: "user1's server 1" },
+      })
+
+      await api.delete(`${url}/${server?.id}`).expect(401)
+    })
+
+    it("Returns 401 if user is not in the server they are trying to delete", async () => {
+      const user1 = await User.findOneBy({ username: "user1" })
+      const token = jwtUtils.signToken({ userId: user1?.id as string })
+
+      const server = await Server.findOne({
+        where: { name: "user2's server 1" },
+      })
+
+      await api
+        .delete(`${url}/${server?.id}`)
+        .set("authorization", `Bearer ${token}`)
+        .expect(401)
+    })
+
+    it("Returns 404 if no server is found", async () => {
+      const user1 = await User.findOneBy({ username: "user1" })
+      const token = jwtUtils.signToken({ userId: user1?.id as string })
+
+      await api
+        .delete(`${url}/d063e5e8-446a-480f-bc8b-83c0ad33f1a8`)
+        .set("authorization", `Bearer ${token}`)
+        .expect(404)
+    })
+
+    it("Deletes server if server is found and user is in the server", async () => {
+      const user1 = await User.findOneBy({ username: "user1" })
+      const token = jwtUtils.signToken({ userId: user1?.id as string })
+
+      const server = await Server.findOne({
+        where: { name: "user1's server 1" },
+      })
+
+      await api
+        .delete(`${url}/${server?.id}`)
+        .set("authorization", `Bearer ${token}`)
+        .expect(204)
+
+      const deletedServer = await Server.findOne({
+        where: { name: "user1's server 1" },
+      })
+
+      expect(deletedServer).toBe(null)
+    })
+  })
 })

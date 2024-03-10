@@ -49,4 +49,27 @@ router.patch("/:serverId", authenticatedValidator, async (req, res) => {
   res.json(updatedServer)
 })
 
+router.delete("/:serverId", authenticatedValidator, async (req, res) => {
+  const { serverId } = req.params
+
+  const server = await ServersController.getServer(serverId)
+  if (!server) {
+    return res.status(404).json({ message: "Server does not exist" })
+  }
+
+  const userIsInServer = await isUserInServer({
+    serverId,
+    userId: req.user?.id as string,
+  })
+
+  if (!userIsInServer) {
+    return res.status(401).json({
+      message: "You are not allowed to delete this server",
+    })
+  }
+
+  await ServersController.deleteServer({ serverId })
+  res.status(204).end()
+})
+
 export default router
