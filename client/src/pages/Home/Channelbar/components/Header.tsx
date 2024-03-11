@@ -1,5 +1,6 @@
 import styled from "styled-components"
 import VerticalSpacer from "../../../../shared/components/VerticalSpacer.tsx"
+import { ReactNode } from "react"
 
 const Wrapper = styled.div`
   box-shadow:
@@ -7,18 +8,19 @@ const Wrapper = styled.div`
     rgba(6, 6, 7, 0.05) 0px 1.5px 0px 0px,
     rgba(2, 2, 2, 0.05) 0px 2px 0px 0px;
   height: 24px;
-  padding: 12px 16px;
+  padding: 12px 10px;
   display: flex;
   align-items: center;
   font-weight: 600;
   cursor: pointer;
+  overflow: initial;
 `
 
-const Header = ({ title }: { title: string }) => {
+const Header = ({ children }: { children: ReactNode }) => {
   return (
     <>
-      <Wrapper>{title}</Wrapper>
-      <VerticalSpacer height={12} />
+      <Wrapper>{children}</Wrapper>
+      <VerticalSpacer height={8} />
     </>
   )
 }
