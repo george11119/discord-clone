@@ -9,6 +9,7 @@ const Wrapper = styled.div`
   display: flex;
   align-items: center;
   padding: 0 8px;
+  margin-top: auto;
 `
 
 const UserBar = () => {

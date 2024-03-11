@@ -5,6 +5,7 @@ import MessageInput from "./components/MessageInput.tsx"
 import { createContext, useState } from "react"
 // import messageService from "../../../services/messageService.ts"
 import { message } from "../../../../types.ts"
+import { matchPath, useLocation } from "react-router-dom"
 
 const Wrapper = styled.div`
   background-color: rgb(49, 51, 56);
@@ -23,6 +24,9 @@ export const MessagesContext = createContext<{
 })
 
 const ChatAreaContainer = () => {
+  const { pathname } = useLocation()
+  const isHomeLink = matchPath(`/channels/@me/*`, pathname)
+
   const [messages, setMessages] = useState<message[]>([])
   //
   // useEffect(() => {
@@ -34,9 +38,15 @@ const ChatAreaContainer = () => {
   return (
     <MessagesContext.Provider value={{ messages, setMessages }}>
       <Wrapper>
-        <Header chatTitle="General" />
-        <ChatMessageDisplay />
-        <MessageInput />
+        {isHomeLink ? (
+          <div>TODO add home page</div>
+        ) : (
+          <>
+            <Header chatTitle="General" />
+            <ChatMessageDisplay />
+            <MessageInput />
+          </>
+        )}
       </Wrapper>
     </MessagesContext.Provider>
   )

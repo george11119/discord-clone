@@ -6,7 +6,7 @@ import ServerService from "../../../services/serverService.ts"
 import { Server } from "../../../../types.ts"
 import HomeIcon from "./components/HomeIcon.tsx"
 import ServerIcon from "./components/ServerIcon.tsx"
-import CreateServerIcon from "./components/CreateServerIcon.tsx"
+import CreateServerButton from "./components/CreateServerButton.tsx"
 import AuthContext from "../../Auth/AuthContext.ts"
 import serverService from "../../../services/serverService.ts"
 
@@ -47,7 +47,7 @@ const Sidebar = () => {
       {servers.map((server) => {
         return <ServerIcon key={server.id} server={server} />
       })}
-      <CreateServerIcon createServer={createServer} />
+      <CreateServerButton createServer={createServer} />
       <VerticalSpacer height={12} />
     </Wrapper>
   )

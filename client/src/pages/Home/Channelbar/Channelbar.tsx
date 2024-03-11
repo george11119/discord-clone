@@ -2,6 +2,7 @@ import styled from "styled-components"
 import Header from "./components/Header.tsx"
 import ChannelList from "./components/ChannelList/ChannelList.tsx"
 import UserBar from "./components/UserInfo/UserBar.tsx"
+import { matchPath, useLocation } from "react-router-dom"
 
 const Wrapper = styled.nav`
   width: 240px;
@@ -13,10 +14,17 @@ const Wrapper = styled.nav`
 `
 
 const Channelbar = () => {
+  const { pathname } = useLocation()
+  const isHomeLink = matchPath(`/channels/@me/*`, pathname)
+
   return (
     <Wrapper>
-      <Header title={"Channel title"} />
-      <ChannelList />
+      <Header title={isHomeLink ? "Home" : "Channel title"} />
+      {!isHomeLink && (
+        <>
+          <ChannelList />
+        </>
+      )}
       <UserBar />
     </Wrapper>
   )

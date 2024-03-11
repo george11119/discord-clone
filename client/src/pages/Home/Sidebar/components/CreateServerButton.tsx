@@ -1,10 +1,10 @@
 import Icon from "./Icon.tsx"
-import CreateServer from "../../../../shared/svg/CreateServer.tsx"
+import CreateServerIcon from "../../../../shared/svg/CreateServer.tsx"
 import useModal from "../../../../hooks/useModal.ts"
 import { AnimatePresence } from "framer-motion"
 import CreateServerModal from "./CreateServerModal.tsx"
 
-const CreateServerIcon = ({
+const CreateServerButton = ({
   createServer,
 }: {
   createServer: (serverObject: { name: string }) => Promise<void>
@@ -16,7 +16,7 @@ const CreateServerIcon = ({
       <Icon
         name="Add a Server"
         link={"#"}
-        icon={<CreateServer />}
+        icon={<CreateServerIcon />}
         hoverColor="#23a559"
         onClick={() => (modalOpen ? close() : open())}
       />
@@ -29,4 +29,4 @@ const CreateServerIcon = ({
   )
 }
 
-export default CreateServerIcon
+export default CreateServerButton

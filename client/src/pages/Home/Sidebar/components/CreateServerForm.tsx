@@ -37,6 +37,8 @@ const CreateServerForm = ({
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
 
+    if (serverName === "") return
+
     const serverObject = {
       name: serverName,
     }
