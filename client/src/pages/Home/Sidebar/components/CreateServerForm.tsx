@@ -15,13 +15,21 @@ const UploadIconContainer = styled.div`
   margin-bottom: 24px;
 `
 
-const CreateServerForm = ({ formId }: { formId: string }) => {
+const CreateServerForm = ({
+  formId,
+  handleClose,
+}: {
+  formId: string
+  handleClose: () => void
+}) => {
   const [serverName, setServerName] = useState("")
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
+    if (serverName === "") return
 
     console.log(serverName)
+    handleClose()
   }
 
   return (
