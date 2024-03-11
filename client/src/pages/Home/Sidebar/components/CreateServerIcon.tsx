@@ -4,7 +4,11 @@ import useModal from "../../../../hooks/useModal.ts"
 import { AnimatePresence } from "framer-motion"
 import CreateServerModal from "./CreateServerModal.tsx"
 
-const CreateServerIcon = () => {
+const CreateServerIcon = ({
+  createServer,
+}: {
+  createServer: (serverObject: { name: string }) => Promise<void>
+}) => {
   const { modalOpen, open, close } = useModal()
 
   return (
@@ -17,7 +21,9 @@ const CreateServerIcon = () => {
         onClick={() => (modalOpen ? close() : open())}
       />
       <AnimatePresence initial={false} mode="wait" onExitComplete={() => null}>
-        {modalOpen && <CreateServerModal handleClose={close} />}
+        {modalOpen && (
+          <CreateServerModal createServer={createServer} handleClose={close} />
+        )}
       </AnimatePresence>
     </>
   )

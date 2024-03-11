@@ -2,7 +2,6 @@ import styled from "styled-components"
 import Modal from "../../../../shared/components/Modal.tsx"
 import CloseIcon from "../../../../shared/svg/CloseIcon.tsx"
 import CreateServerForm from "./CreateServerForm.tsx"
-import Button from "../../../../shared/components/Button.tsx"
 import { useId } from "react"
 
 const Title = styled.h1`
@@ -31,15 +30,13 @@ const Text = styled.p`
   color: rgb(181, 186, 193);
 `
 
-const Footer = styled.div`
-  background-color: rgb(43, 45, 49);
-  padding: 16px;
-  display: flex;
-  justify-content: end;
-`
-const CreateServerModal = ({ handleClose }: { handleClose: () => void }) => {
-  const createServerFormId = useId()
-
+const CreateServerModal = ({
+  createServer,
+  handleClose,
+}: {
+  createServer: (serverObject: { name: string }) => Promise<void>
+  handleClose: () => void
+}) => {
   return (
     <Modal handleClose={handleClose}>
       <CloseButton onClick={handleClose}>
@@ -52,19 +49,7 @@ const CreateServerModal = ({ handleClose }: { handleClose: () => void }) => {
           change it later
         </Text>
       </Header>
-      <CreateServerForm formId={createServerFormId} handleClose={handleClose} />
-      <Footer>
-        <Button
-          text="Create"
-          form={createServerFormId}
-          style={{
-            height: "38px",
-            width: "96px",
-            marginTop: "0px",
-            fontSize: "14px",
-          }}
-        ></Button>
-      </Footer>
+      <CreateServerForm createServer={createServer} handleClose={handleClose} />
     </Modal>
   )
 }

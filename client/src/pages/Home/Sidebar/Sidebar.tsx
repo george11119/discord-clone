@@ -8,6 +8,7 @@ import HomeIcon from "./components/HomeIcon.tsx"
 import ServerIcon from "./components/ServerIcon.tsx"
 import CreateServerIcon from "./components/CreateServerIcon.tsx"
 import AuthContext from "../../Auth/AuthContext.ts"
+import serverService from "../../../services/serverService.ts"
 
 const Wrapper = styled.nav`
   background: rgb(30, 31, 34);
@@ -28,6 +29,11 @@ const Sidebar = () => {
   const { token } = useContext(AuthContext)
   const [servers, setServers] = useState<Server[]>([])
 
+  const createServer = async (serverObject: { name: string }) => {
+    const server = await serverService.create(serverObject, token as string)
+    setServers(servers.concat(server))
+  }
+
   useEffect(() => {
     ServerService.get(token as string).then((servers) => {
       setServers(servers)
@@ -41,7 +47,7 @@ const Sidebar = () => {
       {servers.map((server) => {
         return <ServerIcon key={server.id} server={server} />
       })}
-      <CreateServerIcon />
+      <CreateServerIcon createServer={createServer} />
       <VerticalSpacer height={12} />
     </Wrapper>
   )
