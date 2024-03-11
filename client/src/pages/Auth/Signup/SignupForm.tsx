@@ -1,7 +1,7 @@
 import { FormEvent, useState } from "react"
 import styled from "styled-components"
 import FormInput from "../../../shared/components/FormInput.tsx"
-import Button from "../components/Button.tsx"
+import Button from "../../../shared/components/Button.tsx"
 
 const Wrapper = styled.div``
 

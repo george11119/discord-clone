@@ -1,5 +1,5 @@
 import styled from "styled-components"
-import LoadingSpinner from "./LoadingSpinner.tsx"
+import LoadingSpinner from "../../pages/Auth/components/LoadingSpinner.tsx"
 
 const Wrapper = styled.button`
   margin-top: 24px;

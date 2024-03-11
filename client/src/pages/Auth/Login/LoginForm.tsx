@@ -3,7 +3,7 @@ import styled from "styled-components"
 import LoginHeader from "./LoginHeader.tsx"
 import FormInput from "../../../shared/components/FormInput.tsx"
 import RegisterLink from "./RegisterLink.tsx"
-import Button from "../components/Button.tsx"
+import Button from "../../../shared/components/Button.tsx"
 
 const Wrapper = styled.div`
   flex-grow: 1;
