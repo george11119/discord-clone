@@ -34,7 +34,7 @@ const ChannelListItem = ({ channel }: { channel: Channel }) => {
       style={({ isActive }) => (isActive ? activeStyle : {})}
       to={`/channels/${channel.serverId}/${channel.id}`}
     >
-      <Hashtag size={20} />
+      <Hashtag size={20} color="#737881" />
       {channel.name}
     </LinkWrapper>
   )

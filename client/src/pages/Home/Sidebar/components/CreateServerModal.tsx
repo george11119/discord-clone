@@ -40,7 +40,7 @@ const CreateServerModal = ({
   return (
     <Modal handleClose={handleClose}>
       <CloseButton onClick={handleClose}>
-        <CloseIcon />
+        <CloseIcon size={24} />
       </CloseButton>
       <Header>
         <Title>Create Your Server</Title>

@@ -85,7 +85,7 @@ const UserProfilePopout = ({
         <BoldText>{user?.username}</BoldText>
 
         <VerticalSpacer height={12} />
-        <Separator width={"auto"} />
+        <Separator type="thick" width={"auto"} />
         <VerticalSpacer height={12} />
 
         <div style={{ fontSize: "12px" }}>
@@ -96,7 +96,7 @@ const UserProfilePopout = ({
         </div>
 
         <VerticalSpacer height={12} />
-        <Separator width={"auto"} />
+        <Separator type="thick" width={"auto"} />
         <VerticalSpacer height={12} />
 
         <LogoutButton />

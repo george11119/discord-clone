@@ -1,5 +1,5 @@
 import styled from "styled-components"
-import DropdownButton from "./DropdownButton.tsx"
+import DropdownButton from "../../../../../shared/svg/DropdownButton.tsx"
 
 
 const Wrapper = styled.div`

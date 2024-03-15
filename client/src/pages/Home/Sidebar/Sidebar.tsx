@@ -43,7 +43,7 @@ const Sidebar = () => {
   return (
     <Wrapper>
       <HomeIcon />
-      <Separator />
+      <Separator type={"thick"} />
       {servers.map((server) => {
         return <ServerIcon key={server.id} server={server} />
       })}
