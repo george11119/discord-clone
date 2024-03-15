@@ -1,14 +1,13 @@
 import styled from "styled-components"
 import Separator from "./components/Separator.tsx"
 import VerticalSpacer from "../../../shared/components/VerticalSpacer.tsx"
-import { useContext, useEffect, useState } from "react"
-import ServerService from "../../../services/serverService.ts"
-import { Server } from "../../../../types.ts"
+import { useContext } from "react"
+import serverService from "../../../services/serverService.ts"
 import HomeIcon from "./components/HomeIcon.tsx"
 import ServerIcon from "./components/ServerIcon.tsx"
 import CreateServerButton from "./components/CreateServerButton.tsx"
 import AuthContext from "../../Auth/AuthContext.ts"
-import serverService from "../../../services/serverService.ts"
+import { useQuery } from "@tanstack/react-query"
 
 const Wrapper = styled.nav`
   background: rgb(30, 31, 34);
@@ -27,27 +26,26 @@ const Wrapper = styled.nav`
 
 const Sidebar = () => {
   const { token } = useContext(AuthContext)
-  const [servers, setServers] = useState<Server[]>([])
 
-  const createServer = async (serverObject: { name: string }) => {
-    const server = await serverService.create(serverObject, token as string)
-    setServers(servers.concat(server))
+  const result = useQuery({
+    queryKey: ["servers"],
+    queryFn: () => serverService.get(token as string),
+  })
+
+  if (result.isLoading) {
+    return <Wrapper></Wrapper>
   }
 
-  useEffect(() => {
-    ServerService.get(token as string).then((servers) => {
-      setServers(servers)
-    })
-  }, [])
+  const servers = result.data
 
   return (
     <Wrapper>
       <HomeIcon />
       <Separator type={"thick"} />
-      {servers.map((server) => {
+      {servers?.map((server) => {
         return <ServerIcon key={server.id} server={server} />
       })}
-      <CreateServerButton createServer={createServer} />
+      <CreateServerButton />
       <VerticalSpacer height={12} />
     </Wrapper>
   )

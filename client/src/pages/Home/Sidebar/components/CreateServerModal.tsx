@@ -2,7 +2,6 @@ import styled from "styled-components"
 import Modal from "../../../../shared/components/Modal.tsx"
 import CloseIcon from "../../../../shared/svg/CloseIcon.tsx"
 import CreateServerForm from "./CreateServerForm.tsx"
-import { useId } from "react"
 
 const Title = styled.h1`
   text-align: center;
@@ -31,10 +30,8 @@ const Text = styled.p`
 `
 
 const CreateServerModal = ({
-  createServer,
   handleClose,
 }: {
-  createServer: (serverObject: { name: string }) => Promise<void>
   handleClose: () => void
 }) => {
   return (
@@ -49,7 +46,7 @@ const CreateServerModal = ({
           change it later
         </Text>
       </Header>
-      <CreateServerForm createServer={createServer} handleClose={handleClose} />
+      <CreateServerForm handleClose={handleClose} />
     </Modal>
   )
 }

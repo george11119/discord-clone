@@ -1,5 +1,3 @@
-import UserBarButton from "./UserBarButton.tsx"
-
 const DeafenButton = () => {
   return (
     <svg

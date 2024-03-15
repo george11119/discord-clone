@@ -11,7 +11,7 @@ const Wrapper = styled.div`
 `
 
 const Home = () => {
-  const [isConnected, setIsConnected] = useState(socket.connected)
+  const [_isConnected, setIsConnected] = useState(socket.connected)
 
   useEffect(() => {
     const onConnect = () => {

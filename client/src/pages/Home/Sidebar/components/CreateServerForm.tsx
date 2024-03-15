@@ -1,9 +1,13 @@
 import FormInput from "../../../../shared/components/FormInput.tsx"
 import styled from "styled-components"
-import { FormEvent, useId, useState } from "react"
+import { FormEvent, useContext, useId, useState } from "react"
 import UploadIcon from "../../../../shared/svg/UploadIcon.tsx"
 import Tooltip from "../../../../shared/components/Tooltip.tsx"
 import Button from "../../../../shared/components/Button.tsx"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
+import serverService from "../../../../services/serverService.ts"
+import AuthContext from "../../../Auth/AuthContext.ts"
+import { Server } from "../../../../../types.ts"
 
 const Form = styled.form`
   padding: 16px;
@@ -23,16 +27,24 @@ const Footer = styled.div`
   justify-content: end;
 `
 
-const CreateServerForm = ({
-  handleClose,
-  createServer,
-}: {
-  handleClose: () => void
-  createServer: (serverObject: { name: string }) => Promise<void>
-}) => {
-  const createServerFormId = useId()
-  const [isLoading, setIsLoading] = useState(false)
+const CreateServerForm = ({ handleClose }: { handleClose: () => void }) => {
+  const { token } = useContext(AuthContext)
+  const serverFormId = useId()
   const [serverName, setServerName] = useState("")
+
+  const queryClient = useQueryClient()
+
+  const newServerMutation = useMutation({
+    mutationFn: (newServer: { name: string }) => {
+      return serverService.create(newServer, token as string)
+    },
+    onSuccess: (newServer) => {
+      const servers: Server[] | undefined = queryClient.getQueryData([
+        "servers",
+      ])
+      queryClient.setQueryData(["servers"], servers?.concat(newServer))
+    },
+  })
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
@@ -43,16 +55,14 @@ const CreateServerForm = ({
       name: serverName,
     }
 
-    setIsLoading(true)
-    await createServer(serverObject)
+    newServerMutation.mutate(serverObject)
 
-    setIsLoading(false)
     handleClose()
   }
 
   return (
     <>
-      <Form id={createServerFormId} onSubmit={handleSubmit}>
+      <Form id={serverFormId} onSubmit={handleSubmit}>
         <UploadIconContainer>
           <Tooltip tooltip="Not implemented yet" placement="top">
             <UploadIcon />
@@ -68,8 +78,8 @@ const CreateServerForm = ({
       <Footer>
         <Button
           text="Create"
-          isLoading={isLoading}
-          form={createServerFormId}
+          isLoading={newServerMutation.isPending}
+          form={serverFormId}
           style={{
             height: "38px",
             width: "96px",
