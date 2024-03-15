@@ -27,6 +27,15 @@ const Input = styled.input`
   padding: 11px 0;
 `
 
+const UploadIconWrapper = styled.svg`
+  padding: 0 16px;
+  height: 24px;
+  width: 26px;
+  fill: none;
+  cursor: pointer;
+  color: hsl(215 calc(1 * 8.8%) 73.3% / 1);
+`
+
 const MessageInput = () => {
   const [message, setMessage] = useState("")
 
@@ -41,7 +50,9 @@ const MessageInput = () => {
   return (
     <Wrapper onSubmit={sendMessage}>
       <InputWrapper>
-        <UploadFileButton size={24} />
+        <UploadIconWrapper>
+          <UploadFileButton size={24} />
+        </UploadIconWrapper>
         <Input
           type="text"
           value={message}

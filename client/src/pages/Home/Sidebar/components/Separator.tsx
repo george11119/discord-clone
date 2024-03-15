@@ -24,14 +24,16 @@ const ThinWrapper = styled.div<{ $width?: number | string }>`
 const Separator = ({
   width,
   type,
+  ...rest
 }: {
   width?: number | string
   type: "thick" | "thin"
+  [rest: string]: any
 }) => {
   if (type === "thick") {
-    return <ThickWrapper $width={width}></ThickWrapper>
+    return <ThickWrapper $width={width} {...rest}></ThickWrapper>
   } else {
-    return <ThinWrapper $width={width}></ThinWrapper>
+    return <ThinWrapper $width={width} {...rest}></ThinWrapper>
   }
 }
 
