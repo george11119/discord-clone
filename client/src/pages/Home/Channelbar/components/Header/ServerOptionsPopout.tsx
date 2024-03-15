@@ -5,6 +5,8 @@ import Separator from "../../../Sidebar/components/Separator.tsx"
 import InviteIcon from "../../../../../shared/svg/InviteIcon.tsx"
 import SettingsButton from "../UserInfo/SettingsButton.tsx"
 import UploadFileButton from "../../../Chat/components/UploadFileButton.tsx"
+import TrashIcon from "../../../../../shared/svg/TrashIcon.tsx"
+import EditIcon from "../../../../../shared/svg/EditIcon.tsx"
 
 const Wrapper = styled.div`
   position: absolute;
@@ -23,7 +25,7 @@ const InnerWrapper = styled.div`
   align-items: center;
 `
 
-const Button = styled.button<{ $color?: string }>`
+const Button = styled.button<{ $color?: string; $hoverColor?: string }>`
   margin: 2px 0;
   background-color: inherit;
   padding: 6px 8px;
@@ -34,11 +36,13 @@ const Button = styled.button<{ $color?: string }>`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 13px;
+  font-size: 14px;
   border-radius: 3px;
+  cursor: pointer;
 
   &:hover {
-    background-color: rgb(71, 82, 196);
+    background-color: ${(props) =>
+            props.$hoverColor ? props.$hoverColor : "rgb(71, 82, 196)"};
     color: white;
   }
 `
@@ -59,18 +63,26 @@ const ServerOptionsPopout = ({
       transition={{ duration: 0.1 }}
     >
       <InnerWrapper>
-        <Button color="#949cf7">
-          <div>Invite People</div>
+        <Button $color="#949cf7">
+          Invite People
           <InviteIcon size={18} />
         </Button>
         <Separator type="thin" width={192} style={{ margin: "4px" }} />
         <Button>
-          <div>Create Channel</div>
+          Create Channel
           <UploadFileButton size={18} />
         </Button>
         <Button>
-          <div>Server Settings</div>
+          Server Settings
           <SettingsButton size={18} />
+        </Button>
+        <Button>
+          Edit Server
+          <EditIcon size={18} />
+        </Button>
+        <Button $color="#f23f42" $hoverColor="#f23f42">
+          Delete Server
+          <TrashIcon size={18} />
         </Button>
       </InnerWrapper>
     </Wrapper>
