@@ -1,6 +1,6 @@
-import MicrophoneButton from "./MicrophoneButton.tsx"
-import DeafenButton from "./DeafenButton.tsx"
-import SettingsButton from "./SettingsButton.tsx"
+import MicrophoneButton from "../../../../../shared/svg/MicrophoneButton.tsx"
+import DeafenButton from "../../../../../shared/svg/DeafenButton.tsx"
+import SettingsButton from "../../../../../shared/svg/SettingsButton.tsx"
 import Tooltip from "../../../../../shared/components/Tooltip.tsx"
 import UserBarButton from "./UserBarButton.tsx"
 

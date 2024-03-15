@@ -2,9 +2,11 @@ import styled from "styled-components"
 import VerticalSpacer from "../../../../../shared/components/VerticalSpacer.tsx"
 import ConversationSearchButton from "./ConversationSearchButton.tsx"
 import ChannelTitle from "./ChannelTitle.tsx"
-import { matchPath, useLocation } from "react-router-dom"
+import { matchPath, useLocation, useParams } from "react-router-dom"
 import { useState } from "react"
 import ServerOptionsPopout from "./ServerOptionsPopout.tsx"
+import { Server } from "../../../../../../types.ts"
+import { useQueryClient } from "@tanstack/react-query"
 
 const Wrapper = styled.div`
   box-shadow:
@@ -27,6 +29,9 @@ const Wrapper = styled.div`
 `
 
 const Header = () => {
+  const queryClient = useQueryClient()
+  const { serverId } = useParams()
+
   const [popoutOpen, setPopoutOpen] = useState(false)
   const { pathname } = useLocation()
   const isHomeLink = matchPath(`/channels/@me/*`, pathname)
@@ -35,6 +40,12 @@ const Header = () => {
     e.stopPropagation()
     setPopoutOpen(!popoutOpen)
   }
+
+  const servers: Server[] | undefined = queryClient.getQueryData(["servers"])
+
+  const server = servers
+    ? (servers.find((s) => s.id === serverId) as Server)
+    : null
 
   return (
     <div style={{ position: "relative" }}>
@@ -46,7 +57,10 @@ const Header = () => {
         {isHomeLink ? (
           <ConversationSearchButton />
         ) : (
-          <ChannelTitle title="Hello" popoutOpen={popoutOpen} />
+          <ChannelTitle
+            title={server ? server.name : ""}
+            popoutOpen={popoutOpen}
+          />
         )}
       </Wrapper>
       <VerticalSpacer height={8} />

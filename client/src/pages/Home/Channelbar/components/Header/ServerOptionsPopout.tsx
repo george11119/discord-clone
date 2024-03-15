@@ -3,7 +3,7 @@ import useOnOutsideClick from "../../../../../hooks/useOnOutsideClick.ts"
 import { motion } from "framer-motion"
 import Separator from "../../../Sidebar/components/Separator.tsx"
 import InviteIcon from "../../../../../shared/svg/InviteIcon.tsx"
-import SettingsButton from "../UserInfo/SettingsButton.tsx"
+import SettingsButton from "../../../../../shared/svg/SettingsButton.tsx"
 import UploadFileButton from "../../../Chat/components/UploadFileButton.tsx"
 import TrashIcon from "../../../../../shared/svg/TrashIcon.tsx"
 import EditIcon from "../../../../../shared/svg/EditIcon.tsx"
@@ -42,7 +42,7 @@ const Button = styled.button<{ $color?: string; $hoverColor?: string }>`
 
   &:hover {
     background-color: ${(props) =>
-            props.$hoverColor ? props.$hoverColor : "rgb(71, 82, 196)"};
+      props.$hoverColor ? props.$hoverColor : "rgb(71, 82, 196)"};
     color: white;
   }
 `
@@ -55,37 +55,44 @@ const ServerOptionsPopout = ({
   const ref = useOnOutsideClick(() => setPopoutOpen(false))
 
   return (
-    <Wrapper
-      ref={ref}
-      as={motion.div}
-      initial={{ scaleX: 0, scaleY: 0 }}
-      animate={{ scaleX: 1, scaleY: 1 }}
-      transition={{ duration: 0.1 }}
-    >
-      <InnerWrapper>
-        <Button $color="#949cf7">
-          Invite People
-          <InviteIcon size={18} />
-        </Button>
-        <Separator type="thin" width={192} style={{ margin: "4px" }} />
-        <Button>
-          Create Channel
-          <UploadFileButton size={18} />
-        </Button>
-        <Button>
-          Server Settings
-          <SettingsButton size={18} />
-        </Button>
-        <Button>
-          Edit Server
-          <EditIcon size={18} />
-        </Button>
-        <Button $color="#f23f42" $hoverColor="#f23f42">
-          Delete Server
-          <TrashIcon size={18} />
-        </Button>
-      </InnerWrapper>
-    </Wrapper>
+    <>
+      <Wrapper
+        ref={ref}
+        as={motion.div}
+        initial={{ scaleX: 0, scaleY: 0 }}
+        animate={{ scaleX: 1, scaleY: 1 }}
+        transition={{ duration: 0.1 }}
+      >
+        <InnerWrapper>
+          <Button $color="#949cf7">
+            Invite People
+            <InviteIcon size={18} />
+          </Button>
+
+          <Separator type="thin" width={192} style={{ margin: "4px" }} />
+
+          <Button>
+            Create Channel
+            <UploadFileButton size={18} />
+          </Button>
+
+          <Button>
+            Server Settings
+            <SettingsButton size={18} />
+          </Button>
+
+          <Button>
+            Edit Server
+            <EditIcon size={18} />
+          </Button>
+
+          <Button $color="#f23f42" $hoverColor="#f23f42">
+            Delete Server
+            <TrashIcon size={18} />
+          </Button>
+        </InnerWrapper>
+      </Wrapper>
+    </>
   )
 }
 

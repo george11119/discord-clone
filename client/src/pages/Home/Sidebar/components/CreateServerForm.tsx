@@ -27,10 +27,16 @@ const Footer = styled.div`
   justify-content: end;
 `
 
-const CreateServerForm = ({ handleClose }: { handleClose: () => void }) => {
+const CreateServerForm = ({
+  handleClose,
+  initialServerName = "",
+}: {
+  handleClose: () => void
+  initialServerName?: string
+}) => {
   const { token } = useContext(AuthContext)
   const serverFormId = useId()
-  const [serverName, setServerName] = useState("")
+  const [serverName, setServerName] = useState(initialServerName)
 
   const queryClient = useQueryClient()
 
@@ -43,6 +49,8 @@ const CreateServerForm = ({ handleClose }: { handleClose: () => void }) => {
         "servers",
       ])
       queryClient.setQueryData(["servers"], servers?.concat(newServer))
+
+      handleClose()
     },
   })
 
@@ -56,8 +64,6 @@ const CreateServerForm = ({ handleClose }: { handleClose: () => void }) => {
     }
 
     newServerMutation.mutate(serverObject)
-
-    handleClose()
   }
 
   return (

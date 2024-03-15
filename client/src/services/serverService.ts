@@ -16,6 +16,14 @@ const create = async (
   return res.data
 }
 
+// const update = async (
+//   serverObject: { name: string },
+//   token: string,
+// ): Promise<Server> => {
+//   const res = await apiCaller.patch(url, serverObject, apiConfig(token))
+//   return res.data
+// }
+
 export default {
   get,
   create,
