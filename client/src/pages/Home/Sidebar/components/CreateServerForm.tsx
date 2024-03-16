@@ -45,9 +45,7 @@ const CreateServerForm = ({
       return serverService.create(newServer, token as string)
     },
     onSuccess: (newServer) => {
-      const servers: Server[] | undefined = queryClient.getQueryData([
-        "servers",
-      ])
+      const servers = queryClient.getQueryData(["servers"]) as Server[]
       queryClient.setQueryData(["servers"], servers?.concat(newServer))
 
       handleClose()

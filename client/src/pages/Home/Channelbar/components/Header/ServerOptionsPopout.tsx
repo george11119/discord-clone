@@ -4,9 +4,16 @@ import { motion } from "framer-motion"
 import Separator from "../../../Sidebar/components/Separator.tsx"
 import InviteIcon from "../../../../../shared/svg/InviteIcon.tsx"
 import SettingsButton from "../../../../../shared/svg/SettingsButton.tsx"
-import UploadFileButton from "../../../Chat/components/UploadFileButton.tsx"
+import UploadFileButton from "../../../../../shared/svg/UploadFileButton.tsx"
 import TrashIcon from "../../../../../shared/svg/TrashIcon.tsx"
 import EditIcon from "../../../../../shared/svg/EditIcon.tsx"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
+import serverService from "../../../../../services/serverService.ts"
+import { useParams } from "react-router-dom"
+import { useContext } from "react"
+import AuthContext from "../../../../Auth/AuthContext.ts"
+import { Server } from "../../../../../../types.ts"
+import { useNavigate } from "react-router-dom"
 
 const Wrapper = styled.div`
   position: absolute;
@@ -52,7 +59,28 @@ const ServerOptionsPopout = ({
 }: {
   setPopoutOpen: (popoutOpen: boolean) => void
 }) => {
+  const { token } = useContext(AuthContext)
+  const { serverId } = useParams()
   const ref = useOnOutsideClick(() => setPopoutOpen(false))
+  const navigate = useNavigate()
+
+  const queryClient = useQueryClient()
+
+  const deleteServerMutation = useMutation({
+    mutationFn: () => {
+      return serverService.destroy(serverId as string, token as string)
+    },
+    onSuccess: () => {
+      const servers = queryClient.getQueryData(["servers"]) as Server[]
+      queryClient.setQueryData(
+        ["servers"],
+        servers.filter((s) => s.id !== serverId),
+      )
+
+      setPopoutOpen(false)
+      navigate("/channels/@me")
+    },
+  })
 
   return (
     <>
@@ -86,7 +114,11 @@ const ServerOptionsPopout = ({
             <EditIcon size={18} />
           </Button>
 
-          <Button $color="#f23f42" $hoverColor="#f23f42">
+          <Button
+            $color="#f23f42"
+            $hoverColor="#f23f42"
+            onClick={() => deleteServerMutation.mutate()}
+          >
             Delete Server
             <TrashIcon size={18} />
           </Button>

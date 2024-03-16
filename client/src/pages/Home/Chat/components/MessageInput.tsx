@@ -1,6 +1,6 @@
 import styled from "styled-components"
 import { FormEvent, useState } from "react"
-import UploadFileButton from "./UploadFileButton.tsx"
+import UploadFileButton from "../../../../shared/svg/UploadFileButton.tsx"
 import messageService from "../../../../services/messageService.ts"
 
 const Wrapper = styled.form`

@@ -30,6 +30,7 @@ const Sidebar = () => {
   const result = useQuery({
     queryKey: ["servers"],
     queryFn: () => serverService.get(token as string),
+    refetchOnWindowFocus: false,
   })
 
   if (result.isLoading) {
