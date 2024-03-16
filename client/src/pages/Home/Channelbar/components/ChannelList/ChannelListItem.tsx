@@ -28,6 +28,7 @@ const ChannelListItem = ({ channel }: { channel: Channel }) => {
   const activeStyle = {
     backgroundColor: "rgba(78, 80, 88, 0.6)",
     color: "rgb(229, 232, 235)",
+    fontWeight: 600,
   }
   return (
     <LinkWrapper

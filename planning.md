@@ -28,7 +28,7 @@
         <li>Get messages to be saved on invidual channels</li>
         <li>Add CRUD API endpoints</li>
         <ul>
-            <li>Add CRUD operations to servers</li>
+            <li>Add CRUD operations to servers - DONE</li>
             <li>Add CRUD operations to channels</li>
             <li>Add CRUD operations to messages</li>
         </ul>

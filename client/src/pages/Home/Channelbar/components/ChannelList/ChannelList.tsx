@@ -22,6 +22,7 @@ const ChannelList = () => {
   const result = useQuery({
     queryKey: [`${serverId}-channels`],
     queryFn: () => channelService.get(token as string, serverId as string),
+    staleTime: Infinity,
   })
 
   if (result.isLoading) {
@@ -32,10 +33,11 @@ const ChannelList = () => {
 
   return (
     <Wrapper>
-      <ChannelListCategory title={"General"} />
-      {channels?.map((channel) => {
-        return <ChannelListItem key={channel.id} channel={channel} />
-      })}
+      <ChannelListCategory title={"General"}>
+        {channels?.map((channel) => {
+          return <ChannelListItem key={channel.id} channel={channel} />
+        })}
+      </ChannelListCategory>
     </Wrapper>
   )
 }
