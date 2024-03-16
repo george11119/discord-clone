@@ -11,6 +11,13 @@ const Wrapper = styled.h1`
   align-items: center;
 `
 
+const Title = styled.div`
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  max-width: 180px;
+`
+
 const ChannelTitle = ({
   title,
   popoutOpen,
@@ -20,7 +27,7 @@ const ChannelTitle = ({
 }) => {
   return (
     <Wrapper>
-      <div>{title}</div>
+      <Title>{title}</Title>
       {popoutOpen ? (
         <CloseIcon size={18} fill="rgb(219, 222, 225)" />
       ) : (

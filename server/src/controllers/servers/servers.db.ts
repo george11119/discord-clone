@@ -16,6 +16,7 @@ const getServers = async (userId: string) => {
              INNER JOIN "user_servers" ON "user"."id" = "user_servers"."userId"
              INNER JOIN "server" ON "user_servers"."serverId" = "server"."id"
       WHERE "user"."id" = $1
+      ORDER BY "server"."createdAt"
     `,
     [userId],
   )

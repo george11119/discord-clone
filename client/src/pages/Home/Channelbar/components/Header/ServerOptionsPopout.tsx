@@ -56,8 +56,14 @@ const Button = styled.button<{ $color?: string; $hoverColor?: string }>`
 
 const ServerOptionsPopout = ({
   setPopoutOpen,
+  modal: { open, close, modalOpen },
 }: {
   setPopoutOpen: (popoutOpen: boolean) => void
+  modal: {
+    open: () => void
+    close: () => void
+    modalOpen: boolean
+  }
 }) => {
   const { token } = useContext(AuthContext)
   const { serverId } = useParams()
@@ -109,7 +115,12 @@ const ServerOptionsPopout = ({
             <SettingsButton size={18} />
           </Button>
 
-          <Button>
+          <Button
+            onClick={() => {
+              setPopoutOpen(false)
+              modalOpen ? close() : open()
+            }}
+          >
             Edit Server
             <EditIcon size={18} />
           </Button>
