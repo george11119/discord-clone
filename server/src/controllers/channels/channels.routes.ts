@@ -2,6 +2,7 @@ import express from "express"
 import ChannelsController from "./channels.db"
 import { authenticatedValidator } from "../../middleware/authenticatedValidator"
 import { isUserInServer } from "../helpers"
+import { Server } from "../../models/server"
 
 const router = express.Router()
 
@@ -28,6 +29,30 @@ router.get("/:serverId", authenticatedValidator, async (req, res) => {
   }
 
   res.json({ channels })
+})
+
+router.post("/:serverId", authenticatedValidator, async (req, res) => {
+  const { serverId } = req.params
+  const userId = req.user?.id as string
+  const { name } = req.body
+
+  const server = await Server.findOne({ where: { id: serverId } })
+
+  if (!server) {
+    res.status(400).json({ message: "Server does not exist" })
+  }
+
+  const userIsInServer = await isUserInServer({ serverId, userId })
+
+  if (!userIsInServer) {
+    res.status(401).json({
+      message: "You are not allowed to create channels in this server",
+    })
+  }
+
+  const channel = await ChannelsController.createChannel(name, serverId)
+
+  channel ? res.status(201).json(channel) : res.status(500)
 })
 
 export default router

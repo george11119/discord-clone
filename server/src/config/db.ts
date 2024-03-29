@@ -21,7 +21,8 @@ export const db = new DataSource({
   password: connectionOptions.password,
   database: connectionOptions.database || "",
   entities: [__dirname + "/../models/*.{js,ts}"],
-  logging: process.env.NODE_ENV === "test" ? false : true,
+  // logging: process.env.NODE_ENV === "test" ? false : true,
+  logging: false,
   synchronize: true,
 })
 

@@ -96,4 +96,94 @@ describe(`${url}`, () => {
       expect(channel.name).toBeTruthy()
     })
   })
+
+  describe(`POST ${url}/:serverId`, () => {
+    it("Returns 400 if user invalid serverId given", async () => {
+      const user1 = await User.findOneBy({ username: "testusername1" })
+      const token = jwtUtils.signToken({ userId: user1?.id as string })
+      const payload = { name: "New channel 1" }
+
+      await api
+        .post(`${url}/asdf`)
+        .send(payload)
+        .set("authorization", `Bearer ${token}`)
+        .expect(400)
+    })
+
+    it("Doesnt allow a unauthenticated user to create a new channel", async () => {
+      const server = await Server.findOne({
+        where: { name: "User 1's Server" },
+      })
+      const payload = { name: "New channel 1" }
+
+      await api
+        .post(`${url}/${server?.id}`)
+        .send(payload)
+        .expect(401)
+    })
+
+    it("Doesnt allow a user who isnt in the server to create a channel", async () => {
+      const user1 = await User.findOneBy({ username: "testusername1" })
+      const token = jwtUtils.signToken({ userId: user1?.id as string })
+      const payload = { name: "New channel 1" }
+
+      const server = await Server.findOne({
+        where: { name: "User 2's Server" },
+      })
+
+      // attempt to add a channel in user 2's server
+      await api
+        .post(`${url}/${server?.id}`)
+        .send(payload)
+        .set("authorization", `Bearer ${token}`)
+        .expect(401)
+    })
+
+    it("Returns 404 if no server is found", async () => {
+      const user1 = await User.findOneBy({ username: "testusername1" })
+      const token = jwtUtils.signToken({ userId: user1?.id as string })
+      const payload = { name: "New channel 1" }
+
+      await api
+        .patch(`${url}/d063e5e8-446a-480f-bc8b-83c0ad33f1a8`)
+        .send(payload)
+        .set("authorization", `Bearer ${token}`)
+        .expect(404)
+    })
+
+    it("Returns 200 and creates channel if server exists and user is in server", async () => {
+      const user1 = await User.findOneBy({ username: "testusername1" })
+      const token = jwtUtils.signToken({ userId: user1?.id as string })
+      const payload = { name: "New channel 1" }
+
+      const server = await Server.findOne({
+        where: { name: "User 1's Server" },
+        relations: {
+          channels: true,
+        },
+      })
+
+      const initialServerCount = server?.channels.length as number
+      expect(initialServerCount).toBe(2)
+
+      const res = await api
+        .post(`${url}/${server?.id}`)
+        .send(payload)
+        .set("authorization", `Bearer ${token}`)
+        .expect(201)
+        .expect("Content-Type", /application\/json/)
+
+      const channel = res.body
+      expect(channel.name).toBe("New channel 1")
+
+      const updatedServer = await Server.findOne({
+        where: { name: "User 1's Server" },
+        relations: {
+          channels: true,
+        },
+      })
+      const finalServerCount = updatedServer?.channels.length
+      expect(finalServerCount).toBe(initialServerCount + 1)
+    })
+  })
 })
