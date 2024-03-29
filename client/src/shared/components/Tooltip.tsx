@@ -35,6 +35,7 @@ const Tooltip = ({
           fontSize: fontSize ? `${fontSize}px` : "16px",
           borderRadius: "4px",
           zIndex: 2,
+          userSelect: "none",
         }}
         place={placement}
       />

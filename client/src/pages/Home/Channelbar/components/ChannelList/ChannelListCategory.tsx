@@ -1,8 +1,13 @@
 import styled from "styled-components"
 import DropdownButton from "../../../../../shared/svg/DropdownButton.tsx"
-import { ReactNode, useState } from "react"
+import { ReactNode, useContext, useState } from "react"
 import AddIcon from "../../../../../shared/svg/AddIcon.tsx"
 import Tooltip from "../../../../../shared/components/Tooltip.tsx"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
+import channelService from "../../../../../services/channelService.ts"
+import AuthContext from "../../../../Auth/AuthContext.ts"
+import { useParams } from "react-router-dom"
+import { Channel } from "../../../../../../types.ts"
 
 const Wrapper = styled.div`
   padding-top: 16px;
@@ -23,7 +28,7 @@ const Title = styled.div<{ $isHovered: boolean }>`
 
 const AddChannelButton = styled.div`
   &:hover {
-    color: #fff6f9
+    color: #fff6f9;
   }
 `
 
@@ -34,18 +39,42 @@ const ChannelListCategory = ({
   title: string
   children?: ReactNode
 }) => {
-  const [isOpen, setIsOpen] = useState(true)
+  const { token } = useContext(AuthContext)
+  const { serverId } = useParams()
+  const [dropdownIsOpen, setDropdownIsOpen] = useState(true)
   const [isHovered, setIsHovered] = useState(false)
+
+  const queryClient = useQueryClient()
+
+  // TODO bug with updating cache when new channel is created, fix that
+  const newChannelMutation = useMutation({
+    mutationFn: (newChannel: { name: string }) => {
+      return channelService.create(
+        token as string,
+        serverId as string,
+        newChannel,
+      )
+    },
+    onSuccess: (newChannel) => {
+      const channels = queryClient.getQueryData([
+        `${serverId}-channels`,
+      ]) as Channel[]
+      queryClient.setQueryData(
+        [`${serverId}-channels`],
+        channels?.concat(newChannel),
+      )
+    },
+  })
 
   return (
     <>
       <Wrapper
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={() => setDropdownIsOpen(!dropdownIsOpen)}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
         <Title $isHovered={isHovered}>
-          <DropdownButton size={12} isOpen={isOpen} />
+          <DropdownButton size={12} isOpen={dropdownIsOpen} />
           {title.toUpperCase()}
         </Title>
 
@@ -53,7 +82,7 @@ const ChannelListCategory = ({
           <AddChannelButton
             onClick={(e) => {
               e.stopPropagation()
-              console.log("clicked")
+              newChannelMutation.mutate({ name: "AAAA" })
             }}
             style={{ marginRight: "8px" }}
           >
@@ -61,7 +90,9 @@ const ChannelListCategory = ({
           </AddChannelButton>
         </Tooltip>
       </Wrapper>
-      <div style={{ display: isOpen ? "block" : "none" }}>{children}</div>
+      <div style={{ display: dropdownIsOpen ? "block" : "none" }}>
+        {children}
+      </div>
     </>
   )
 }

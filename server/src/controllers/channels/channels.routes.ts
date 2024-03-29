@@ -36,22 +36,22 @@ router.post("/:serverId", authenticatedValidator, async (req, res) => {
   const userId = req.user?.id as string
   const { name } = req.body
 
+  // check if the server exists
   const server = await Server.findOne({ where: { id: serverId } })
-
   if (!server) {
     res.status(400).json({ message: "Server does not exist" })
   }
 
+  // check if the ser is in the server
   const userIsInServer = await isUserInServer({ serverId, userId })
-
   if (!userIsInServer) {
     res.status(401).json({
       message: "You are not allowed to create channels in this server",
     })
   }
 
+  // attempt to create the channel
   const channel = await ChannelsController.createChannel(name, serverId)
-
   channel ? res.status(201).json(channel) : res.status(500)
 })
 
