@@ -56,13 +56,12 @@ const ChannelListCategory = ({
       )
     },
     onSuccess: (newChannel) => {
-      const channels = queryClient.getQueryData([
-        `${serverId}-channels`,
-      ]) as Channel[]
-      queryClient.setQueryData(
-        [`${serverId}-channels`],
-        channels?.concat(newChannel),
-      )
+      const channels = queryClient.getQueryData(["channels"]) as Channel[]
+      queryClient.invalidateQueries({
+        queryKey: ["channels"],
+      })
+
+      queryClient.setQueryData(["channels"], channels?.concat(newChannel))
     },
   })
 

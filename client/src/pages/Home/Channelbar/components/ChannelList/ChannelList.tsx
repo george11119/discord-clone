@@ -2,11 +2,11 @@ import styled from "styled-components"
 import ChannelListItem from "./ChannelListItem.tsx"
 import ChannelListCategory from "./ChannelListCategory.tsx"
 import { useParams } from "react-router-dom"
-import { useContext } from "react"
+import { useContext, useEffect } from "react"
 import { Channel } from "../../../../../../types.ts"
 import channelService from "../../../../../services/channelService.ts"
 import AuthContext from "../../../../Auth/AuthContext.ts"
-import { useQuery } from "@tanstack/react-query"
+import { useQuery, useQueryClient } from "@tanstack/react-query"
 
 const Wrapper = styled.div`
   list-style: none;
@@ -18,12 +18,18 @@ const Wrapper = styled.div`
 const ChannelList = () => {
   const { token } = useContext(AuthContext)
   const { serverId } = useParams()
+  const queryClient = useQueryClient()
 
   const result = useQuery({
-    queryKey: [`${serverId}-channels`],
+    queryKey: ["channels"],
     queryFn: () => channelService.get(token as string, serverId as string),
-    staleTime: Infinity,
   })
+
+  useEffect(() => {
+    queryClient.invalidateQueries({
+      queryKey: ["channels"],
+    })
+  }, [serverId])
 
   if (result.isLoading) {
     return <ChannelListCategory title="" />
