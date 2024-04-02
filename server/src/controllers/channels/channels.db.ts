@@ -43,8 +43,13 @@ const updateChannel = async (name: string, channelId: string) => {
   return updatedChannel
 }
 
+const deleteChannel = async (channelId: string) => {
+  await Channel.delete({ id: channelId })
+}
+
 export default {
   getChannels,
   createChannel,
   updateChannel,
+  deleteChannel,
 }

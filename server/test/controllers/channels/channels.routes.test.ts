@@ -139,7 +139,7 @@ describe(`${url}`, () => {
         .expect(401)
     })
 
-    it("Returns 404 if no server is found", async () => {
+    it("Returns 401 if no server is found", async () => {
       const user1 = await User.findOneBy({ username: "testusername1" })
       const token = jwtUtils.signToken({ userId: user1?.id as string })
       const payload = { name: "New channel 1" }
@@ -148,7 +148,7 @@ describe(`${url}`, () => {
         .post(`${url}/d063e5e8-446a-480f-bc8b-83c0ad33f1a8`)
         .send(payload)
         .set("authorization", `Bearer ${token}`)
-        .expect(404)
+        .expect(401)
     })
 
     it("Returns 200 and creates channel if server exists and user is in server", async () => {
@@ -235,7 +235,7 @@ describe(`${url}`, () => {
         .expect(401)
     })
 
-    it("Returns 404 if no server or channel is found", async () => {
+    it("Returns 401 if no server or channel is found", async () => {
       const user1 = await User.findOneBy({ username: "testusername1" })
       const token = jwtUtils.signToken({ userId: user1?.id as string })
       const payload = { name: "Updated channel 1" }
@@ -246,7 +246,7 @@ describe(`${url}`, () => {
         )
         .send(payload)
         .set("authorization", `Bearer ${token}`)
-        .expect(404)
+        .expect(401)
     })
 
     it("Returns 200 and updates channel if server and channel exists and user is in server", async () => {
@@ -284,6 +284,89 @@ describe(`${url}`, () => {
         (channel) => channel.name === "Updated channel 1",
       )
       expect(updatedChannel).toBeTruthy()
+    })
+  })
+
+  describe(`DELETE ${url}/:serverId/:channelId`, () => {
+    it("Returns 400 if invalid serverId or channelId is given", async () => {
+      const user1 = await User.findOneBy({ username: "testusername1" })
+      const token = jwtUtils.signToken({ userId: user1?.id as string })
+
+      await api
+        .delete(`${url}/asdf/asdf`)
+        .set("authorization", `Bearer ${token}`)
+        .expect(400)
+    })
+
+    it("Returns 401 if user is not logged in", async () => {
+      const server = await Server.findOne({
+        where: { name: "User 1's Server" },
+        relations: {
+          channels: true,
+        },
+      })
+
+      await api
+        .delete(`${url}/${server?.id}/${server?.channels[0].id}`)
+        .expect(401)
+    })
+
+    it("Returns 401 if user is not in the server they are trying to delete from", async () => {
+      const user1 = await User.findOneBy({ username: "testusername1" })
+      const token = jwtUtils.signToken({ userId: user1?.id as string })
+
+      const server = await Server.findOne({
+        where: { name: "User 2's Server" },
+        relations: {
+          channels: true,
+        },
+      })
+
+      // attempt to add a channel in user 2's server
+      await api
+        .delete(`${url}/${server?.id}/${server?.channels[0].id}`)
+        .set("authorization", `Bearer ${token}`)
+        .expect(401)
+    })
+
+    it("Returns 401 if no server or channel is found", async () => {
+      const user1 = await User.findOneBy({ username: "testusername1" })
+      const token = jwtUtils.signToken({ userId: user1?.id as string })
+
+      await api
+        .delete(
+          `${url}/d063e5e8-446a-480f-bc8b-83c0ad33f1a8/d063e5e8-446a-480f-bc8b-83c0ad33f1a8`,
+        )
+        .set("authorization", `Bearer ${token}`)
+        .expect(401)
+    })
+
+    it("Deletes channel if user is in the server that the channel is in", async () => {
+      const user1 = await User.findOneBy({ username: "testusername1" })
+      const token = jwtUtils.signToken({ userId: user1?.id as string })
+
+      const server = await Server.findOne({
+        where: { name: "User 1's Server" },
+        relations: {
+          channels: true,
+        },
+      })
+
+      expect(server?.channels.length).toBe(2)
+
+      await api
+        .delete(`${url}/${server?.id}/${server?.channels[0].id}`)
+        .set("authorization", `Bearer ${token}`)
+        .expect(204)
+
+      const updatedServer = await Server.findOne({
+        where: { name: "User 1's Server" },
+        relations: {
+          channels: true,
+        },
+      })
+
+      expect(updatedServer?.channels.length).toBe(1)
     })
   })
 })

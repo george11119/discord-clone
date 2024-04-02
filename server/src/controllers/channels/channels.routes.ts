@@ -2,7 +2,6 @@ import express from "express"
 import ChannelsController from "./channels.db"
 import { authenticatedValidator } from "../../middleware/authenticatedValidator"
 import { isUserInServer } from "../helpers"
-import { Server } from "../../models/server"
 
 const router = express.Router()
 
@@ -36,12 +35,6 @@ router.post("/:serverId", authenticatedValidator, async (req, res) => {
   const userId = req.user?.id as string
   const { name } = req.body
 
-  // check if the server exists
-  const server = await Server.findOne({ where: { id: serverId } })
-  if (!server) {
-    res.status(404).json({ message: "Server does not exist" })
-  }
-
   // check if the user is in the server
   const userIsInServer = await isUserInServer({ serverId, userId })
   if (!userIsInServer) {
@@ -63,12 +56,6 @@ router.patch(
     const userId = req.user?.id as string
     const { name } = req.body
 
-    // check if the server exists
-    const server = await Server.findOne({ where: { id: serverId } })
-    if (!server) {
-      res.status(404).json({ message: "Server does not exist" })
-    }
-
     const userIsInServer = await isUserInServer({ serverId, userId })
     if (!userIsInServer) {
       res.status(401).json({
@@ -78,6 +65,25 @@ router.patch(
 
     const channel = await ChannelsController.updateChannel(name, channelId)
     channel ? res.status(200).json(channel) : res.status(500)
+  },
+)
+
+router.delete(
+  "/:serverId/:channelId",
+  authenticatedValidator,
+  async (req, res) => {
+    const { serverId, channelId } = req.params
+    const userId = req.user?.id as string
+
+    const userIsInServer = await isUserInServer({ serverId, userId })
+    if (!userIsInServer) {
+      res.status(401).json({
+        message: "You are not allowed to delete channels in this server",
+      })
+    }
+
+    await ChannelsController.deleteChannel(channelId)
+    res.status(204).end()
   },
 )
 
