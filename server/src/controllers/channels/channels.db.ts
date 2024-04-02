@@ -29,7 +29,22 @@ const createChannel = async (name: string, serverId: string) => {
   }
 }
 
+const updateChannel = async (name: string, channelId: string) => {
+  const updatedChannel = (
+    await db
+      .createQueryBuilder()
+      .update(Channel)
+      .set({ name })
+      .where("id = :channelId", { channelId })
+      .returning("*")
+      .execute()
+  ).raw[0]
+
+  return updatedChannel
+}
+
 export default {
   getChannels,
   createChannel,
+  updateChannel,
 }

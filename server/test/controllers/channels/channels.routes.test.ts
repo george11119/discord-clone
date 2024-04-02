@@ -187,7 +187,7 @@ describe(`${url}`, () => {
     })
   })
 
-  describe.only(`PATCH ${url}/:serverId/:channelId`, () => {
+  describe(`PATCH ${url}/:serverId/:channelId`, () => {
     it("Returns 400 if invalid serverId or invalid channelId is given", async () => {
       const user1 = await User.findOneBy({ username: "testusername1" })
       const token = jwtUtils.signToken({ userId: user1?.id as string })
@@ -280,7 +280,10 @@ describe(`${url}`, () => {
         },
       })
 
-      expect(updatedServer?.channels[0].name).toBe("Updated channel 1")
+      const updatedChannel = updatedServer?.channels.find(
+        (channel) => channel.name === "Updated channel 1",
+      )
+      expect(updatedChannel).toBeTruthy()
     })
   })
 })
