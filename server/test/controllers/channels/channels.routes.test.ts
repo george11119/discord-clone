@@ -145,7 +145,7 @@ describe(`${url}`, () => {
       const payload = { name: "New channel 1" }
 
       await api
-        .patch(`${url}/d063e5e8-446a-480f-bc8b-83c0ad33f1a8`)
+        .post(`${url}/d063e5e8-446a-480f-bc8b-83c0ad33f1a8`)
         .send(payload)
         .set("authorization", `Bearer ${token}`)
         .expect(404)
@@ -184,6 +184,103 @@ describe(`${url}`, () => {
       })
       const finalServerCount = updatedServer?.channels.length
       expect(finalServerCount).toBe(initialServerCount + 1)
+    })
+  })
+
+  describe.only(`PATCH ${url}/:serverId/:channelId`, () => {
+    it("Returns 400 if invalid serverId or invalid channelId is given", async () => {
+      const user1 = await User.findOneBy({ username: "testusername1" })
+      const token = jwtUtils.signToken({ userId: user1?.id as string })
+      const payload = { name: "Updated channel 1" }
+
+      await api
+        .patch(`${url}/asdf/asdf`)
+        .send(payload)
+        .set("authorization", `Bearer ${token}`)
+        .expect(400)
+    })
+
+    it("Doesnt allow an unauthenticated user to update a channel", async () => {
+      const server = await Server.findOne({
+        where: { name: "User 1's Server" },
+        relations: {
+          channels: true,
+        },
+      })
+      const payload = { name: "Updated channel 1" }
+
+      await api
+        .patch(`${url}/${server?.id}/${server?.channels[0].id}`)
+        .send(payload)
+        .expect(401)
+    })
+
+    it("Doesnt allow a user who isnt in the server to update a channel", async () => {
+      const user1 = await User.findOneBy({ username: "testusername1" })
+      const token = jwtUtils.signToken({ userId: user1?.id as string })
+      const payload = { name: "Updated channel 1" }
+
+      const server = await Server.findOne({
+        where: { name: "User 2's Server" },
+        relations: {
+          channels: true,
+        },
+      })
+
+      // attempt to add a channel in user 2's server
+      await api
+        .patch(`${url}/${server?.id}/${server?.channels[0].id}`)
+        .send(payload)
+        .set("authorization", `Bearer ${token}`)
+        .expect(401)
+    })
+
+    it("Returns 404 if no server or channel is found", async () => {
+      const user1 = await User.findOneBy({ username: "testusername1" })
+      const token = jwtUtils.signToken({ userId: user1?.id as string })
+      const payload = { name: "Updated channel 1" }
+
+      await api
+        .patch(
+          `${url}/d063e5e8-446a-480f-bc8b-83c0ad33f1a8/d063e5e8-446a-480f-bc8b-83c0ad33f1a8`,
+        )
+        .send(payload)
+        .set("authorization", `Bearer ${token}`)
+        .expect(404)
+    })
+
+    it("Returns 200 and updates channel if server and channel exists and user is in server", async () => {
+      const user1 = await User.findOneBy({ username: "testusername1" })
+      const token = jwtUtils.signToken({ userId: user1?.id as string })
+      const payload = { name: "Updated channel 1" }
+
+      const server = await Server.findOne({
+        where: { name: "User 1's Server" },
+        relations: {
+          channels: true,
+        },
+      })
+
+      expect(server?.channels[0].name).not.toBe("Updated channel 1")
+
+      const res = await api
+        .patch(`${url}/${server?.id}/${server?.channels[0].id}`)
+        .send(payload)
+        .set("authorization", `Bearer ${token}`)
+        .expect(200)
+        .expect("Content-Type", /application\/json/)
+
+      const channel = res.body
+      expect(channel.name).toBe("Updated channel 1")
+
+      const updatedServer = await Server.findOne({
+        where: { name: "User 1's Server" },
+        relations: {
+          channels: true,
+        },
+      })
+
+      expect(updatedServer?.channels[0].name).toBe("Updated channel 1")
     })
   })
 })
