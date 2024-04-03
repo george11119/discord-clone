@@ -48,19 +48,13 @@ router.post("/:channelId", authenticatedValidator, async (req, res) => {
     relations: { server: true },
   })
 
-  if (!channel) {
-    return res.status(401).json({
-      message: "You are not allowed to create messages on this channel",
-    })
-  }
-
   const userIsInServer = await isUserInServer({
     serverId: channel?.server.id as string,
     userId: user.id,
   })
 
-  if (!userIsInServer) {
-    res.status(401).json({
+  if (!channel || !userIsInServer) {
+    return res.status(401).json({
       message: "You are not allowed to create messages on this channel",
     })
   }
