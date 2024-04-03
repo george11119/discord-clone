@@ -151,7 +151,7 @@ describe(`${url}`, () => {
         .expect(401)
     })
 
-    it("Returns 200 and creates channel if server exists and user is in server", async () => {
+    it("Returns 201 and creates channel if server exists and user is in server", async () => {
       const user1 = await User.findOneBy({ username: "testusername1" })
       const token = jwtUtils.signToken({ userId: user1?.id as string })
       const payload = { name: "New channel 1" }

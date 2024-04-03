@@ -106,4 +106,74 @@ describe(`${url}`, () => {
       expect(messageOwner.username).toBe(user?.username)
     })
   })
+
+  describe(`POST ${url}/:channelId`, () => {
+    it("Returns 400 if invalid channelId is given", async () => {
+      const user1 = await User.findOneBy({ username: "testusername1" })
+      const token = jwtUtils.signToken({ userId: user1?.id as string })
+      const payload = { content: "hello world" }
+
+      await api
+        .post(`${url}/asdf`)
+        .send(payload)
+        .set("authorization", `Bearer ${token}`)
+        .expect(400)
+    })
+
+    it("Doesnt allow a unauthenticated user to send a message", async () => {
+      const channel = await Channel.findOne({
+        where: {
+          name: "testusername1's Channel",
+        },
+      })
+      const payload = { content: "hello world" }
+
+      await api
+        .post(`${url}/${channel?.id}`)
+        .send(payload)
+        .expect(401)
+    })
+
+    it("Returns 401 if no channel exists", async () => {
+      const user1 = await User.findOneBy({ username: "testusername1" })
+      const token = jwtUtils.signToken({ userId: user1?.id as string })
+      const payload = { content: "hello world" }
+
+      await api
+        .post(`${url}/d063e5e8-446a-480f-bc8b-83c0ad33f1a8`)
+        .send(payload)
+        .set("authorization", `Bearer ${token}`)
+        .expect(401)
+    })
+
+    it("Returns 201 and creates message if channel exists and user is in server that channel is in", async () => {
+      const user1 = await User.findOneBy({ username: "testusername1" })
+      const token = jwtUtils.signToken({ userId: user1?.id as string })
+      const channel = await Channel.findOne({
+        where: {
+          name: "testusername1's Channel",
+        },
+        relations: { messages: true },
+      })
+      const payload = { content: "hello world" }
+
+      const initialMessageCount = channel?.messages.length as number
+      expect(initialMessageCount).toBe(5)
+
+      await api
+        .post(`${url}/${channel?.id}`)
+        .send(payload)
+        .set("authorization", `Bearer ${token}`)
+        .expect(201)
+        .expect("Content-Type", /application\/json/)
+
+      const updatedChannel = await Channel.findOne({
+        where: {
+          name: "testusername1's Channel",
+        },
+        relations: { messages: true },
+      })
+      expect(updatedChannel?.messages.length).toBe(initialMessageCount + 1)
+    })
+  })
 })

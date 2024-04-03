@@ -1,9 +1,9 @@
 import express from "express"
 import messagesController from "./messages.db"
-import { Message } from "../../models/message"
 import { authenticatedValidator } from "../../middleware/authenticatedValidator"
 import { isUserInServer } from "../helpers"
 import { Channel } from "../../models/channel"
+import { User } from "../../models/user"
 
 const router = express.Router()
 
@@ -33,16 +33,44 @@ router.get("/:channelId", authenticatedValidator, async (req, res) => {
     })
   }
 
-  const messages = await messagesController.getAllMessages({ channelId })
+  const messages = await messagesController.getMessages({ channelId })
   res.json({ messages })
 })
 
 // create a message
-router.post("/", authenticatedValidator, async (req, res) => {
+router.post("/:channelId", authenticatedValidator, async (req, res) => {
+  const { channelId } = req.params
   const { content } = req.body
-  const message: Message = await messagesController.createNewMessage({
-    content,
+  const user = req.user as User
+
+  const channel = await Channel.findOne({
+    where: { id: channelId },
+    relations: { server: true },
   })
+
+  if (!channel) {
+    return res.status(401).json({
+      message: "You are not allowed to create messages on this channel",
+    })
+  }
+
+  const userIsInServer = await isUserInServer({
+    serverId: channel?.server.id as string,
+    userId: user.id,
+  })
+
+  if (!userIsInServer) {
+    res.status(401).json({
+      message: "You are not allowed to create messages on this channel",
+    })
+  }
+
+  const message = await messagesController.createMessage({
+    content,
+    user,
+    channel,
+  })
+
   res.status(201).json(message)
 })
 
