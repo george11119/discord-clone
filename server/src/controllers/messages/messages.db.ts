@@ -1,6 +1,7 @@
 import { Message } from "../../models/message"
 import { User } from "../../models/user"
 import { Channel } from "../../models/channel"
+import { db } from "../../config/db"
 
 const getMessages = async ({
   channelId,
@@ -28,7 +29,28 @@ const createMessage = async ({
   return message
 }
 
+const updateMessage = async ({
+  content,
+  messageId,
+}: {
+  content: string
+  messageId: string
+}) => {
+  const updatedMessage = (
+    await db
+      .createQueryBuilder()
+      .update(Message)
+      .set({ content })
+      .where("id = :messageId", { messageId })
+      .returning("*")
+      .execute()
+  ).raw[0]
+
+  return updatedMessage
+}
+
 export default {
   getMessages,
   createMessage,
+  updateMessage
 }
