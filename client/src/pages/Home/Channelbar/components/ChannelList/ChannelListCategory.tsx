@@ -7,7 +7,9 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 import channelService from "../../../../../services/channelService.ts"
 import AuthContext from "../../../../Auth/AuthContext.ts"
 import { useParams } from "react-router-dom"
-import { Channel } from "../../../../../../types.ts"
+import useModal from "../../../../../hooks/useModal.ts"
+import CreateChannelModal from "./CreateChannelModal.tsx"
+import { AnimatePresence } from "framer-motion"
 
 const Wrapper = styled.div`
   padding-top: 16px;
@@ -39,31 +41,9 @@ const ChannelListCategory = ({
   title: string
   children?: ReactNode
 }) => {
-  const { token } = useContext(AuthContext)
-  const { serverId } = useParams()
   const [dropdownIsOpen, setDropdownIsOpen] = useState(true)
   const [isHovered, setIsHovered] = useState(false)
-
-  const queryClient = useQueryClient()
-
-  // TODO bug with updating cache when new channel is created, fix that
-  const newChannelMutation = useMutation({
-    mutationFn: (newChannel: { name: string }) => {
-      return channelService.create(
-        token as string,
-        serverId as string,
-        newChannel,
-      )
-    },
-    onSuccess: (newChannel) => {
-      const channels = queryClient.getQueryData(["channels"]) as Channel[]
-      queryClient.invalidateQueries({
-        queryKey: ["channels"],
-      })
-
-      queryClient.setQueryData(["channels"], channels?.concat(newChannel))
-    },
-  })
+  const { open, close, modalOpen } = useModal()
 
   return (
     <>
@@ -81,7 +61,7 @@ const ChannelListCategory = ({
           <AddChannelButton
             onClick={(e) => {
               e.stopPropagation()
-              newChannelMutation.mutate({ name: "AAAA" })
+              modalOpen ? close() : open()
             }}
             style={{ marginRight: "8px" }}
           >
@@ -92,6 +72,9 @@ const ChannelListCategory = ({
       <div style={{ display: dropdownIsOpen ? "block" : "none" }}>
         {children}
       </div>
+      <AnimatePresence initial={false} mode="wait" onExitComplete={() => null}>
+        {modalOpen && <CreateChannelModal handleClose={close} />}
+      </AnimatePresence>
     </>
   )
 }

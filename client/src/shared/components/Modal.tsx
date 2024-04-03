@@ -2,6 +2,7 @@ import Backdrop from "./Backdrop.tsx"
 import styled from "styled-components"
 import { motion } from "framer-motion"
 import { ReactNode } from "react"
+import * as React from "react"
 
 const modalAnimation = {
   hidden: {
@@ -40,9 +41,11 @@ const Wrapper = styled.div`
 const Modal = ({
   handleClose,
   children,
+  style,
 }: {
   handleClose: () => void
   children: ReactNode
+  style?: React.CSSProperties
 }) => {
   return (
     <Backdrop onClick={handleClose}>
@@ -53,6 +56,7 @@ const Modal = ({
         initial="hidden"
         animate="visible"
         exit="exit"
+        style={style}
       >
         {children}
       </Wrapper>

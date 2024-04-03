@@ -36,22 +36,26 @@ const FormInput = ({
   setValue,
   errorText,
   showErrorText = false,
+  labelStyle,
+  placeholder,
   ...rest
 }: {
   name: string
   type: string
   value: string
+  setValue: (value: string) => void
   errorText?: string
   showErrorText?: boolean
-  setValue: (value: string) => void
+  labelStyle?: any
+  placeholder?: string
   [rest: string]: any
 }) => {
   const labelId = useId()
 
   return (
     <Wrapper>
-      <Label $isError={showErrorText} htmlFor={labelId}>
-        {name.toUpperCase()}:{" "}
+      <Label $isError={showErrorText} htmlFor={labelId} style={labelStyle}>
+        {name.toUpperCase()}{" "}
       </Label>
       {showErrorText && <ErrorSpan> - {errorText}</ErrorSpan>}
       <Input
@@ -60,6 +64,7 @@ const FormInput = ({
         name={name}
         value={value}
         onChange={({ target }) => setValue(target.value)}
+        placeholder={placeholder ? placeholder : ""}
         {...rest}
       />
     </Wrapper>

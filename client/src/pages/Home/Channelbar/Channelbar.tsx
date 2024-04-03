@@ -5,9 +5,10 @@ import UserBar from "./components/UserInfo/UserBar.tsx"
 import { matchPath, useLocation } from "react-router-dom"
 import DirectMessagesList from "./components/DirectMessagesList/DirectMessagesList.tsx"
 
+// TODO fix channel list overflow
 const Wrapper = styled.nav`
   width: 240px;
-  height: 100vh;
+  max-height: 100vh;
   background-color: rgb(43, 45, 49);
   flex-shrink: 0;
   display: flex;
