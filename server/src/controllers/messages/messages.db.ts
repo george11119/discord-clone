@@ -49,8 +49,13 @@ const updateMessage = async ({
   return updatedMessage
 }
 
+const deleteMessage = async ({ messageId }: { messageId: string }) => {
+  await Message.delete({ id: messageId })
+}
+
 export default {
   getMessages,
   createMessage,
-  updateMessage
+  updateMessage,
+  deleteMessage,
 }
