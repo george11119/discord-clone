@@ -100,28 +100,32 @@ router.patch(
   },
 )
 
-router.delete("/:channelId/:messageId", async (req, res) => {
-  const { channelId, messageId } = req.params
-  const user = req.user as User
+router.delete(
+  "/:channelId/:messageId",
+  authenticatedValidator,
+  async (req, res) => {
+    const { channelId, messageId } = req.params
+    const user = req.user as User
 
-  const channel = await Channel.findOne({
-    where: { id: channelId },
-    relations: { server: true },
-  })
-
-  const userIsInServer = await isUserInServer({
-    serverId: channel?.server.id as string,
-    userId: user.id,
-  })
-
-  if (!channel || !userIsInServer) {
-    return res.status(401).json({
-      message: "You are not allowed to create messages on this channel",
+    const channel = await Channel.findOne({
+      where: { id: channelId },
+      relations: { server: true },
     })
-  }
 
-  await messagesController.deleteMessage({ messageId })
-  res.status(204).end()
-})
+    const userIsInServer = await isUserInServer({
+      serverId: channel?.server.id as string,
+      userId: user.id,
+    })
+
+    if (!channel || !userIsInServer) {
+      return res.status(401).json({
+        message: "You are not allowed to create messages on this channel",
+      })
+    }
+
+    await messagesController.deleteMessage({ messageId })
+    res.status(204).end()
+  },
+)
 
 export default router
