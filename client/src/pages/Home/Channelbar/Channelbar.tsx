@@ -15,6 +15,12 @@ const Wrapper = styled.nav`
   flex-direction: column;
 `
 
+const ScrollableContainer = styled.div`
+  overflow: hidden scroll;
+  scrollbar-width: thin;
+  scrollbar-color: rgb(26, 27, 30) rgb(43, 45, 49);
+`
+
 const Channelbar = () => {
   const { pathname } = useLocation()
   const isHomeLink = matchPath(`/channels/@me/*`, pathname)
@@ -22,7 +28,9 @@ const Channelbar = () => {
   return (
     <Wrapper>
       <Header />
-      {isHomeLink ? <DirectMessagesList /> : <ChannelList />}
+      <ScrollableContainer>
+        {isHomeLink ? <DirectMessagesList /> : <ChannelList />}
+      </ScrollableContainer>
       <UserBar />
     </Wrapper>
   )

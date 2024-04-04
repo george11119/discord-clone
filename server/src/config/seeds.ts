@@ -28,8 +28,8 @@ const seedDatabase = async () => {
     await UserServers.save({ user: user1, server })
   }
 
-  // create 3 channels for the first server of user 1
-  for (let i = 1; i <= 3; i++) {
+  // create 100 channels for the first server of user 1
+  for (let i = 1; i <= 100; i++) {
     const server = await Server.findOne({
       where: { name: "User 1's Server 1" },
     })
