@@ -55,14 +55,7 @@ const ChatMessageDisplay = () => {
       <div>
         {messages &&
           messages.map((message: Message) => {
-            return (
-              <ChatMessage
-                key={message.id}
-                message={message.content}
-                createdAt={formatDateTime(message.createdAt)}
-                sender={message.user.username}
-              />
-            )
+            return <ChatMessage key={message.id} message={message} />
           })}
         <VerticalSpacer height={30} />
         <span ref={messagesEndRef}></span>
