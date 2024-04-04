@@ -40,7 +40,7 @@ const ChatMessageDisplay = () => {
     if (messages?.length && messages.length > 0) {
       const message = messages[messages.length - 1]
 
-      if (message.id === user?.id) {
+      if (message.user.id === user?.id) {
         messagesEndRef.current?.scrollIntoView({ behavior: "instant" })
       }
     }

@@ -1,5 +1,4 @@
 import { Message } from "../../types.ts"
-import { socket } from "../config/socket.ts"
 import apiCaller, { apiConfig } from "./apiCaller.ts"
 
 const url = "/messages"
@@ -9,8 +8,17 @@ const get = async (token: string, channelId: string): Promise<Message[]> => {
   return res.data
 }
 
-const create = (messageObject: { content: string }) => {
-  socket.emit("message:create", messageObject)
+const create = async (
+  token: string,
+  messageObject: { content: string },
+  channelId: string,
+) => {
+  const res = await apiCaller.post(
+    `${url}/${channelId}`,
+    messageObject,
+    apiConfig(token),
+  )
+  return res.data
 }
 
 export default {

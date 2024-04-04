@@ -1,7 +1,11 @@
 import styled from "styled-components"
-import { FormEvent, useState } from "react"
+import { FormEvent, useContext, useState } from "react"
 import UploadFileButton from "../../../../shared/svg/UploadFileButton.tsx"
 import messageService from "../../../../services/messageService.ts"
+import AuthContext from "../../../Auth/AuthContext.ts"
+import { useParams } from "react-router-dom"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { Channel, Message } from "../../../../../types.ts"
 
 const Wrapper = styled.form`
   height: 68px;
@@ -37,14 +41,38 @@ const UploadIconWrapper = styled.svg`
 `
 
 const MessageInput = () => {
-  const [message, setMessage] = useState("")
+  const { token } = useContext(AuthContext)
+  const { channelId } = useParams()
+  const [content, setContent] = useState("")
+  const queryClient = useQueryClient()
+
+  const newMessageMutation = useMutation({
+    mutationFn: (newMessage: { content: string }) => {
+      return messageService.create(
+        token as string,
+        newMessage,
+        channelId as string,
+      )
+    },
+    onSuccess: (newMessage) => {
+      const messages = queryClient.getQueryData([
+        `messages-${channelId}`,
+      ]) as Message[]
+
+      queryClient.setQueryData(
+        [`messages-${channelId}`],
+        messages?.concat(newMessage),
+      )
+    },
+  })
 
   const sendMessage = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault()
-    if (message === "") return
+    if (content === "") return
 
-    messageService.create({ content: message })
-    setMessage("")
+    const messageObject = { content }
+    newMessageMutation.mutate(messageObject)
+    setContent("")
   }
 
   return (
@@ -55,8 +83,8 @@ const MessageInput = () => {
         </UploadIconWrapper>
         <Input
           type="text"
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
           placeholder="Enter a message"
         />
       </InputWrapper>

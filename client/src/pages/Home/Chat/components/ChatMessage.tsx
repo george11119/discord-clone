@@ -27,7 +27,13 @@ const DateWrapper = styled.span`
 `
 
 const MessageWrapper = styled.div`
-  font-weight: 400;
+  font-weight: 500;
+  font-size: 14px;
+`
+
+const Sender = styled.span`
+  font-size: 14px;
+  font-weight: 600;
 `
 
 const ChatMessage = ({
@@ -43,7 +49,7 @@ const ChatMessage = ({
     <Wrapper>
       <Img></Img>
       <div>
-        <span>{sender}</span>
+        <Sender>{sender}</Sender>
         <DateWrapper>{createdAt}</DateWrapper>
         <MessageWrapper>{message}</MessageWrapper>
       </div>
