@@ -1,11 +1,11 @@
-import { message } from "../../types.ts"
+import { Message } from "../../types.ts"
 import { socket } from "../config/socket.ts"
 import apiCaller, { apiConfig } from "./apiCaller.ts"
 
 const url = "/messages"
 
-const get = async (token: string): Promise<message[]> => {
-  const res = await apiCaller.get(url, apiConfig(token))
+const get = async (token: string, channelId: string): Promise<Message[]> => {
+  const res = await apiCaller.get(`${url}/${channelId}`, apiConfig(token))
   return res.data
 }
 

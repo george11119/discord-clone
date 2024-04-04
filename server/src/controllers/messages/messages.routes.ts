@@ -34,7 +34,7 @@ router.get("/:channelId", authenticatedValidator, async (req, res) => {
   }
 
   const messages = await messagesController.getMessages({ channelId })
-  res.json({ messages })
+  res.json(messages)
 })
 
 // create a message

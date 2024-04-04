@@ -2,10 +2,12 @@ import styled from "styled-components"
 import ChatMessage from "./ChatMessage.tsx"
 import VerticalSpacer from "../../../../shared/components/VerticalSpacer.tsx"
 import { useContext, useEffect, useRef } from "react"
-import { MessagesContext } from "../ChatAreaContainer.tsx"
-import { message } from "../../../../../types.ts"
+import { Message } from "../../../../../types.ts"
 import { formatDateTime } from "../../../../utils/dateTime.ts"
-import { socket } from "../../../../config/socket.ts"
+import { useQuery, useQueryClient } from "@tanstack/react-query"
+import messageService from "../../../../services/messageService.ts"
+import AuthContext from "../../../Auth/AuthContext.ts"
+import { useParams } from "react-router-dom"
 
 const Wrapper = styled.ul`
   flex: 1;
@@ -18,41 +20,50 @@ const Wrapper = styled.ul`
 `
 
 const ChatMessageDisplay = () => {
-  const { messages, setMessages } = useContext(MessagesContext)
+  const { token, user } = useContext(AuthContext)
+  const { channelId } = useParams()
+  const queryClient = useQueryClient()
+
+  useQuery({
+    queryKey: [`messages-${channelId}`],
+    queryFn: () => messageService.get(token as string, channelId as string),
+    enabled: channelId ? true : false,
+  })
 
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
+  const messages: Message[] | undefined = queryClient.getQueryData([
+    `messages-${channelId}`,
+  ])
+
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "instant" })
+    if (messages?.length && messages.length > 0) {
+      const message = messages[messages.length - 1]
+
+      if (message.id === user?.id) {
+        messagesEndRef.current?.scrollIntoView({ behavior: "instant" })
+      }
+    }
   }
 
   useEffect(() => {
-    const onMessageCreate = (res: { createdMessage: message }) => {
-      const { createdMessage } = res
-      setMessages(messages.concat(createdMessage))
-    }
-
     scrollToBottom()
-    socket.on("message:create", onMessageCreate)
-
-    return () => {
-      socket.off("message:create", onMessageCreate)
-    }
   }, [messages])
 
   return (
     <Wrapper>
       <div>
-        {messages.map((message: message) => {
-          return (
-            <ChatMessage
-              key={message.id}
-              message={message.content}
-              createdAt={formatDateTime(message.createdAt)}
-              sender={"George"}
-            />
-          )
-        })}
+        {messages &&
+          messages.map((message: Message) => {
+            return (
+              <ChatMessage
+                key={message.id}
+                message={message.content}
+                createdAt={formatDateTime(message.createdAt)}
+                sender={message.user.username}
+              />
+            )
+          })}
         <VerticalSpacer height={30} />
         <span ref={messagesEndRef}></span>
       </div>
