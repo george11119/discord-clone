@@ -1,5 +1,6 @@
 import styled from "styled-components"
 import LoadingSpinner from "../../pages/Auth/components/LoadingSpinner.tsx"
+import * as React from "react"
 
 const Wrapper = styled.button`
   margin-top: 24px;
@@ -19,13 +20,20 @@ const Wrapper = styled.button`
 const Button = ({
   text,
   isLoading = false,
+  style,
   ...rest
 }: {
   text: string
   isLoading?: boolean
+  hoverColor?: string
+  style: React.CSSProperties
   [rest: string]: any
 }) => {
-  return <Wrapper {...rest}>{isLoading ? <LoadingSpinner /> : text}</Wrapper>
+  return (
+    <Wrapper style={style} {...rest}>
+      {isLoading ? <LoadingSpinner /> : text}
+    </Wrapper>
+  )
 }
 
 export default Button

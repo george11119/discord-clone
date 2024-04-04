@@ -9,6 +9,7 @@ const getChannels = async (userId: string, serverId: string) => {
         FROM "server"
                  JOIN "channel" ON "server"."id" = "channel"."serverId"
         WHERE "channel"."serverId" = $1
+        ORDER BY "channel"."createdAt"
     `,
     [serverId],
   )

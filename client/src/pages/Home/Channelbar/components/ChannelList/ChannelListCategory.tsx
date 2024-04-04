@@ -8,7 +8,7 @@ import channelService from "../../../../../services/channelService.ts"
 import AuthContext from "../../../../Auth/AuthContext.ts"
 import { useParams } from "react-router-dom"
 import useModal from "../../../../../hooks/useModal.ts"
-import CreateChannelModal from "./CreateChannelModal.tsx"
+import ChannelModal from "./ChannelModal.tsx"
 import { AnimatePresence } from "framer-motion"
 
 const Wrapper = styled.div`
@@ -73,7 +73,7 @@ const ChannelListCategory = ({
         {children}
       </div>
       <AnimatePresence initial={false} mode="wait" onExitComplete={() => null}>
-        {modalOpen && <CreateChannelModal handleClose={close} />}
+        {modalOpen && <ChannelModal type="create" handleClose={close} />}
       </AnimatePresence>
     </>
   )

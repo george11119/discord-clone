@@ -32,7 +32,17 @@ const Text = styled.div`
   line-height: 1.35;
   color: rgb(181, 186, 193);
 `
-const CreateChannelModal = ({ handleClose }: { handleClose: () => void }) => {
+const ChannelModal = ({
+  handleClose,
+  type,
+  initialChannelName,
+  channelId,
+}: {
+  handleClose: () => void
+  type: "create" | "edit"
+  initialChannelName?: string
+  channelId?: string
+}) => {
   return (
     <Modal
       style={{ width: 460, borderRadius: "12px" }}
@@ -43,10 +53,15 @@ const CreateChannelModal = ({ handleClose }: { handleClose: () => void }) => {
       </CloseButton>
       <VerticalSpacer height={8} />
       <Header>
-        <Title>Create Channel</Title>
+        <Title>{type === "create" ? "Create Channel" : "Edit Channel"}</Title>
         <Text>in General</Text>
       </Header>
-      <CreateChannelForm handleClose={handleClose} />
+      <ChannelForm
+        handleClose={handleClose}
+        initialChannelName={initialChannelName ? initialChannelName : ""}
+        type={type}
+        channelId={channelId}
+      />
     </Modal>
   )
 }
@@ -63,15 +78,21 @@ const Footer = styled.div`
   justify-content: end;
   border-bottom-left-radius: 12px;
   border-bottom-right-radius: 12px;
+  gap: 8px;
 `
 
-const CreateChannelForm = ({
+const ChannelForm = ({
   handleClose,
   initialChannelName = "",
+  type,
+  channelId,
 }: {
   handleClose: () => void
   initialChannelName?: string
+  type: "create" | "edit"
+  channelId?: string
 }) => {
+  const [deleteButtonHovered, setDeleteButtonHovered] = useState(false)
   const { token } = useContext(AuthContext)
   const { serverId } = useParams()
 
@@ -96,6 +117,25 @@ const CreateChannelForm = ({
     },
   })
 
+  const editChannelMutation = useMutation({
+    mutationFn: (newChannel: { name: string }) => {
+      return channelService.update(
+        token as string,
+        serverId as string,
+        channelId as string,
+        newChannel,
+      )
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [`channels`],
+      })
+      handleClose()
+    },
+  })
+
+  const mutator = type === "create" ? newChannelMutation : editChannelMutation
+
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
 
@@ -105,8 +145,24 @@ const CreateChannelForm = ({
       name: channelName,
     }
 
-    newChannelMutation.mutate(channelObject)
+    mutator.mutate(channelObject)
   }
+
+  const deleteChannelMutation = useMutation({
+    mutationFn: () => {
+      return channelService.destroy(
+        token as string,
+        serverId as string,
+        channelId as string,
+      )
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [`channels`],
+      })
+      handleClose()
+    },
+  })
 
   return (
     <>
@@ -121,9 +177,27 @@ const CreateChannelForm = ({
         />
       </Form>
       <Footer>
+        {type === "edit" && (
+          <Button
+            text="Delete Channel"
+            isLoading={deleteChannelMutation.isPending}
+            style={{
+              height: "38px",
+              backgroundColor: deleteButtonHovered
+                ? "rgb(161, 40, 40)"
+                : "rgb(218, 55, 60)",
+              marginTop: "0px",
+              fontSize: "14px",
+              width: "125px",
+            }}
+            onClick={() => deleteChannelMutation.mutate()}
+            onMouseOver={() => setDeleteButtonHovered(true)}
+            onMouseOut={() => setDeleteButtonHovered(false)}
+          />
+        )}
         <Button
           text="Create Channel"
-          isLoading={newChannelMutation.isPending}
+          isLoading={mutator.isPending}
           form={channelFormId}
           style={{
             height: "38px",
@@ -137,4 +211,4 @@ const CreateChannelForm = ({
   )
 }
 
-export default CreateChannelModal
+export default ChannelModal

@@ -1,5 +1,4 @@
 import apiCaller, { apiConfig } from "./apiCaller.ts"
-import { Channel } from "../../types.ts"
 
 const url = "/channels"
 
@@ -22,7 +21,27 @@ const create = async (
   return res.data
 }
 
+const update = async (
+  token: string,
+  serverId: string,
+  channelId: string,
+  channelObject: { name: string },
+) => {
+  const res = await apiCaller.patch(
+    `${url}/${serverId}/${channelId}`,
+    channelObject,
+    apiConfig(token),
+  )
+  return res.data
+}
+
+const destroy = async (token: string, serverId: string, channelId: string) => {
+  await apiCaller.delete(`${url}/${serverId}/${channelId}`, apiConfig(token))
+}
+
 export default {
   get,
   create,
+  update,
+  destroy,
 }
