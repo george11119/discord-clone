@@ -32,12 +32,26 @@ const LinkWrapper = styled(NavLink)`
 const Left = styled.div`
   display: flex;
   align-items: center;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+`
+
+const HashtagContainer = styled.div`
+  flex-shrink: 0;
+`
+
+const ChannelName = styled.span`
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 `
 
 const Right = styled.div<{ $isActive: any; $isHovered: boolean }>`
   display: ${(props) =>
     props.$isActive || props.$isHovered ? "flex" : "none"};
   align-items: center;
+  margin-left: 12px;
 `
 
 const SettingsButtonContainer = styled.div``
@@ -72,8 +86,10 @@ const ChannelListItem = ({ channel }: { channel: Channel }) => {
         onMouseOut={() => setHovered(false)}
       >
         <Left>
-          <Hashtag size={20} color="#737881" />
-          {channel.name}
+          <HashtagContainer>
+            <Hashtag size={20} color="#737881" />
+          </HashtagContainer>
+          <ChannelName>{channel.name}</ChannelName>
         </Left>
         <Right $isActive={isActive} $isHovered={hovered}>
           <Tooltip tooltip="Edit Channel" placement="top">

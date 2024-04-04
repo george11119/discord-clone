@@ -4,8 +4,9 @@ import ChatMessageDisplay from "./components/ChatMessageDisplay.tsx"
 import MessageInput from "./components/MessageInput.tsx"
 import { createContext, useState } from "react"
 // import messageService from "../../../services/messageService.ts"
-import { message } from "../../../../types.ts"
-import { matchPath, useLocation } from "react-router-dom"
+import { Channel, message } from "../../../../types.ts"
+import { matchPath, useLocation, useParams } from "react-router-dom"
+import { useQueryClient } from "@tanstack/react-query"
 
 const Wrapper = styled.div`
   background-color: rgb(49, 51, 56);
@@ -24,8 +25,18 @@ export const MessagesContext = createContext<{
 })
 
 const ChatAreaContainer = () => {
+  const queryClient = useQueryClient()
+  const { channelId } = useParams()
   const { pathname } = useLocation()
   const isHomeLink = matchPath(`/channels/@me/*`, pathname)
+
+  const data: { channels: Channel[] } | undefined = queryClient.getQueryData([
+    "channels",
+  ])
+
+  const channel = data
+    ? (data.channels.find((c) => c.id === channelId) as Channel)
+    : null
 
   const [messages, setMessages] = useState<message[]>([])
   //
@@ -42,7 +53,7 @@ const ChatAreaContainer = () => {
           <div>TODO add home page</div>
         ) : (
           <>
-            <Header chatTitle="General" />
+            <Header chatTitle={channel ? channel.name : ""} />
             <ChatMessageDisplay />
             <MessageInput />
           </>
