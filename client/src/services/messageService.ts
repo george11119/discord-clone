@@ -21,7 +21,28 @@ const create = async (
   return res.data
 }
 
+const update = async (
+  token: string,
+  messageObject: { content: string },
+  channelId: string,
+  messageId: string,
+) => {
+  const res = await apiCaller.patch(
+    `${url}/${channelId}/${messageId}`,
+    messageObject,
+    apiConfig(token),
+  )
+
+  return res.data
+}
+
+const destroy = async (token: string, channelId: string, messageId: string) => {
+  await apiCaller.delete(`${url}/${channelId}/${messageId}`, apiConfig(token))
+}
+
 export default {
   get,
   create,
+  update,
+  destroy,
 }

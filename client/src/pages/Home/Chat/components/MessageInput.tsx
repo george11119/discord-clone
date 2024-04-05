@@ -5,7 +5,7 @@ import messageService from "../../../../services/messageService.ts"
 import AuthContext from "../../../Auth/AuthContext.ts"
 import { useParams } from "react-router-dom"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { Channel, Message } from "../../../../../types.ts"
+import { Message } from "../../../../../types.ts"
 
 const Wrapper = styled.form`
   height: 68px;

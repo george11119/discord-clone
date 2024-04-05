@@ -1,9 +1,13 @@
 import styled from "styled-components"
-import { useState } from "react"
+import { useContext, useState } from "react"
 import { Message } from "../../../../../types.ts"
 import { formatDateTime } from "../../../../utils/dateTime.ts"
 import TrashIcon from "../../../../shared/svg/TrashIcon.tsx"
 import EditIcon from "../../../../shared/svg/EditIcon.tsx"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
+import messageService from "../../../../services/messageService.ts"
+import AuthContext from "../../../Auth/AuthContext.ts"
+import { useParams } from "react-router-dom"
 
 const Wrapper = styled.li`
   margin-left: 16px;
@@ -18,8 +22,10 @@ const Wrapper = styled.li`
 `
 
 const Img = styled.div`
-  height: 40px;
-  width: 40px;
+  min-height: 40px;
+  max-height: 40px;
+  min-width: 40px;
+  max-width: 40px;
   border-radius: 50%;
   margin-right: 16px;
   margin-top: 2px;
@@ -35,6 +41,7 @@ const DateWrapper = styled.span`
 const MessageWrapper = styled.div`
   font-weight: 500;
   font-size: 14px;
+  padding-right: 48px;
 `
 
 const Sender = styled.span`
@@ -56,7 +63,7 @@ const ChatMessage = ({ message }: { message: Message }) => {
         <DateWrapper>{formatDateTime(message.createdAt)}</DateWrapper>
         <MessageWrapper>{message.content}</MessageWrapper>
       </div>
-      {hovered && <MessageOptionsPopout />}
+      {hovered && <MessageOptionsPopout messageId={message.id} />}
     </Wrapper>
   )
 }
@@ -89,10 +96,58 @@ const IconWrapper = styled.div<{ $type?: string }>`
 `
 
 // TODO add tooltips to icon wrappers
-const MessageOptionsPopout = () => {
+const MessageOptionsPopout = ({ messageId }: { messageId: string }) => {
+  const { token } = useContext(AuthContext)
+  const { channelId } = useParams()
+  const queryClient = useQueryClient()
+
+  // const editMessageMutation = useMutation({
+  //   mutationFn: (message: { content: string }) => {
+  //     return messageService.update(
+  //       token as string,
+  //       message,
+  //       channelId as string,
+  //       messageId,
+  //     )
+  //   },
+  //   onSuccess: (editedMessage) => {
+  //     const messages = queryClient.getQueryData([
+  //       `messages-${channelId}`,
+  //     ]) as Message[]
+  //
+  //     queryClient.setQueryData(
+  //       [`messages-${channelId}`],
+  //       messages.map((m) => (m.id === editedMessage.id ? editedMessage : m)),
+  //     )
+  //   },
+  // })
+
+  const deleteMessageMutation = useMutation({
+    mutationFn: () => {
+      return messageService.destroy(
+        token as string,
+        channelId as string,
+        messageId,
+      )
+    },
+    onSuccess: () => {
+      const messages = queryClient.getQueryData([
+        `messages-${channelId}`,
+      ]) as Message[]
+
+      queryClient.setQueryData(
+        [`messages-${channelId}`],
+        messages.filter((m) => m.id !== messageId),
+      )
+    },
+  })
+
   return (
     <PopoutWrapper>
-      <IconWrapper $type="delete" onClick={() => console.log("deleted")}>
+      <IconWrapper
+        $type="delete"
+        onClick={() => deleteMessageMutation.mutate()}
+      >
         <TrashIcon size={20} />
       </IconWrapper>
 
