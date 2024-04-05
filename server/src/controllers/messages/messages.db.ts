@@ -11,6 +11,7 @@ const getMessages = async ({
   const messages = await Message.createQueryBuilder("message")
     .leftJoinAndSelect("message.user", "user")
     .where("message.channelId = :channelId", { channelId })
+    .orderBy("message.createdAt")
     .getMany()
 
   return messages
@@ -36,15 +37,20 @@ const updateMessage = async ({
   content: string
   messageId: string
 }) => {
-  const updatedMessage = (
-    await db
-      .createQueryBuilder()
-      .update(Message)
-      .set({ content })
-      .where("id = :messageId", { messageId })
-      .returning("*")
-      .execute()
-  ).raw[0]
+  // const updatedMessage = (
+  await db
+    .createQueryBuilder()
+    .update(Message)
+    .set({ content })
+    .where("id = :messageId", { messageId })
+    .returning("*")
+    .execute()
+  // ).raw[0]
+
+  const updatedMessage = Message.findOne({
+    where: { id: messageId },
+    relations: { user: true },
+  })
 
   return updatedMessage
 }

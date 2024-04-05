@@ -1,5 +1,5 @@
 import styled from "styled-components"
-import ChatMessage from "./ChatMessage.tsx"
+import ChatMessage from "./ChatMessage/ChatMessage.tsx"
 import VerticalSpacer from "../../../../shared/components/VerticalSpacer.tsx"
 import { useContext, useEffect, useRef } from "react"
 import { Message } from "../../../../../types.ts"

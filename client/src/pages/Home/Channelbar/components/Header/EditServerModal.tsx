@@ -21,7 +21,7 @@ const Header = styled.div`
   padding-bottom: 0;
 `
 
-const CreateServerModal = ({ handleClose }: { handleClose: () => void }) => {
+const EditServerModal = ({ handleClose }: { handleClose: () => void }) => {
   return (
     <Modal handleClose={handleClose}>
       <CloseButton onClick={handleClose}>
@@ -35,4 +35,4 @@ const CreateServerModal = ({ handleClose }: { handleClose: () => void }) => {
   )
 }
 
-export default CreateServerModal
+export default EditServerModal
