@@ -21,6 +21,10 @@ body {
   overflow: hidden;
 }
 
+textarea {
+  font-family: "Noto Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
 input {
   border-width: 0;
   padding: 0;

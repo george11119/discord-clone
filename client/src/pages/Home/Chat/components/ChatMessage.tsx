@@ -1,5 +1,5 @@
 import styled from "styled-components"
-import { useContext, useState } from "react"
+import { FormEvent, useContext, useRef, useState } from "react"
 import { Message } from "../../../../../types.ts"
 import { formatDateTime } from "../../../../utils/dateTime.ts"
 import TrashIcon from "../../../../shared/svg/TrashIcon.tsx"
@@ -8,13 +8,16 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 import messageService from "../../../../services/messageService.ts"
 import AuthContext from "../../../Auth/AuthContext.ts"
 import { useParams } from "react-router-dom"
+import useAutosizeTextArea from "../../../../hooks/useAutosizeTextArea.ts"
 
-const Wrapper = styled.li`
+const Wrapper = styled.li<{ $beingEdited: boolean }>`
   margin-left: 16px;
   margin-top: 16px;
   display: flex;
   line-height: 1.375rem;
   position: relative;
+  background-color: ${(props) =>
+    props.$beingEdited ? "rgba(2, 2, 2, 0.06)" : "inherit"};
 
   &:hover {
     background-color: rgba(2, 2, 2, 0.06);
@@ -50,20 +53,35 @@ const Sender = styled.span`
 `
 
 const ChatMessage = ({ message }: { message: Message }) => {
+  const [beingEdited, setBeingEdited] = useState(false)
   const [hovered, setHovered] = useState(false)
 
   return (
     <Wrapper
-      onMouseOver={() => setHovered(true)}
-      onMouseOut={() => setHovered(false)}
+      $beingEdited={beingEdited}
+      onMouseOver={() => {
+        if (!beingEdited) setHovered(true)
+      }}
+      onMouseOut={() => {
+        if (!beingEdited) setHovered(false)
+      }}
     >
       <Img></Img>
       <div>
         <Sender>{message.user.username}</Sender>
         <DateWrapper>{formatDateTime(message.createdAt)}</DateWrapper>
-        <MessageWrapper>{message.content}</MessageWrapper>
+        {beingEdited ? (
+          <EditMessageForm message={message} setBeingEdited={setBeingEdited} />
+        ) : (
+          <MessageWrapper>{message.content}</MessageWrapper>
+        )}
       </div>
-      {hovered && <MessageOptionsPopout messageId={message.id} />}
+      {hovered && (
+        <MessageOptionsPopout
+          messageId={message.id}
+          setBeingEditted={setBeingEdited}
+        />
+      )}
     </Wrapper>
   )
 }
@@ -96,31 +114,16 @@ const IconWrapper = styled.div<{ $type?: string }>`
 `
 
 // TODO add tooltips to icon wrappers
-const MessageOptionsPopout = ({ messageId }: { messageId: string }) => {
+const MessageOptionsPopout = ({
+  messageId,
+  setBeingEditted,
+}: {
+  messageId: string
+  setBeingEditted: (beingEditted: boolean) => void
+}) => {
   const { token } = useContext(AuthContext)
   const { channelId } = useParams()
   const queryClient = useQueryClient()
-
-  // const editMessageMutation = useMutation({
-  //   mutationFn: (message: { content: string }) => {
-  //     return messageService.update(
-  //       token as string,
-  //       message,
-  //       channelId as string,
-  //       messageId,
-  //     )
-  //   },
-  //   onSuccess: (editedMessage) => {
-  //     const messages = queryClient.getQueryData([
-  //       `messages-${channelId}`,
-  //     ]) as Message[]
-  //
-  //     queryClient.setQueryData(
-  //       [`messages-${channelId}`],
-  //       messages.map((m) => (m.id === editedMessage.id ? editedMessage : m)),
-  //     )
-  //   },
-  // })
 
   const deleteMessageMutation = useMutation({
     mutationFn: () => {
@@ -151,10 +154,78 @@ const MessageOptionsPopout = ({ messageId }: { messageId: string }) => {
         <TrashIcon size={20} />
       </IconWrapper>
 
-      <IconWrapper onClick={() => console.log("edited")}>
+      <IconWrapper onClick={() => setBeingEditted(true)}>
         <EditIcon size={20} />
       </IconWrapper>
     </PopoutWrapper>
+  )
+}
+
+const EditMessageFormWrapper = styled.form``
+
+const EditInput = styled.textarea`
+  border-radius: 8px;
+  background-color: #383a40;
+  color: rgb(219, 222, 225);
+  outline: none;
+  border: none;
+  overflow: hidden;
+  resize: none;
+  padding: 16px;
+`
+
+const EditMessageForm = ({
+  message,
+  setBeingEdited,
+}: {
+  message: Message
+  setBeingEdited: (beingEdited: boolean) => void
+}) => {
+  const { token } = useContext(AuthContext)
+  const { channelId } = useParams()
+  const queryClient = useQueryClient()
+  // content for the edited message
+  const [content, setContent] = useState(message.content)
+  const textAreaRef = useRef<HTMLTextAreaElement>(null)
+
+  useAutosizeTextArea(textAreaRef.current, content)
+
+  const editMessageMutation = useMutation({
+    mutationFn: (editedMessage: { content: string }) => {
+      return messageService.update(
+        token as string,
+        editedMessage,
+        channelId as string,
+        message.id,
+      )
+    },
+    onSuccess: (editedMessage) => {
+      const messages = queryClient.getQueryData([
+        `messages-${channelId}`,
+      ]) as Message[]
+
+      queryClient.setQueryData(
+        [`messages-${channelId}`],
+        messages.map((m) => (m.id === editedMessage.id ? editedMessage : m)),
+      )
+    },
+  })
+
+  const onSubmit = (e: FormEvent) => {
+    e.preventDefault()
+
+    setBeingEdited(false)
+  }
+
+  return (
+    <EditMessageFormWrapper onSubmit={onSubmit}>
+      <EditInput
+        value={content}
+        ref={textAreaRef}
+        onChange={(e) => setContent(e.target.value)}
+        rows={1}
+      />
+    </EditMessageFormWrapper>
   )
 }
 

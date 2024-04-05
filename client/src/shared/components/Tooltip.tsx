@@ -1,16 +1,19 @@
 import { Tooltip as ReactTooltip } from "react-tooltip"
-import { useId, useState } from "react"
+import { ReactNode, useId, useState } from "react"
+import * as React from "react"
 
 const Tooltip = ({
   children,
   tooltip,
   placement,
   fontSize,
+  style,
 }: {
-  children: JSX.Element | string
+  children: ReactNode | string
   tooltip: string
   placement: "top" | "left" | "right" | "bottom"
   fontSize?: number
+  style?: React.CSSProperties
 }) => {
   const tooltipId = useId()
   const [isOpen, setIsOpen] = useState(false)
@@ -36,6 +39,7 @@ const Tooltip = ({
           borderRadius: "4px",
           zIndex: 2,
           userSelect: "none",
+          ...style,
         }}
         place={placement}
       />

@@ -8,7 +8,7 @@ import Button from "../../../../../shared/components/Button.tsx"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import channelService from "../../../../../services/channelService.ts"
 import AuthContext from "../../../../Auth/AuthContext.ts"
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 
 const CloseButton = styled.div`
   position: absolute;
@@ -95,6 +95,7 @@ const ChannelForm = ({
   const [deleteButtonHovered, setDeleteButtonHovered] = useState(false)
   const { token } = useContext(AuthContext)
   const { serverId } = useParams()
+  const navigate = useNavigate()
 
   const channelFormId = useId()
   const [channelName, setChannelName] = useState(initialChannelName)
@@ -160,7 +161,9 @@ const ChannelForm = ({
       queryClient.invalidateQueries({
         queryKey: [`channels`],
       })
+
       handleClose()
+      navigate(`/channels/${serverId}`)
     },
   })
 

@@ -90,3 +90,15 @@ erDiagram
         int channel_id FK
     }
 ```
+
+### Known Bugs:
+
+### Frontend:
+
+<ul>
+    <li>Inefficient data fetching</li>
+    <li>Refreshing the page sends you back to home page</li>
+    <li>Clicking on server sends you to empty channel page</li>
+</ul>
+
+should have used github projects kanban board instead of this :/
