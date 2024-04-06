@@ -1,12 +1,6 @@
 import styled from "styled-components"
 import { Message } from "../../../../../../types.ts"
-import {
-  FormEvent,
-  KeyboardEventHandler,
-  useContext,
-  useRef,
-  useState,
-} from "react"
+import { FormEvent, useContext, useEffect, useRef, useState } from "react"
 import AuthContext from "../../../../Auth/AuthContext.ts"
 import { useParams } from "react-router-dom"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
@@ -15,7 +9,7 @@ import messageService from "../../../../../services/messageService.ts"
 
 const EditMessageFormWrapper = styled.form``
 
-const EditInput = styled.textarea`
+const EditInputTextArea = styled.textarea`
   border-radius: 8px;
   background-color: #383a40;
   color: rgb(219, 222, 225);
@@ -24,8 +18,11 @@ const EditInput = styled.textarea`
   overflow: hidden;
   resize: none;
   padding: 13px;
-  width: calc(100% - 48px);
+  min-width: calc(100% - 48px);
+  max-width: calc(100% - 48px);
   box-sizing: border-box;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
 `
 
 const EditButtonContainer = styled.div`
@@ -64,13 +61,24 @@ const EditMessageForm = ({
 
   useAutosizeTextArea(textAreaRef.current, content)
 
+  useEffect(() => {
+    if (textAreaRef.current) {
+      textAreaRef.current.style.height = "0px"
+      const scrollHeight = textAreaRef.current.scrollHeight
+
+      textAreaRef.current.style.height = scrollHeight + "px"
+      textAreaRef.current.setSelectionRange(content.length, content.length)
+      textAreaRef.current.focus()
+    }
+  }, [])
+
   const editMessageMutation = useMutation({
     mutationFn: (editedMessage: { content: string }) => {
       return messageService.update(
         token as string,
         editedMessage,
         channelId as string,
-        message.id,
+        message.id
       )
     },
     onSuccess: (editedMessage) => {
@@ -80,7 +88,7 @@ const EditMessageForm = ({
 
       queryClient.setQueryData(
         [`messages-${channelId}`],
-        messages.map((m) => (m.id === editedMessage.id ? editedMessage : m)),
+        messages.map((m) => (m.id === editedMessage.id ? editedMessage : m))
       )
 
       setBeingEdited(false)
@@ -108,11 +116,10 @@ const EditMessageForm = ({
 
   return (
     <EditMessageFormWrapper onSubmit={onSubmit}>
-      <EditInput
+      <EditInputTextArea
         value={content}
         ref={textAreaRef}
         onChange={(e) => setContent(e.target.value)}
-        rows={1}
         onKeyDown={onEnterPress}
       />
       <EditButtonContainer>

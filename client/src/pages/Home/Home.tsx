@@ -6,8 +6,9 @@ import { useEffect, useState } from "react"
 import { socket } from "../../config/socket.ts"
 
 const Wrapper = styled.div`
-  display: flex;
+  display: grid;
   color: rgb(219, 222, 225);
+  grid-template-columns: 72px 240px 1fr;
 `
 
 const Home = () => {

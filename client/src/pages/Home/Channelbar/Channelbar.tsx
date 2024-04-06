@@ -6,7 +6,6 @@ import { matchPath, useLocation } from "react-router-dom"
 import DirectMessagesList from "./components/DirectMessagesList/DirectMessagesList.tsx"
 
 const Wrapper = styled.nav`
-  width: 240px;
   max-height: 100vh;
   background-color: rgb(43, 45, 49);
   flex-shrink: 0;

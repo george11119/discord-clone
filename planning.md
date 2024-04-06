@@ -26,12 +26,13 @@
         </ul>
         <li>fix frontend - DONE</li>
         <li>Get messages to be saved on invidual channels</li>
-        <li>Add CRUD API endpoints</li>
+        <li>Add CRUD API endpoints - DONE</li>
         <ul>
             <li>Add CRUD operations to servers - DONE</li>
             <li>Add CRUD operations to channels</li>
             <li>Add CRUD operations to messages</li>
         </ul>
+        <li>Fix initial data fetching and bugs</li>
         <li>Add socket operations</li>
         <ul>
             <li>Add socket operations to servers</li>

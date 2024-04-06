@@ -19,6 +19,11 @@ const Wrapper = styled.li<{ $beingEdited: boolean }>`
   }
 `
 
+const MessageWrapper = styled.div`
+  width: 100%;
+  white-space: initial;
+`
+
 const Img = styled.div`
   min-height: 40px;
   max-height: 40px;
@@ -36,10 +41,12 @@ const DateWrapper = styled.span`
   font-size: 12px;
 `
 
-const MessageWrapper = styled.div`
+const MessageContentWrapper = styled.div`
   font-weight: 500;
   font-size: 14px;
   padding-right: 48px;
+  white-space: pre-wrap;
+  word-wrap: break-word;
 `
 
 const Sender = styled.span`
@@ -70,18 +77,18 @@ const ChatMessage = ({ message }: { message: Message }) => {
       }}
     >
       <Img></Img>
-      <div style={{ width: "100%" }}>
+      <MessageWrapper>
         <Sender>{message.user.username}</Sender>
         <DateWrapper>{formatDateTime(message.createdAt)}</DateWrapper>
         {beingEdited ? (
           <EditMessageForm message={message} setBeingEdited={setBeingEdited} />
         ) : (
-          <MessageWrapper>
-            {message.content}{" "}
+          <MessageContentWrapper>
+            {message.content}
             {edited ? <EditedIndicator>(edited)</EditedIndicator> : ""}
-          </MessageWrapper>
+          </MessageContentWrapper>
         )}
-      </div>
+      </MessageWrapper>
       {hovered && (
         <MessageOptionsPopout
           messageId={message.id}

@@ -6,7 +6,9 @@ import { isUserInServer } from "../helpers"
 const router = express.Router()
 
 router.get("/", authenticatedValidator, async (req, res) => {
-  const servers = await ServersController.getServers(req.user?.id as string)
+  const servers = await ServersController.getServersWithChannels(
+    req.user?.id as string,
+  )
   res.json({ servers })
 })
 

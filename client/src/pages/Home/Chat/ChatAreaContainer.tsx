@@ -8,7 +8,6 @@ import { useQueryClient } from "@tanstack/react-query"
 
 const Wrapper = styled.div`
   background-color: rgb(49, 51, 56);
-  width: 100%;
   height: 100vh;
   display: flex;
   flex-direction: column;

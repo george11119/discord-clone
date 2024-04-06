@@ -51,7 +51,7 @@ const ChatMessageDisplay = () => {
 
   return (
     <Wrapper>
-      <div>
+      <div style={{ width: "100%" }}>
         {messages &&
           messages.map((message: Message) => {
             return <ChatMessage key={message.id} message={message} />

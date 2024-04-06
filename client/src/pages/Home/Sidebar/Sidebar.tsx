@@ -11,7 +11,6 @@ import { useQuery } from "@tanstack/react-query"
 
 const Wrapper = styled.nav`
   background: rgb(30, 31, 34);
-  width: 72px;
   height: 100vh;
   display: flex;
   box-sizing: border-box; // wtf this

@@ -9,17 +9,24 @@ const getServer = async (serverId: string) => {
 }
 
 const getServers = async (userId: string) => {
-  const servers = await db.query(
-    `
-      SELECT "server".*
-      FROM "user"
-             INNER JOIN "user_servers" ON "user"."id" = "user_servers"."userId"
-             INNER JOIN "server" ON "user_servers"."serverId" = "server"."id"
-      WHERE "user"."id" = $1
-      ORDER BY "server"."createdAt"
-    `,
-    [userId],
-  )
+  const servers = await Server.createQueryBuilder("server")
+    .innerJoin(UserServers, "user_servers", "user_servers.serverId = server.id")
+    .innerJoin(User, "user", "user.id = user_servers.userId")
+    .where("user.id = :userId", { userId })
+    .orderBy("server.createdAt")
+    .getMany()
+
+  return servers
+}
+
+const getServersWithChannels = async (userId: string) => {
+  const servers = await Server.createQueryBuilder("server")
+    .innerJoin(UserServers, "user_servers", "user_servers.serverId = server.id")
+    .innerJoin(User, "user", "user.id = user_servers.userId")
+    .leftJoinAndSelect("server.channels", "channel")
+    .where("user.id = :userId", { userId })
+    .orderBy("server.createdAt")
+    .getMany()
 
   return servers
 }
@@ -58,6 +65,7 @@ const deleteServer = async ({ serverId }: { serverId: string }) => {
 export default {
   getServer,
   getServers,
+  getServersWithChannels,
   createServer,
   updateServer,
   deleteServer,

@@ -96,7 +96,7 @@ describe(`${url}`, () => {
         .set("authorization", `Bearer ${token}`)
         .expect(200)
 
-      const { messages } = res.body
+      const messages = res.body
       expect(messages.length).toBe(5)
 
       const [message] = messages
