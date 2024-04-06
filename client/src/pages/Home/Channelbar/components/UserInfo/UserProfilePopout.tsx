@@ -7,6 +7,8 @@ import LogoutButton from "../../../../Auth/components/LogoutButton.tsx"
 import { motion } from "framer-motion"
 import useOnOutsideClick from "../../../../../hooks/useOnOutsideClick.ts"
 import UserProfilePicture from "../../../../../shared/components/UserProfilePicture.tsx"
+import useOnKeyDown from "../../../../../hooks/useOnKeyDown.ts"
+import { KeyCodes } from "../../../../../shared/constants/keycodes.ts"
 
 const Wrapper = styled.div`
   display: flex;
@@ -19,6 +21,7 @@ const Wrapper = styled.div`
   flex-direction: column;
   border-radius: 8px;
   max-height: 800px;
+  z-index: 2;
 `
 
 const Banner = styled.div`
@@ -64,6 +67,8 @@ const UserProfilePopout = ({
   const { user } = useContext(AuthContext)
 
   const ref = useOnOutsideClick(() => setPopoutOpen(false))
+
+  useOnKeyDown(KeyCodes.ESCAPE, () => setPopoutOpen(false))
 
   return (
     <Wrapper

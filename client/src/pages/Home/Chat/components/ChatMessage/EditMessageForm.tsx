@@ -13,6 +13,8 @@ import { useParams } from "react-router-dom"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import useAutosizeTextArea from "../../../../../hooks/useAutosizeTextArea.ts"
 import messageService from "../../../../../services/messageService.ts"
+import useOnKeyDown from "../../../../../hooks/useOnKeyDown.ts"
+import { KeyCodes } from "../../../../../shared/constants/keycodes.ts"
 
 const EditMessageFormWrapper = styled.form``
 
@@ -94,7 +96,7 @@ const EditMessageForm = ({
         token as string,
         editedMessage,
         channelId as string,
-        message.id
+        message.id,
       )
     },
     onSuccess: (editedMessage) => {
@@ -104,7 +106,7 @@ const EditMessageForm = ({
 
       queryClient.setQueryData(
         [`messages-${channelId}`],
-        messages.map((m) => (m.id === editedMessage.id ? editedMessage : m))
+        messages.map((m) => (m.id === editedMessage.id ? editedMessage : m)),
       )
 
       setBeingEdited(false)
@@ -117,6 +119,8 @@ const EditMessageForm = ({
       submitButtonRef.current.click()
     }
   }
+
+  useOnKeyDown(KeyCodes.ESCAPE, () => setBeingEdited(false))
 
   const onSubmit = (e: FormEvent) => {
     e.preventDefault()
@@ -139,7 +143,7 @@ const EditMessageForm = ({
         onKeyDown={onEnterPress}
       />
       <EditButtonContainer>
-        <span>press to </span>
+        <span>Escape to </span>
         <EditButton onClick={() => setBeingEdited(false)}>cancel</EditButton>
         <span> • enter to </span>
         <EditButton ref={submitButtonRef}>save</EditButton>
