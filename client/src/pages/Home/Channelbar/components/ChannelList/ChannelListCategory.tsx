@@ -16,6 +16,7 @@ const Wrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  user-select: none;
 `
 
 const Title = styled.div<{ $isHovered: boolean }>`

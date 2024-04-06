@@ -3,6 +3,8 @@ import styled from "styled-components"
 import { motion } from "framer-motion"
 import { ReactNode } from "react"
 import * as React from "react"
+import useOnKeyDown from "../../hooks/useOnKeyDown.ts"
+import { KeyCodes } from "../constants/keycodes.ts"
 
 const modalAnimation = {
   hidden: {
@@ -47,6 +49,7 @@ const Modal = ({
   children: ReactNode
   style?: React.CSSProperties
 }) => {
+  useOnKeyDown(KeyCodes.ESCAPE, handleClose)
   return (
     <Backdrop onClick={handleClose}>
       <Wrapper

@@ -1,6 +1,6 @@
 import styled from "styled-components"
 import useOnOutsideClick from "../../../../../hooks/useOnOutsideClick.ts"
-import { motion } from "framer-motion"
+import { AnimatePresence, motion } from "framer-motion"
 import Separator from "../../../Sidebar/components/Separator.tsx"
 import InviteIcon from "../../../../../shared/svg/InviteIcon.tsx"
 import SettingsButton from "../../../../../shared/svg/SettingsButton.tsx"
@@ -14,6 +14,7 @@ import { useContext } from "react"
 import AuthContext from "../../../../Auth/AuthContext.ts"
 import { Server } from "../../../../../../types.ts"
 import { useNavigate } from "react-router-dom"
+import useModal from "../../../../../hooks/useModal.ts"
 
 const Wrapper = styled.div`
   position: absolute;
@@ -57,9 +58,15 @@ const Button = styled.button<{ $color?: string; $hoverColor?: string }>`
 const ServerOptionsPopout = ({
   setPopoutOpen,
   modal: { open, close, modalOpen },
+  createChannel,
 }: {
   setPopoutOpen: (popoutOpen: boolean) => void
   modal: {
+    open: () => void
+    close: () => void
+    modalOpen: boolean
+  }
+  createChannel: {
     open: () => void
     close: () => void
     modalOpen: boolean
@@ -105,7 +112,12 @@ const ServerOptionsPopout = ({
 
           <Separator type="thin" width={192} style={{ margin: "4px" }} />
 
-          <Button>
+          <Button
+            onClick={() => {
+              setPopoutOpen(false)
+              createChannel.open()
+            }}
+          >
             Create Channel
             <UploadFileButton size={18} />
           </Button>

@@ -10,6 +10,7 @@ import { useQueryClient } from "@tanstack/react-query"
 import { AnimatePresence } from "framer-motion"
 import useModal from "../../../../../hooks/useModal.ts"
 import EditServerModal from "./EditServerModal.tsx"
+import ChannelModal from "../ChannelList/ChannelModal.tsx"
 
 const Wrapper = styled.div`
   box-shadow:
@@ -39,6 +40,7 @@ const Header = () => {
   const { pathname } = useLocation()
   const isHomeLink = matchPath(`/channels/@me/*`, pathname)
   const { open, close, modalOpen } = useModal()
+  const createChannel = useModal()
 
   const togglePopoutVisibility = (e: any) => {
     e.stopPropagation()
@@ -56,11 +58,19 @@ const Header = () => {
       <AnimatePresence initial={false} mode="wait" onExitComplete={() => null}>
         {modalOpen && <EditServerModal handleClose={close} />}
       </AnimatePresence>
+
+      <AnimatePresence initial={false} mode="wait" onExitComplete={() => null}>
+        {createChannel.modalOpen && (
+          <ChannelModal type="create" handleClose={createChannel.close} />
+        )}
+      </AnimatePresence>
+
       <div style={{ position: "relative" }}>
         {popoutOpen && (
           <ServerOptionsPopout
             setPopoutOpen={setPopoutOpen}
             modal={{ open, close, modalOpen }}
+            createChannel={createChannel}
           />
         )}
         <Wrapper
