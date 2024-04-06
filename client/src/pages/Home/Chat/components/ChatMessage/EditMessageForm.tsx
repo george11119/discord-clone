@@ -1,6 +1,13 @@
 import styled from "styled-components"
 import { Message } from "../../../../../../types.ts"
-import { FormEvent, useContext, useEffect, useRef, useState } from "react"
+import {
+  FormEvent,
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react"
 import AuthContext from "../../../../Auth/AuthContext.ts"
 import { useParams } from "react-router-dom"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
@@ -61,7 +68,7 @@ const EditMessageForm = ({
 
   useAutosizeTextArea(textAreaRef.current, content)
 
-  useEffect(() => {
+  const resizeTextArea = () => {
     if (textAreaRef.current) {
       textAreaRef.current.style.height = "0px"
       const scrollHeight = textAreaRef.current.scrollHeight
@@ -70,6 +77,15 @@ const EditMessageForm = ({
       textAreaRef.current.setSelectionRange(content.length, content.length)
       textAreaRef.current.focus()
     }
+  }
+
+  useEffect(() => {
+    resizeTextArea()
+  }, [])
+
+  useLayoutEffect(() => {
+    window.addEventListener("resize", resizeTextArea)
+    return () => window.removeEventListener("resize", resizeTextArea)
   }, [])
 
   const editMessageMutation = useMutation({

@@ -45,8 +45,7 @@ const MessageContentWrapper = styled.div`
   font-weight: 500;
   font-size: 14px;
   padding-right: 48px;
-  white-space: pre-wrap;
-  word-wrap: break-word;
+  word-break: break-word;
 `
 
 const Sender = styled.span`
@@ -84,7 +83,7 @@ const ChatMessage = ({ message }: { message: Message }) => {
           <EditMessageForm message={message} setBeingEdited={setBeingEdited} />
         ) : (
           <MessageContentWrapper>
-            {message.content}
+            {message.content}{" "}
             {edited ? <EditedIndicator>(edited)</EditedIndicator> : ""}
           </MessageContentWrapper>
         )}
