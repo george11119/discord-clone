@@ -26,6 +26,7 @@ const seedDatabase = async () => {
   for (let i = 1; i <= 5; i++) {
     const server = await Server.save({ name: `User 1's Server ${i}` })
     await UserServers.save({ user: user1, server })
+    await UserServers.save({ user: user2, server })
   }
 
   // create 5 channels for the first server of user 1

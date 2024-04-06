@@ -1,10 +1,18 @@
-const DiscordIcon = () => {
+import { CSSProperties } from "react"
+
+const DiscordIcon = ({
+  style,
+  size,
+}: {
+  style?: CSSProperties
+  size?: number
+}) => {
   return (
     <svg
-      className="h-6 w-6 mr-2"
+      style={style}
       xmlns="http://www.w3.org/2000/svg"
-      width="18px"
-      height="18px"
+      width={size ? `${size}px` : "18px"}
+      height={size ? `${size}px` : "18px"}
       viewBox="0 -28.5 256 256"
       version="1.1"
       preserveAspectRatio="xMidYMid"

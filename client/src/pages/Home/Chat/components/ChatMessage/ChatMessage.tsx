@@ -4,6 +4,7 @@ import { Message } from "../../../../../../types.ts"
 import { formatDateTime } from "../../../../../utils/dateTime.ts"
 import MessageOptionsPopout from "./MessageOptionsPopout.tsx"
 import EditMessageForm from "./EditMessageForm.tsx"
+import DiscordIcon from "../../../../Auth/assets/DiscordIcon.tsx"
 
 const Wrapper = styled.li<{ $beingEdited: boolean }>`
   margin-left: 16px;
@@ -32,7 +33,10 @@ const Img = styled.div`
   border-radius: 50%;
   margin-right: 16px;
   margin-top: 2px;
-  background-color: yellow;
+  background-color: #5865f2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `
 
 const DateWrapper = styled.span`
@@ -75,7 +79,9 @@ const ChatMessage = ({ message }: { message: Message }) => {
         if (!beingEdited) setHovered(false)
       }}
     >
-      <Img></Img>
+      <Img>
+        <DiscordIcon size={24} />
+      </Img>
       <MessageWrapper>
         <Sender>{message.user.username}</Sender>
         <DateWrapper>{formatDateTime(message.createdAt)}</DateWrapper>

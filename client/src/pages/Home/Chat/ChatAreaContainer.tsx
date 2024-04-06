@@ -27,16 +27,39 @@ const ChatAreaContainer = () => {
     ? (data.channels.find((c) => c.id === channelId) as Channel)
     : null
 
+  if (isHomeLink) {
+    return (
+      <Wrapper
+        style={{
+          alignItems: "center",
+          justifyContent: "center",
+          color: "rgb(148, 155, 164)",
+        }}
+      >
+        <div>TODO add home page</div>
+      </Wrapper>
+    )
+  }
+
   return (
     <Wrapper>
-      {isHomeLink ? (
-        <div>TODO add home page</div>
-      ) : (
+      {channelId ? (
         <>
           <Header chatTitle={channel ? channel.name : ""} />
           <ChatMessageDisplay />
           <MessageInput />
         </>
+      ) : (
+        <Wrapper
+          style={{
+            backgroundColor: "#1e1f22",
+            alignItems: "center",
+            justifyContent: "center",
+            color: "rgb(148, 155, 164)",
+          }}
+        >
+          Create or select a channel
+        </Wrapper>
       )}
     </Wrapper>
   )

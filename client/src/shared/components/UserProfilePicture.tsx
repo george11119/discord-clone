@@ -1,6 +1,7 @@
 import styled from "styled-components"
 import { useId } from "react"
-import Tooltip from "./Tooltip.tsx"
+// import Tooltip from "./Tooltip.tsx"
+import DiscordIcon from "../../pages/Auth/assets/DiscordIcon.tsx"
 
 const Wrapper = styled.div<{ $profileDiameter: number }>`
   position: relative;
@@ -83,24 +84,29 @@ const UserProfilePicture = ({
             style={{
               height: profileDiameter,
               width: profileDiameter,
-              backgroundColor: "yellow",
+              backgroundColor: "#5865f2",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
             }}
-          ></div>
+          >
+            <DiscordIcon size={profileDiameter * 0.6} />
+          </div>
         </foreignObject>
       </svg>
-      <Tooltip tooltip="Do not disturb" placement="top" fontSize={14}>
-        <StatusIcon
-          style={{ height: statusSize, width: statusSize }}
-          $translateDistance={statusIconTranslateDistance}
-        >
-          <circle
-            cx={statusSize / 2}
-            cy={statusSize / 2}
-            r={statusSize / 2}
-            fill="rgb(242, 63, 67)"
-          ></circle>
-        </StatusIcon>
-      </Tooltip>
+      {/*<Tooltip tooltip="Do not disturb" placement="left" fontSize={14}>*/}
+      <StatusIcon
+        style={{ height: statusSize, width: statusSize }}
+        $translateDistance={statusIconTranslateDistance}
+      >
+        <circle
+          cx={statusSize / 2}
+          cy={statusSize / 2}
+          r={statusSize / 2}
+          fill="rgb(242, 63, 67)"
+        ></circle>
+      </StatusIcon>
+      {/*</Tooltip>*/}
     </Wrapper>
   )
 }
