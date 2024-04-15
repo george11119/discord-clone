@@ -12,11 +12,10 @@ import useModal from "../../../../../hooks/useModal.ts"
 import EditServerModal from "./EditServerModal.tsx"
 import ChannelModal from "../ChannelList/ChannelModal.tsx"
 
-const Wrapper = styled.div`
-  box-shadow:
-    rgba(2, 2, 2, 0.2) 0px 1px 0px 0px,
-    rgba(6, 6, 7, 0.05) 0px 1.5px 0px 0px,
-    rgba(2, 2, 2, 0.05) 0px 2px 0px 0px;
+const Wrapper = styled.div<{ $isHomeLink: boolean }>`
+  box-shadow: rgba(2, 2, 2, 0.2) 0px 1px 0px 0px,
+  rgba(6, 6, 7, 0.05) 0px 1.5px 0px 0px,
+  rgba(2, 2, 2, 0.05) 0px 2px 0px 0px;
   height: 24px;
   padding: 12px 10px;
   display: flex;
@@ -28,8 +27,11 @@ const Wrapper = styled.div`
   user-select: none;
 
   &:hover {
-    background-color: #35373c;
+    background-color: ${(props) =>
+      props.$isHomeLink ? "inherit" : " #35373c"};
   }
+;
+}
 `
 
 const Header = () => {
@@ -38,7 +40,7 @@ const Header = () => {
 
   const [popoutOpen, setPopoutOpen] = useState(false)
   const { pathname } = useLocation()
-  const isHomeLink = matchPath(`/channels/@me/*`, pathname)
+  const isHomeLink = matchPath(`/channels/@me/*`, pathname) ? true : false
   const { open, close, modalOpen } = useModal()
   const createChannel = useModal()
 
@@ -74,8 +76,9 @@ const Header = () => {
           />
         )}
         <Wrapper
-          onClick={togglePopoutVisibility}
+          onClick={isHomeLink ? () => null : togglePopoutVisibility}
           style={popoutOpen ? { backgroundColor: "#35373c" } : {}}
+          $isHomeLink={isHomeLink}
         >
           {isHomeLink ? (
             <ConversationSearchButton />

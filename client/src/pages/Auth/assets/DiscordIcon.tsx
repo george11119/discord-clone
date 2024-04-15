@@ -9,7 +9,7 @@ const DiscordIcon = ({
 }) => {
   return (
     <svg
-      style={style}
+      style={{ height: size, width: size, ...style }}
       xmlns="http://www.w3.org/2000/svg"
       width={size ? `${size}px` : "18px"}
       height={size ? `${size}px` : "18px"}

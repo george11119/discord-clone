@@ -1,6 +1,6 @@
 import styled from "styled-components"
 import useOnOutsideClick from "../../../../../hooks/useOnOutsideClick.ts"
-import { AnimatePresence, motion } from "framer-motion"
+import { motion } from "framer-motion"
 import Separator from "../../../Sidebar/components/Separator.tsx"
 import InviteIcon from "../../../../../shared/svg/InviteIcon.tsx"
 import SettingsButton from "../../../../../shared/svg/SettingsButton.tsx"
@@ -14,7 +14,8 @@ import { useContext } from "react"
 import AuthContext from "../../../../Auth/AuthContext.ts"
 import { Server } from "../../../../../../types.ts"
 import { useNavigate } from "react-router-dom"
-import useModal from "../../../../../hooks/useModal.ts"
+import useOnKeyDown from "../../../../../hooks/useOnKeyDown.ts"
+import { KeyCodes } from "../../../../../shared/constants/keycodes.ts"
 
 const Wrapper = styled.div`
   position: absolute;
@@ -94,6 +95,8 @@ const ServerOptionsPopout = ({
       navigate("/channels/@me")
     },
   })
+
+  useOnKeyDown(KeyCodes.ESCAPE, () => setPopoutOpen(false))
 
   return (
     <>

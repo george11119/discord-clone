@@ -6,7 +6,6 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   ManyToOne,
-  JoinColumn,
 } from "typeorm"
 import { Channel } from "./channel"
 import { User } from "./user"

@@ -177,6 +177,7 @@ const ChannelForm = ({
           setValue={setChannelName}
           labelStyle={{ color: "rgb(219, 222, 225)" }}
           placeholder="new-channel"
+          autoFocus
         />
       </Form>
       <Footer>
@@ -199,7 +200,7 @@ const ChannelForm = ({
           />
         )}
         <Button
-          text="Create Channel"
+          text={type === "create" ? "Create Channel" : "Edit Channel"}
           isLoading={mutator.isPending}
           form={channelFormId}
           style={{
