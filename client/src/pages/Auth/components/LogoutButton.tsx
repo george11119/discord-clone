@@ -1,6 +1,7 @@
 import { useContext } from "react"
 import AuthContext from "../AuthContext.ts"
 import styled from "styled-components"
+import { socket } from "../../../config/socket.ts"
 
 const Button = styled.button`
   padding: 8px 4px;

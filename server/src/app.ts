@@ -14,7 +14,7 @@ import messageRouter from "./controllers/messages/messages.routes"
 import usersRouter from "./controllers/users/users.routes"
 import serverRouter from "./controllers/servers/servers.routes"
 import channelsRouter from "./controllers/channels/channels.routes"
-import messageService from "./controllers/messages/messages.socket"
+import messageSocket from "./controllers/messages/messages.socket"
 
 import { requestLogger } from "./middleware/requestLogger"
 import { unknownEndpoint } from "./middleware/unknownEndpoint"
@@ -67,5 +67,34 @@ app.use(errorHandler)
 
 // websocket stuff
 io.on("connection", (socket) => {
-  socket.on("message:create", messageService.createMessage)
+  // console.log("CONNECTED")
+
+  // server room stuff
+  socket.on("joinServerRoom", (serverId) => {
+    socket.join(`server-${serverId}`)
+  })
+  socket.on("leaveServerRoom", (serverId) => {
+    socket.leave(`server-${serverId}`)
+  })
+
+  // channel room stuff
+  socket.on("joinChannelRoom", (channelId) => {
+    socket.join(`channel-${channelId}`)
+  })
+  socket.on("leaveChannelRoom", (channelId) => {
+    socket.leave(`channel-${channelId}`)
+  })
+
+  socket.on("message:create", (m) => messageSocket.emitCreatedMessage(m))
+
+  // socket.on("disconnect", (reason) => {
+  //   console.log("USER DISCONNECTED", reason)
+  // })
 })
+
+let i = 0
+setInterval(() => {
+  console.log(`ran setInterval ${i} times`)
+  console.log(io.sockets.adapter.rooms)
+  i++
+}, 5000)

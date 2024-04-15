@@ -29,9 +29,10 @@
         <li>Add CRUD API endpoints - DONE</li>
         <ul>
             <li>Add CRUD operations to servers - DONE</li>
-            <li>Add CRUD operations to channels</li>
-            <li>Add CRUD operations to messages</li>
+            <li>Add CRUD operations to channels - DONE</li>
+            <li>Add CRUD operations to messages - DONE</li>
         </ul>
+        <li>Get servers, channels, and user to load before showing page</li>
         <li>Fix initial data fetching and bugs</li>
         <li>Add socket operations</li>
         <ul>
@@ -40,9 +41,7 @@
             <li>Add socket operations to messages</li>
         </ul>
         <li>Add authentication to socket connection</li>
-        <li>Get servers, channels, and user to load before showing page</li>
         <li>Create a user direct message home page</li>
-        <li>Add react query to cache responses</li>
         <li>Add ways to invite people into server</li>
         <li>Add pagination fetching for messages in channels</li>
         <li>Add loading animations</li>

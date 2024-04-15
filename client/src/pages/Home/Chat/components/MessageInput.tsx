@@ -1,11 +1,12 @@
 import styled from "styled-components"
-import { FormEvent, useContext, useState } from "react"
+import { FormEvent, useContext, useEffect, useState } from "react"
 import UploadFileButton from "../../../../shared/svg/UploadFileButton.tsx"
 import messageService from "../../../../services/messageService.ts"
 import AuthContext from "../../../Auth/AuthContext.ts"
 import { useParams } from "react-router-dom"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { Message } from "../../../../../types.ts"
+import { socket } from "../../../../config/socket.ts"
 
 const Wrapper = styled.form`
   height: 68px;
@@ -48,11 +49,12 @@ const MessageInput = () => {
 
   const newMessageMutation = useMutation({
     mutationFn: (newMessage: { content: string }) => {
-      return messageService.create(
+      const res = messageService.create(
         token as string,
         newMessage,
         channelId as string,
       )
+      return res
     },
     onSuccess: (newMessage) => {
       const messages = queryClient.getQueryData([
@@ -63,6 +65,8 @@ const MessageInput = () => {
         [`messages-${channelId}`],
         messages?.concat(newMessage),
       )
+
+      socket.emit("message:create", newMessage)
     },
   })
 

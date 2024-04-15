@@ -7,6 +7,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query"
 import messageService from "../../../../services/messageService.ts"
 import AuthContext from "../../../Auth/AuthContext.ts"
 import { useParams } from "react-router-dom"
+import { socket } from "../../../../config/socket.ts"
 
 const Wrapper = styled.ul`
   flex: 1;
@@ -44,6 +45,23 @@ const ChatMessageDisplay = () => {
       }
     }
   }
+
+  useEffect(() => {
+    const onMessageCreate = (newMessage: Message) => {
+      if (newMessage.user.id !== user?.id) {
+        queryClient.setQueryData(
+          [`messages-${channelId}`],
+          messages?.concat(newMessage),
+        )
+      }
+    }
+
+    socket.on("message:create", onMessageCreate)
+
+    return () => {
+      socket.off("message:create", onMessageCreate)
+    }
+  }, [messages])
 
   useEffect(() => {
     scrollToBottom()
