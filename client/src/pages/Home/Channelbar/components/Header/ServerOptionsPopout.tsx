@@ -16,6 +16,7 @@ import { Server } from "../../../../../../types.ts"
 import { useNavigate } from "react-router-dom"
 import useOnKeyDown from "../../../../../hooks/useOnKeyDown.ts"
 import { KeyCodes } from "../../../../../shared/constants/keycodes.ts"
+import { socket } from "../../../../../config/socket.ts"
 
 const Wrapper = styled.div`
   position: absolute;
@@ -91,6 +92,7 @@ const ServerOptionsPopout = ({
         servers.filter((s) => s.id !== serverId),
       )
 
+      socket.emit("server:delete", serverId)
       setPopoutOpen(false)
       navigate("/channels/@me")
     },

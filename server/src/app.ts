@@ -17,6 +17,7 @@ import initialDataFetchRouter from "./controllers/initialDataFetch/initialDataFe
 import channelsRouter from "./controllers/channels/channels.routes"
 import messageSocket from "./controllers/messages/messages.socket"
 import channelSocket from "./controllers/channels/channel.socket"
+import serverSocket from "./controllers/servers/server.socket"
 
 import { requestLogger } from "./middleware/requestLogger"
 import { unknownEndpoint } from "./middleware/unknownEndpoint"
@@ -102,6 +103,12 @@ io.on("connection", (socket) => {
   )
   socket.on("channel:delete", ({ channelId, serverId }) =>
     channelSocket.emitChannelDelete({ channelId, serverId }, socket),
+  )
+
+  // server socket stuff
+  socket.on("server:edit", (s) => serverSocket.emitEditedServer(s, socket))
+  socket.on("server:delete", (serverId) =>
+    serverSocket.emitServerDelete(serverId, socket),
   )
 })
 

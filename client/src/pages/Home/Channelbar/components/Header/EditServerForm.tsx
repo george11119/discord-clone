@@ -47,11 +47,11 @@ const EditServerForm = ({ handleClose }: { handleClose: () => void }) => {
         token as string,
       )
     },
-    onSuccess: (newServer) => {
+    onSuccess: (editedServer) => {
       const servers = queryClient.getQueryData(["servers"]) as Server[]
       queryClient.setQueryData(
         ["servers"],
-        servers.map((s) => (s.id === serverId ? newServer : s)),
+        servers.map((s) => (s.id === serverId ? editedServer : s)),
       )
 
       handleClose()
