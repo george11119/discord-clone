@@ -7,7 +7,7 @@ import { Channel } from "../../../../../../types.ts"
 import channelService from "../../../../../services/channelService.ts"
 import AuthContext from "../../../../Auth/AuthContext.ts"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
-import { socket } from "../../../../../config/socket.ts"
+// import { socket } from "../../../../../config/socket.ts"
 
 const Wrapper = styled.div`
   list-style: none;
@@ -32,17 +32,19 @@ const ChannelList = () => {
     })
   }, [serverId])
 
-  useEffect(() => {
-    const onChannelCreate = (newChannel: Channel) => {
-      console.log(newChannel)
-    }
+  // TODO FIX HANDLING RECEIVING EMIT EVENT AFTER SOMEONE ELSE CREATING CHANNEL
 
-    socket.on("channel:create", onChannelCreate)
-
-    return () => {
-      socket.off("channel:create", onChannelCreate)
-    }
-  }, [channels])
+  // useEffect(() => {
+  //   const onChannelCreate = (newChannel: Channel) => {
+  //     console.log(newChannel)
+  //   }
+  //
+  //   socket.on("channel:create", onChannelCreate)
+  //
+  //   return () => {
+  //     socket.off("channel:create", onChannelCreate)
+  //   }
+  // }, [channels])
 
   if (result.isLoading) {
     return <ChannelListCategory title="" />

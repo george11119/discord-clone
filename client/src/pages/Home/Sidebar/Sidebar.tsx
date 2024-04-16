@@ -1,13 +1,11 @@
 import styled from "styled-components"
 import Separator from "./components/Separator.tsx"
 import VerticalSpacer from "../../../shared/components/VerticalSpacer.tsx"
-import { useContext } from "react"
-import serverService from "../../../services/serverService.ts"
 import HomeIcon from "./components/HomeIcon.tsx"
 import ServerIcon from "./components/ServerIcon.tsx"
 import CreateServerButton from "./components/CreateServerButton.tsx"
-import AuthContext from "../../Auth/AuthContext.ts"
-import { useQuery } from "@tanstack/react-query"
+import { useQueryClient } from "@tanstack/react-query"
+import { Server } from "../../../../types.ts"
 
 const Wrapper = styled.nav`
   background: rgb(30, 31, 34);
@@ -24,19 +22,9 @@ const Wrapper = styled.nav`
 `
 
 const Sidebar = () => {
-  const { token } = useContext(AuthContext)
+  const queryClient = useQueryClient()
 
-  const result = useQuery({
-    queryKey: ["servers"],
-    queryFn: () => serverService.get(token as string),
-    refetchOnWindowFocus: false,
-  })
-
-  if (result.isLoading) {
-    return <Wrapper></Wrapper>
-  }
-
-  const servers = result.data
+  const servers = queryClient.getQueryData(["servers"]) as Server[]
 
   return (
     <Wrapper>

@@ -7,6 +7,8 @@ const RootLayout = () => {
   // console.log(location)
   const { loggedIn } = useContext(AuthContext)
 
+  if (loggedIn === undefined) return <div></div>
+
   // set this to true for no redirect problems
   return loggedIn ? <Outlet /> : <Navigate to={`/login`} replace={true} />
 }

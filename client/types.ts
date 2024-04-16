@@ -19,6 +19,7 @@ export type Server = {
   name: string
   createdAt: Date
   updatedAt: Date
+  channels?: Channel[]
 }
 
 export type Channel = {

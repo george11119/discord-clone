@@ -3,14 +3,14 @@ import { User } from "./../../../types.ts"
 
 type AuthContextType = {
   user: null | User
-  loggedIn: boolean
+  loggedIn: boolean | undefined
   checkLoginState: () => void
   token: null | string
 }
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
-  loggedIn: false,
+  loggedIn: undefined,
   checkLoginState: () => {},
   token: null,
 })

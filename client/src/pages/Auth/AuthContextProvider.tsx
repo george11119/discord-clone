@@ -4,7 +4,7 @@ import axios from "axios"
 import config from "../../config/config.ts"
 
 const AuthContextProvider = ({ children }: { children: ReactNode }) => {
-  const [loggedIn, setLoggedIn] = useState(false)
+  const [loggedIn, setLoggedIn] = useState<boolean | undefined>(undefined)
   const [user, setUser] = useState(null)
   const [token, setToken] = useState<string | null>(null)
 
