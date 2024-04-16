@@ -4,6 +4,7 @@ import "express-async-errors"
 import { createServer } from "http"
 import { Server } from "socket.io"
 import { initializeDatabase } from "./config/db"
+import { initializeRedisClient } from "./config/redis"
 import config from "./config/config"
 import passport from "passport"
 
@@ -26,6 +27,7 @@ import { tokenExtractor } from "./middleware/tokenExtractor"
 import logger from "./utils/logger"
 
 initializeDatabase()
+initializeRedisClient()
 
 const app = express()
 export const server = createServer(app)

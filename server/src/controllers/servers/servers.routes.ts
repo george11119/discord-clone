@@ -2,6 +2,8 @@ import express from "express"
 import ServersController from "./servers.db"
 import { authenticatedValidator } from "../../middleware/authenticatedValidator"
 import { isUserInServer } from "../helpers"
+import idGenerator from "../../utils/idGenerator"
+import { redisClient } from "../../config/redis"
 
 const router = express.Router()
 
@@ -72,6 +74,31 @@ router.delete("/:serverId", authenticatedValidator, async (req, res) => {
 
   await ServersController.deleteServer({ serverId })
   res.status(204).end()
+})
+
+router.post("/:serverId/invites", authenticatedValidator, async (req, res) => {
+  const { serverId } = req.params
+
+  const server = await ServersController.getServer(serverId)
+  if (!server) {
+    return res.status(404).json({ message: "Server does not exist" })
+  }
+
+  const userIsInServer = await isUserInServer({
+    serverId,
+    userId: req.user?.id as string,
+  })
+
+  if (!userIsInServer) {
+    return res.status(401).json({
+      message: "You are not allowed to create a invite for this server",
+    })
+  }
+
+  const inviteLinkId = idGenerator.generateInviteLinkId()
+  await redisClient.set(inviteLinkId, serverId, { EX: 60 * 60 * 24 * 7 }) // 7 days
+
+  res.json({ code: inviteLinkId })
 })
 
 export default router
