@@ -26,7 +26,7 @@ const createChannel = async (name: string, serverId: string) => {
   if (server) {
     channel.server = server
     await channel.save()
-    return channel
+    return { ...channel, serverId: channel.server.id }
   }
 }
 
