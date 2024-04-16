@@ -7,6 +7,7 @@ import messageService from "../../../../../services/messageService.ts"
 import { Message } from "../../../../../../types.ts"
 import TrashIcon from "../../../../../shared/svg/TrashIcon.tsx"
 import EditIcon from "../../../../../shared/svg/EditIcon.tsx"
+import { socket } from "../../../../../config/socket.ts"
 
 const PopoutWrapper = styled.div`
   position: absolute;
@@ -64,6 +65,8 @@ const MessageOptionsPopout = ({
         [`messages-${channelId}`],
         messages.filter((m) => m.id !== messageId),
       )
+
+      socket.emit("message:delete", { channelId, messageId })
     },
   })
 

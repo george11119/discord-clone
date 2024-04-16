@@ -49,7 +49,7 @@ const updateMessage = async ({
 
   const updatedMessage = Message.findOne({
     where: { id: messageId },
-    relations: { user: true },
+    relations: { user: true, channel: true },
   })
 
   return updatedMessage

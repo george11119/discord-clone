@@ -67,8 +67,6 @@ app.use(errorHandler)
 
 // websocket stuff
 io.on("connection", (socket) => {
-  // console.log("CONNECTED")
-
   // server room stuff
   socket.on("joinServerRoom", (serverId) => {
     socket.join(`server-${serverId}`)
@@ -85,16 +83,17 @@ io.on("connection", (socket) => {
     socket.leave(`channel-${channelId}`)
   })
 
+  // message socket stuff
   socket.on("message:create", (m) => messageSocket.emitCreatedMessage(m))
-
-  // socket.on("disconnect", (reason) => {
-  //   console.log("USER DISCONNECTED", reason)
-  // })
+  socket.on("message:edit", (m) => messageSocket.emitEditedMessage(m))
+  socket.on("message:delete", ({ messageId, channelId }) =>
+    messageSocket.emitMessageDelete({ messageId, channelId }),
+  )
 })
 
-let i = 0
-setInterval(() => {
-  console.log(`ran setInterval ${i} times`)
-  console.log(io.sockets.adapter.rooms)
-  i++
-}, 5000)
+// let i = 0
+// setInterval(() => {
+//   console.log(`ran setInterval ${i} times`)
+//   console.log(io.sockets.adapter.rooms)
+//   i++
+// }, 5000)

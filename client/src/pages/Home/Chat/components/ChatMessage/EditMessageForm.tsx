@@ -15,6 +15,7 @@ import useAutosizeTextArea from "../../../../../hooks/useAutosizeTextArea.ts"
 import messageService from "../../../../../services/messageService.ts"
 import useOnKeyDown from "../../../../../hooks/useOnKeyDown.ts"
 import { KeyCodes } from "../../../../../shared/constants/keycodes.ts"
+import { socket } from "../../../../../config/socket.ts"
 
 const EditMessageFormWrapper = styled.form``
 
@@ -109,6 +110,7 @@ const EditMessageForm = ({
         messages.map((m) => (m.id === editedMessage.id ? editedMessage : m)),
       )
 
+      socket.emit("message:edit", editedMessage)
       setBeingEdited(false)
     },
   })

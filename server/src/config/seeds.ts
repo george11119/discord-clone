@@ -22,17 +22,24 @@ const seedDatabase = async () => {
     email: "test2@test.com",
   })
 
-  // create 5 servers for user 1
+  const user3 = await User.save({
+    username: "testusername3",
+    passwordHash: await bcrypt.hash("password", 10), // password is "password"
+    email: "test3@test.com",
+  })
+
+  // put user 1, 2, and 3 in a server
   for (let i = 1; i <= 5; i++) {
-    const server = await Server.save({ name: `User 1's Server ${i}` })
+    const server = await Server.save({ name: `Server ${i}` })
     await UserServers.save({ user: user1, server })
     await UserServers.save({ user: user2, server })
+    await UserServers.save({ user: user3, server })
   }
 
-  // create 5 channels for the first server of user 1
+  // create 5 channels for the first server
   for (let i = 1; i <= 5; i++) {
     const server = await Server.findOne({
-      where: { name: "User 1's Server 1" },
+      where: { name: "Server 1" },
     })
     const channel = Channel.create({ name: `Channel ${i}` })
 
@@ -41,15 +48,15 @@ const seedDatabase = async () => {
     await channel.save()
   }
 
-  // create 3 servers for user 1
+  // create 3 servers for user 2
   for (let i = 1; i <= 3; i++) {
     const server = await Server.save({ name: `User 2's Server ${i}` })
     await UserServers.save({ user: user2, server })
   }
 
-  // create 10 messages for the first channel in the first server of user 1
+  // create 10 messages for the first channel in the first server
   const server = await Server.findOne({
-    where: { name: "User 1's Server 1" },
+    where: { name: "Server 1" },
     relations: { channels: true },
   })
 
