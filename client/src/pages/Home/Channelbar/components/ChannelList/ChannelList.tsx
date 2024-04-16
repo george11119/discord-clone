@@ -7,7 +7,7 @@ import { Channel } from "../../../../../../types.ts"
 import channelService from "../../../../../services/channelService.ts"
 import AuthContext from "../../../../Auth/AuthContext.ts"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
-// import { socket } from "../../../../../config/socket.ts"
+import { socket } from "../../../../../config/socket.ts"
 
 const Wrapper = styled.div`
   list-style: none;
@@ -32,25 +32,55 @@ const ChannelList = () => {
     })
   }, [serverId])
 
-  // TODO FIX HANDLING RECEIVING EMIT EVENT AFTER SOMEONE ELSE CREATING CHANNEL
+  useEffect(() => {
+    const onChannelCreate = (newChannel: Channel) => {
+      const oldChannels = queryClient.getQueryData(["channels"]) as Channel[]
+      const newChannels = oldChannels.concat(newChannel)
+      queryClient.setQueryData(["channels"], newChannels)
+    }
 
-  // useEffect(() => {
-  //   const onChannelCreate = (newChannel: Channel) => {
-  //     console.log(newChannel)
-  //   }
-  //
-  //   socket.on("channel:create", onChannelCreate)
-  //
-  //   return () => {
-  //     socket.off("channel:create", onChannelCreate)
-  //   }
-  // }, [channels])
+    socket.on("channel:create", onChannelCreate)
+
+    return () => {
+      socket.off("channel:create", onChannelCreate)
+    }
+  }, [])
+
+  useEffect(() => {
+    const onChannelEdit = (editedChannel: Channel) => {
+      const oldChannels = queryClient.getQueryData(["channels"]) as Channel[]
+      const newChannels = oldChannels.map((c) =>
+        c.id === editedChannel.id ? editedChannel : c,
+      )
+      queryClient.setQueryData(["channels"], newChannels)
+    }
+
+    socket.on("channel:edit", onChannelEdit)
+
+    return () => {
+      socket.off("channel:edit", onChannelEdit)
+    }
+  }, [])
+
+  useEffect(() => {
+    const onChannelDelete = (channelId: string) => {
+      const oldChannels = queryClient.getQueryData(["channels"]) as Channel[]
+      const newChannels = oldChannels.filter((c) => c.id !== channelId)
+      queryClient.setQueryData(["channels"], newChannels)
+    }
+
+    socket.on("channel:delete", onChannelDelete)
+
+    return () => {
+      socket.off("channel:delete", onChannelDelete)
+    }
+  }, [])
 
   if (result.isLoading) {
     return <ChannelListCategory title="" />
   }
 
-  const channels: Channel[] = result.data.channels
+  const channels: Channel[] = result.data
 
   return (
     <Wrapper>

@@ -27,7 +27,7 @@ router.get("/:serverId", authenticatedValidator, async (req, res) => {
     res.status(404).json({ message: "Server does not exist" })
   }
 
-  res.json({ channels })
+  res.json(channels)
 })
 
 router.post("/:serverId", authenticatedValidator, async (req, res) => {

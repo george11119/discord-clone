@@ -23,7 +23,6 @@ const Wrapper = styled.nav`
 
 const Sidebar = () => {
   const queryClient = useQueryClient()
-
   const servers = queryClient.getQueryData(["servers"]) as Server[]
 
   return (

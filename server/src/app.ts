@@ -13,6 +13,7 @@ import authRouter from "./controllers/auth/auth.routes"
 import messageRouter from "./controllers/messages/messages.routes"
 import usersRouter from "./controllers/users/users.routes"
 import serverRouter from "./controllers/servers/servers.routes"
+import initialDataFetchRouter from "./controllers/initialDataFetch/initialDataFetch.routes"
 import channelsRouter from "./controllers/channels/channels.routes"
 import messageSocket from "./controllers/messages/messages.socket"
 import channelSocket from "./controllers/channels/channel.socket"
@@ -59,6 +60,7 @@ if (process.env.NODE_ENV === "test") {
 }
 
 // routes that require login
+app.use("/api/@me", initialDataFetchRouter)
 app.use("/api/messages", messageRouter)
 app.use("/api/servers", serverRouter)
 app.use("/api/channels", channelsRouter)
@@ -92,10 +94,14 @@ io.on("connection", (socket) => {
   )
 
   // channel socket stuff
-  socket.on("channel:create", (m) => channelSocket.emitCreatedChannel(m))
-  socket.on("channel:edit", (m) => channelSocket.emitEditedChannel(m))
+  socket.on("channel:create", (c) =>
+    channelSocket.emitCreatedChannel(c, socket),
+  )
+  socket.on("channel:edit", (c, serverId) =>
+    channelSocket.emitEditedChannel(c, serverId, socket),
+  )
   socket.on("channel:delete", ({ channelId, serverId }) =>
-    channelSocket.emitChannelDelete({ channelId, serverId }),
+    channelSocket.emitChannelDelete({ channelId, serverId }, socket),
   )
 })
 

@@ -10,6 +10,7 @@ import channelService from "../../../../../services/channelService.ts"
 import AuthContext from "../../../../Auth/AuthContext.ts"
 import { useNavigate, useParams } from "react-router-dom"
 import { socket } from "../../../../../config/socket.ts"
+import { Channel } from "../../../../../../types.ts"
 
 const CloseButton = styled.div`
   position: absolute;
@@ -112,9 +113,9 @@ const ChannelForm = ({
       )
     },
     onSuccess: (newChannel) => {
-      queryClient.invalidateQueries({
-        queryKey: [`channels`],
-      })
+      const oldChannels = queryClient.getQueryData(["channels"]) as Channel[]
+      const newChannels = oldChannels.concat(newChannel)
+      queryClient.setQueryData(["channels"], newChannels)
 
       socket.emit("channel:create", newChannel)
       handleClose()
@@ -122,18 +123,22 @@ const ChannelForm = ({
   })
 
   const editChannelMutation = useMutation({
-    mutationFn: (newChannel: { name: string }) => {
+    mutationFn: (channelToEdit: { name: string }) => {
       return channelService.update(
         token as string,
         serverId as string,
         channelId as string,
-        newChannel,
+        channelToEdit,
       )
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: [`channels`],
-      })
+    onSuccess: (editedChannel: Channel) => {
+      const oldChannels = queryClient.getQueryData(["channels"]) as Channel[]
+      const newChannels = oldChannels.map((c) =>
+        c.id === editedChannel.id ? editedChannel : c,
+      )
+      queryClient.setQueryData(["channels"], newChannels)
+
+      socket.emit("channel:edit", editedChannel, serverId)
       handleClose()
     },
   })
@@ -161,10 +166,11 @@ const ChannelForm = ({
       )
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: [`channels`],
-      })
+      const oldChannels = queryClient.getQueryData(["channels"]) as Channel[]
+      const newChannels = oldChannels.filter((c) => c.id !== channelId)
+      queryClient.setQueryData(["channels"], newChannels)
 
+      socket.emit("channel:delete", { channelId, serverId })
       handleClose()
       navigate(`/channels/${serverId}`)
     },

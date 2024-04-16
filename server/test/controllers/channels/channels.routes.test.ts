@@ -89,7 +89,7 @@ describe(`${url}`, () => {
         .set("authorization", `Bearer ${token}`)
         .expect(200)
 
-      const { channels } = res.body
+      const channels = res.body
       expect(channels.length).toBe(2)
 
       const [channel] = channels

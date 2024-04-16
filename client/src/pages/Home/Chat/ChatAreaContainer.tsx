@@ -19,12 +19,10 @@ const ChatAreaContainer = () => {
   const { pathname } = useLocation()
   const isHomeLink = matchPath(`/channels/@me/*`, pathname)
 
-  const data: { channels: Channel[] } | undefined = queryClient.getQueryData([
-    "channels",
-  ])
+  const channels: Channel[] | undefined = queryClient.getQueryData(["channels"])
 
-  const channel = data
-    ? (data.channels.find((c) => c.id === channelId) as Channel)
+  const channel = channels
+    ? (channels.find((c) => c.id === channelId) as Channel)
     : null
 
   if (isHomeLink) {
