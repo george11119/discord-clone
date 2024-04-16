@@ -15,6 +15,7 @@ import usersRouter from "./controllers/users/users.routes"
 import serverRouter from "./controllers/servers/servers.routes"
 import channelsRouter from "./controllers/channels/channels.routes"
 import messageSocket from "./controllers/messages/messages.socket"
+import channelSocket from "./controllers/channels/channel.socket"
 
 import { requestLogger } from "./middleware/requestLogger"
 import { unknownEndpoint } from "./middleware/unknownEndpoint"
@@ -88,6 +89,13 @@ io.on("connection", (socket) => {
   socket.on("message:edit", (m) => messageSocket.emitEditedMessage(m))
   socket.on("message:delete", ({ messageId, channelId }) =>
     messageSocket.emitMessageDelete({ messageId, channelId }),
+  )
+
+  // channel socket stuff
+  socket.on("channel:create", (m) => channelSocket.emitCreatedChannel(m))
+  socket.on("channel:edit", (m) => channelSocket.emitEditedChannel(m))
+  socket.on("channel:delete", ({ channelId, serverId }) =>
+    channelSocket.emitChannelDelete({ channelId, serverId }),
   )
 })
 

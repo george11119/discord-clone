@@ -38,7 +38,7 @@
         <ul>
             <li>Add socket operations to servers</li>
             <li>Add socket operations to channels</li>
-            <li>Add socket operations to messages</li>
+            <li>Add socket operations to messages - DONE</li>
         </ul>
         <li>Add authentication to socket connection</li>
         <li>Create a user direct message home page</li>

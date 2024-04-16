@@ -9,6 +9,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 import channelService from "../../../../../services/channelService.ts"
 import AuthContext from "../../../../Auth/AuthContext.ts"
 import { useNavigate, useParams } from "react-router-dom"
+import { socket } from "../../../../../config/socket.ts"
 
 const CloseButton = styled.div`
   position: absolute;
@@ -110,10 +111,12 @@ const ChannelForm = ({
         newChannel,
       )
     },
-    onSuccess: () => {
+    onSuccess: (newChannel) => {
       queryClient.invalidateQueries({
         queryKey: [`channels`],
       })
+
+      socket.emit("channel:create", newChannel)
       handleClose()
     },
   })
