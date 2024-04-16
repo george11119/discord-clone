@@ -34,10 +34,10 @@
         </ul>
         <li>Get servers, channels, and user to load before showing page</li>
         <li>Fix initial data fetching and bugs</li>
-        <li>Add socket operations</li>
+        <li>Add socket operations - DONE</li>
         <ul>
-            <li>Add socket operations to servers</li>
-            <li>Add socket operations to channels</li>
+            <li>Add socket operations to servers DONE</li>
+            <li>Add socket operations to channels - DONE</li>
             <li>Add socket operations to messages - DONE</li>
         </ul>
         <li>Add authentication to socket connection</li>
@@ -97,7 +97,6 @@ erDiagram
 
 <ul>
     <li>Inefficient data fetching</li>
-    <li>Refreshing the page sends you back to home page</li>
     <li>Clicking on server sends you to empty channel page</li>
 </ul>
 
