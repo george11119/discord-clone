@@ -17,6 +17,7 @@ import { useNavigate } from "react-router-dom"
 import useOnKeyDown from "../../../../../hooks/useOnKeyDown.ts"
 import { KeyCodes } from "../../../../../shared/constants/keycodes.ts"
 import { socket } from "../../../../../config/socket.ts"
+import { ModalOptions } from "../../../../../hooks/useModal.ts"
 
 const Wrapper = styled.div`
   position: absolute;
@@ -59,20 +60,14 @@ const Button = styled.button<{ $color?: string; $hoverColor?: string }>`
 
 const ServerOptionsPopout = ({
   setPopoutOpen,
-  modal: { open, close, modalOpen },
+  editChannel,
   createChannel,
+  inviteToServer,
 }: {
   setPopoutOpen: (popoutOpen: boolean) => void
-  modal: {
-    open: () => void
-    close: () => void
-    modalOpen: boolean
-  }
-  createChannel: {
-    open: () => void
-    close: () => void
-    modalOpen: boolean
-  }
+  editChannel: ModalOptions
+  createChannel: ModalOptions
+  inviteToServer: ModalOptions
 }) => {
   const { token } = useContext(AuthContext)
   const { serverId } = useParams()
@@ -110,7 +105,13 @@ const ServerOptionsPopout = ({
         transition={{ duration: 0.1 }}
       >
         <InnerWrapper>
-          <Button $color="#949cf7">
+          <Button
+            $color="#949cf7"
+            onClick={() => {
+              setPopoutOpen(false)
+              inviteToServer.open()
+            }}
+          >
             Invite People
             <InviteIcon size={18} />
           </Button>
@@ -135,7 +136,7 @@ const ServerOptionsPopout = ({
           <Button
             onClick={() => {
               setPopoutOpen(false)
-              modalOpen ? close() : open()
+              editChannel.open()
             }}
           >
             Edit Server

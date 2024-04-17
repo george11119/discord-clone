@@ -4,7 +4,6 @@ import RootLayout from "../pages/Layouts/RootLayout.tsx"
 import AuthLayout from "../pages/Layouts/AuthLayout.tsx"
 import LoginPage from "../pages/Auth/Login/LoginPage.tsx"
 import SignupPage from "../pages/Auth/Signup/SignupPage.tsx"
-import { AnimatePresence } from "framer-motion"
 import OAuthRedirect from "../pages/Auth/components/OAuthRedirect.tsx"
 
 const Routes = () => {
@@ -35,11 +34,7 @@ const Routes = () => {
     },
   ])
 
-  return (
-    <AnimatePresence>
-      <RouterProvider router={router} />
-    </AnimatePresence>
-  )
+  return <RouterProvider router={router} />
 }
 
 export default Routes

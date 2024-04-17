@@ -2,15 +2,16 @@ import styled from "styled-components"
 import VerticalSpacer from "../../../../../shared/components/VerticalSpacer.tsx"
 import ConversationSearchButton from "./ConversationSearchButton.tsx"
 import ChannelTitle from "./ChannelTitle.tsx"
-import { matchPath, useLocation, useParams } from "react-router-dom"
-import { useState } from "react"
+import {matchPath, useLocation, useParams} from "react-router-dom"
+import {useState} from "react"
 import ServerOptionsPopout from "./ServerOptionsPopout.tsx"
-import { Server } from "../../../../../../types.ts"
-import { useQueryClient } from "@tanstack/react-query"
-import { AnimatePresence } from "framer-motion"
+import {Server} from "../../../../../../types.ts"
+import {useQueryClient} from "@tanstack/react-query"
+import {AnimatePresence} from "framer-motion"
 import useModal from "../../../../../hooks/useModal.ts"
 import EditServerModal from "./EditServerModal.tsx"
 import ChannelModal from "../ChannelList/ChannelModal.tsx"
+import InviteToServerModal from "./InviteToServerModal.tsx"
 
 const Wrapper = styled.div<{ $isHomeLink: boolean }>`
   box-shadow: rgba(2, 2, 2, 0.2) 0px 1px 0px 0px,
@@ -28,7 +29,7 @@ const Wrapper = styled.div<{ $isHomeLink: boolean }>`
 
   &:hover {
     background-color: ${(props) =>
-      props.$isHomeLink ? "inherit" : " #35373c"};
+        props.$isHomeLink ? "inherit" : " #35373c"};
   }
 ;
 }
@@ -36,13 +37,14 @@ const Wrapper = styled.div<{ $isHomeLink: boolean }>`
 
 const Header = () => {
   const queryClient = useQueryClient()
-  const { serverId } = useParams()
+  const {serverId} = useParams()
 
   const [popoutOpen, setPopoutOpen] = useState(false)
-  const { pathname } = useLocation()
+  const {pathname} = useLocation()
   const isHomeLink = matchPath(`/channels/@me/*`, pathname) ? true : false
-  const { open, close, modalOpen } = useModal()
+  const editChannel = useModal()
   const createChannel = useModal()
+  const inviteToServer = useModal()
 
   const togglePopoutVisibility = (e: any) => {
     e.stopPropagation()
@@ -58,7 +60,9 @@ const Header = () => {
   return (
     <>
       <AnimatePresence initial={false} mode="wait" onExitComplete={() => null}>
-        {modalOpen && <EditServerModal handleClose={close} />}
+        {editChannel.modalOpen && (
+          <EditServerModal handleClose={editChannel.close} />
+        )}
       </AnimatePresence>
 
       <AnimatePresence initial={false} mode="wait" onExitComplete={() => null}>
@@ -67,17 +71,24 @@ const Header = () => {
         )}
       </AnimatePresence>
 
-      <div style={{ position: "relative" }}>
+      <AnimatePresence initial={false} mode="wait" onExitComplete={() => null}>
+        {inviteToServer.modalOpen && (
+          <InviteToServerModal handleClose={inviteToServer.close} />
+        )}
+      </AnimatePresence>
+
+      <div style={{position: "relative"}}>
         {popoutOpen && (
           <ServerOptionsPopout
             setPopoutOpen={setPopoutOpen}
-            modal={{ open, close, modalOpen }}
+            editChannel={editChannel}
             createChannel={createChannel}
+            inviteToServer={inviteToServer}
           />
         )}
         <Wrapper
           onClick={isHomeLink ? () => null : togglePopoutVisibility}
-          style={popoutOpen ? { backgroundColor: "#35373c" } : {}}
+          style={popoutOpen ? {backgroundColor: "#35373c"} : {}}
           $isHomeLink={isHomeLink}
         >
           {isHomeLink ? (

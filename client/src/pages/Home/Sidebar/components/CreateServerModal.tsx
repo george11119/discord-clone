@@ -29,11 +29,7 @@ const Text = styled.p`
   color: rgb(181, 186, 193);
 `
 
-const CreateServerModal = ({
-  handleClose,
-}: {
-  handleClose: () => void
-}) => {
+const CreateServerModal = ({ handleClose }: { handleClose: () => void }) => {
   return (
     <Modal handleClose={handleClose}>
       <CloseButton onClick={handleClose}>

@@ -33,9 +33,20 @@ const destroy = async (serverId: string, token: string): Promise<void> => {
   await apiCaller.delete(`${url}/${serverId}`, apiConfig(token))
 }
 
+const getInviteLink = async (token: string, serverId: string) => {
+  console.log(token)
+  const res = await apiCaller.post(
+    `${url}/${serverId}/invites`,
+    null,
+    apiConfig(token),
+  )
+  return res.data
+}
+
 export default {
   get,
   create,
   update,
   destroy,
+  getInviteLink,
 }

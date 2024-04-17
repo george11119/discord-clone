@@ -1,5 +1,6 @@
 import styled from "styled-components"
 import { useId } from "react"
+import * as React from "react"
 
 const Wrapper = styled.div`
   margin-bottom: 20px;
@@ -27,6 +28,7 @@ const Input = styled.input`
   box-sizing: border-box;
   height: 40px;
   color: rgb(181, 186, 193);
+  font-size: 14px;
 `
 
 const FormInput = ({
@@ -38,6 +40,7 @@ const FormInput = ({
   showErrorText = false,
   labelStyle,
   placeholder,
+  wrapperStyle,
   ...rest
 }: {
   name: string
@@ -46,14 +49,15 @@ const FormInput = ({
   setValue: (value: string) => void
   errorText?: string
   showErrorText?: boolean
-  labelStyle?: any
+  labelStyle?: React.CSSProperties
   placeholder?: string
+  wrapperStyle?: React.CSSProperties
   [rest: string]: any
 }) => {
   const labelId = useId()
 
   return (
-    <Wrapper>
+    <Wrapper style={wrapperStyle}>
       <Label $isError={showErrorText} htmlFor={labelId} style={labelStyle}>
         {name.toUpperCase()}{" "}
       </Label>

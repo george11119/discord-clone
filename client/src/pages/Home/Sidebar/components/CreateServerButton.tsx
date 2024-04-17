@@ -17,9 +17,7 @@ const CreateServerButton = () => {
         onClick={() => (modalOpen ? close() : open())}
       />
       <AnimatePresence initial={false} mode="wait" onExitComplete={() => null}>
-        {modalOpen && (
-          <CreateServerModal handleClose={close} />
-        )}
+        {modalOpen && <CreateServerModal handleClose={close} />}
       </AnimatePresence>
     </>
   )
