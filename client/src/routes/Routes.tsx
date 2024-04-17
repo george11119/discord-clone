@@ -5,9 +5,17 @@ import AuthLayout from "../pages/Layouts/AuthLayout.tsx"
 import LoginPage from "../pages/Auth/Login/LoginPage.tsx"
 import SignupPage from "../pages/Auth/Signup/SignupPage.tsx"
 import OAuthRedirect from "../pages/Auth/components/OAuthRedirect.tsx"
+import JoinServer from "../pages/JoinServer/JoinServer.tsx"
 
 const Routes = () => {
   const router = createBrowserRouter([
+    {
+      element: <AuthLayout />,
+      children: [
+        { path: "login", element: <LoginPage /> },
+        { path: "signup", element: <SignupPage /> },
+      ],
+    },
     {
       path: "/",
       element: <Navigate to="/channels/@me" replace={true} />,
@@ -26,11 +34,8 @@ const Routes = () => {
       element: <OAuthRedirect />,
     },
     {
-      element: <AuthLayout />,
-      children: [
-        { path: "login", element: <LoginPage /> },
-        { path: "signup", element: <SignupPage /> },
-      ],
+      path: "join/:inviteLinkId",
+      element: <JoinServer />,
     },
   ])
 

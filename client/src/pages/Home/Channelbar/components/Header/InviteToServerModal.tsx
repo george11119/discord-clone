@@ -47,7 +47,8 @@ const CopyLinkButtonWrapper = styled.div`
 const InviteToServerModal = ({ handleClose }: { handleClose: () => void }) => {
   const { token } = useContext(AuthContext)
   const { serverId } = useParams()
-  const [inviteLink, setInviteLink] = useState(`${config.CLIENT_URL}`)
+  const [inviteLink, setInviteLink] = useState(`${config.CLIENT_URL}/join`)
+  const [copyButtonClicked, setCopyButtonClicked] = useState(false)
 
   // so url doesnt get fetched twice in dev mode (vite refreshes page causing another invite link fetch)
   const [called, setCalled] = useState(false)
@@ -56,7 +57,7 @@ const InviteToServerModal = ({ handleClose }: { handleClose: () => void }) => {
     mutationFn: () =>
       serverService.getInviteLink(token as string, serverId as string),
     onSuccess: ({ code }) => {
-      setInviteLink(`${inviteLink}/join/${code}`)
+      setInviteLink(`${inviteLink}/${code}`)
       setCalled(true)
     },
   })
@@ -96,14 +97,18 @@ const InviteToServerModal = ({ handleClose }: { handleClose: () => void }) => {
           />
           <CopyLinkButtonWrapper>
             <Button
-              text="Copy"
+              text={copyButtonClicked ? "Copied" : "Copy"}
               style={{
                 margin: 0,
                 fontSize: 13,
                 height: 32,
                 width: 75,
                 marginRight: 4,
+                backgroundColor: copyButtonClicked
+                  ? "rgb(28, 141, 26)"
+                  : "rgb(88, 101, 242)",
               }}
+              onClick={() => setCopyButtonClicked(true)}
             />
           </CopyLinkButtonWrapper>
         </Form>

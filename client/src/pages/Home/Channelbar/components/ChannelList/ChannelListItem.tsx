@@ -45,6 +45,7 @@ const ChannelName = styled.span`
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
+  height: 16px;
 `
 
 const Right = styled.div<{ $isActive: any; $isHovered: boolean }>`

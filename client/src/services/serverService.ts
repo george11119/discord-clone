@@ -34,12 +34,21 @@ const destroy = async (serverId: string, token: string): Promise<void> => {
 }
 
 const getInviteLink = async (token: string, serverId: string) => {
-  console.log(token)
   const res = await apiCaller.post(
     `${url}/${serverId}/invites`,
     null,
     apiConfig(token),
   )
+  return res.data
+}
+
+const joinServer = async (token: string, inviteLinkId: string) => {
+  const res = await apiCaller.post(
+    `${url}/join/${inviteLinkId}`,
+    null,
+    apiConfig(token),
+  )
+
   return res.data
 }
 
@@ -49,4 +58,5 @@ export default {
   update,
   destroy,
   getInviteLink,
+  joinServer,
 }
