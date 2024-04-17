@@ -6,6 +6,14 @@ export const redisClient = createClient({
   url: config.REDIS_URL,
 })
 
+// clears out redis database
+export const clearRedis = async () => {
+  const client = createClient({ url: config.REDIS_URL })
+  await client.connect()
+  await client.flushAll()
+  await client.quit()
+}
+
 export const initializeRedisClient = async () => {
   try {
     // dont run in jest tests

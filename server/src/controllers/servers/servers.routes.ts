@@ -76,6 +76,7 @@ router.delete("/:serverId", authenticatedValidator, async (req, res) => {
   res.status(204).end()
 })
 
+// creates a invite link for a user to join a server
 router.post("/:serverId/invites", authenticatedValidator, async (req, res) => {
   const { serverId } = req.params
 

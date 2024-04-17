@@ -6,6 +6,7 @@ import { User } from "../../../src/models/user"
 import { Server } from "../../../src/models/server"
 import jwtUtils from "../../../src/utils/jwtUtils"
 import { UserServers } from "../../../src/models/userServers"
+import { redisClient } from "../../../src/config/redis"
 
 const api = supertest(server)
 const url = "/api/servers"
@@ -271,6 +272,72 @@ describe(`${url}`, () => {
       })
 
       expect(deletedServer).toBe(null)
+    })
+  })
+
+  describe(`${url}/:serverId/invites`, () => {
+    it("Returns 400 if invalid serverId is given", async () => {
+      const user1 = await User.findOneBy({ username: "user1" })
+      const token = jwtUtils.signToken({ userId: user1?.id as string })
+
+      await api
+        .post(`${url}/asdf/invites`)
+        .set("authorization", `Bearer ${token}`)
+        .expect(400)
+    })
+
+    it("Returns 401 if user is not logged in", async () => {
+      const server = await Server.findOne({
+        where: { name: "user1's server 1" },
+      })
+
+      await api.post(`${url}/${server?.id}/invites`).expect(401)
+    })
+
+    it("Returns 401 if user is not in the server they are trying to create a invite for", async () => {
+      const user1 = await User.findOneBy({ username: "user1" })
+      const token = jwtUtils.signToken({ userId: user1?.id as string })
+
+      const server = await Server.findOne({
+        where: { name: "user2's server 1" },
+      })
+
+      await api
+        .post(`${url}/${server?.id}/invites`)
+        .set("authorization", `Bearer ${token}`)
+        .expect(401)
+    })
+
+    it("Returns 404 if no server is found", async () => {
+      const user1 = await User.findOneBy({ username: "user1" })
+      const token = jwtUtils.signToken({ userId: user1?.id as string })
+
+      await api
+        .post(`${url}/d063e5e8-446a-480f-bc8b-83c0ad33f1a8/invites`)
+        .set("authorization", `Bearer ${token}`)
+        .expect(404)
+    })
+
+    it("Generates a invite link if user is in the server", async () => {
+      const user1 = await User.findOneBy({ username: "user1" })
+      const token = jwtUtils.signToken({ userId: user1?.id as string })
+
+      const server = await Server.findOne({
+        where: { name: "user1's server 1" },
+      })
+
+      const res = await api
+        .post(`${url}/${server?.id}/invites`)
+        .set("authorization", `Bearer ${token}`)
+        .expect(200)
+        .expect("Content-Type", /application\/json/)
+
+      // check that response has no problems
+      const { code } = res.body
+      expect(code.length).toBe(16)
+
+      const serverId = await redisClient.get(code)
+      expect(serverId).toBe(server?.id)
     })
   })
 })

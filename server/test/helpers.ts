@@ -6,17 +6,23 @@ import { Server } from "../src/models/server"
 import { UserServers } from "../src/models/userServers"
 import { Channel } from "../src/models/channel"
 import { Message } from "../src/models/message"
+import { clearRedis, redisClient } from "../src/config/redis"
 
 export const dbSetupAndTeardown = () => {
   beforeAll(async () => {
-    // start up database connection
+    // start up database and redis connection
     await db.initialize()
+    await redisClient.connect()
   })
 
   afterAll(async () => {
     // clear out database and close database connection
     await clearDatabase()
     await db.destroy()
+
+    // clear out redis and close redis connection
+    await clearRedis()
+    await redisClient.quit()
   })
 }
 
