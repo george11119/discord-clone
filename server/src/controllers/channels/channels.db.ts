@@ -3,6 +3,8 @@ import { Channel } from "../../models/channel"
 import { Server } from "../../models/server"
 
 const getChannels = async (userId: string, serverId: string) => {
+  if (!userId || !serverId) return null
+
   const channels = await db.query(
     `
         SELECT "channel".*
@@ -31,6 +33,8 @@ const createChannel = async (name: string, serverId: string) => {
 }
 
 const updateChannel = async (name: string, channelId: string) => {
+  if (!channelId) return null
+
   const updatedChannel = (
     await db
       .createQueryBuilder()
@@ -45,6 +49,7 @@ const updateChannel = async (name: string, channelId: string) => {
 }
 
 const deleteChannel = async (channelId: string) => {
+  if (!channelId) return null
   await Channel.delete({ id: channelId })
 }
 

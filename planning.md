@@ -40,11 +40,13 @@
             <li>Add socket operations to channels - DONE</li>
             <li>Add socket operations to messages - DONE</li>
         </ul>
-        <li>Add authentication to socket connection</li>
+        <li>Create a way for users to join a server</li>
+        <li>Add a list of users for the server</li>
         <li>Create a user direct message home page</li>
         <li>Add ways to invite people into server</li>
         <li>Add pagination fetching for messages in channels</li>
         <li>Add loading animations</li>
+        <li>Add authentication to socket connection</li>
     </ul>
 </ul>
 

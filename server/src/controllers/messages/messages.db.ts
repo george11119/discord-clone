@@ -3,11 +3,9 @@ import { User } from "../../models/user"
 import { Channel } from "../../models/channel"
 import { db } from "../../config/db"
 
-const getMessages = async ({
-  channelId,
-}: {
-  channelId: string
-}): Promise<Message[]> => {
+const getMessages = async ({ channelId }: { channelId: string }) => {
+  if (!channelId) return null
+
   const messages = await Message.createQueryBuilder("message")
     .leftJoinAndSelect("message.user", "user")
     .where("message.channelId = :channelId", { channelId })
@@ -37,7 +35,8 @@ const updateMessage = async ({
   content: string
   messageId: string
 }) => {
-  // const updatedMessage = (
+  if (!messageId) return null
+
   await db
     .createQueryBuilder()
     .update(Message)
@@ -45,7 +44,6 @@ const updateMessage = async ({
     .where("id = :messageId", { messageId })
     .returning("*")
     .execute()
-  // ).raw[0]
 
   const updatedMessage = Message.findOne({
     where: { id: messageId },
@@ -56,6 +54,7 @@ const updateMessage = async ({
 }
 
 const deleteMessage = async ({ messageId }: { messageId: string }) => {
+  if (!messageId) return null
   await Message.delete({ id: messageId })
 }
 

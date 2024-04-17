@@ -340,4 +340,85 @@ describe(`${url}`, () => {
       expect(serverId).toBe(server?.id)
     })
   })
+
+  describe(`${url}/join/:inviteLinkId`, () => {
+    it("Returns 401 if user is not logged in", async () => {
+      const server = await Server.findOne({
+        where: { name: "user1's server 1" },
+      })
+      const { code } = await testHelpers.generateServerInviteLink({
+        server: server!,
+      })
+
+      await api.post(`${url}/join/${code}`).expect(401)
+    })
+
+    it("Returns 400 if invite link is invalid", async () => {
+      const server = await Server.findOne({
+        where: { name: "user1's server 1" },
+      })
+      const invalidCode = "asdjfkjaie"
+
+      const user2 = await User.findOneBy({ username: "user2" })
+      const token = jwtUtils.signToken({ userId: user2?.id as string })
+
+      const res = await api
+        .post(`${url}/join/${invalidCode}`)
+        .set("authorization", `Bearer ${token}`)
+        .expect(400)
+        .expect("Content-Type", /application\/json/)
+
+      const { joined } = res.body
+      expect(joined).toBe(false)
+    })
+
+    it("Returns 400 if user is already in the server they are trying to join", async () => {
+      const server = await Server.findOne({
+        where: { name: "user1's server 1" },
+      })
+      const { code } = await testHelpers.generateServerInviteLink({
+        server: server!,
+      })
+
+      const user1 = await User.findOneBy({ username: "user1" })
+      const token = jwtUtils.signToken({ userId: user1?.id as string })
+
+      const res = await api
+        .post(`${url}/join/${code}`)
+        .set("authorization", `Bearer ${token}`)
+        .expect(400)
+        .expect("Content-Type", /application\/json/)
+
+      const { joined } = res.body
+      expect(joined).toBe(false)
+    })
+
+    it("Returns 200 if invite link is valid and user isnt part of the server yet", async () => {
+      const server = await Server.findOne({
+        where: { name: "user1's server 1" },
+      })
+      const { code } = await testHelpers.generateServerInviteLink({
+        server: server!,
+      })
+
+      const user2 = await User.findOneBy({ username: "user2" })
+      const token = jwtUtils.signToken({ userId: user2?.id as string })
+
+      const res = await api
+        .post(`${url}/join/${code}`)
+        .set("authorization", `Bearer ${token}`)
+        .expect(200)
+        .expect("Content-Type", /application\/json/)
+
+      const { joined } = res.body
+      expect(joined).toBe(true)
+
+      const userServer = await UserServers.findOne({
+        where: { userId: user2?.id, serverId: server?.id },
+      })
+
+      expect(userServer?.serverId).toBe(server?.id)
+      expect(userServer?.userId).toBe(user2?.id)
+    })
+  })
 })

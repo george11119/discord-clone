@@ -4,6 +4,7 @@ import { authenticatedValidator } from "../../middleware/authenticatedValidator"
 import { isUserInServer } from "../helpers"
 import idGenerator from "../../utils/idGenerator"
 import { redisClient } from "../../config/redis"
+import { UserServers } from "../../models/userServers"
 
 const router = express.Router()
 
@@ -100,6 +101,39 @@ router.post("/:serverId/invites", authenticatedValidator, async (req, res) => {
   await redisClient.set(inviteLinkId, serverId, { EX: 60 * 60 * 24 * 7 }) // 7 days
 
   res.json({ code: inviteLinkId })
+})
+
+// allows a user to join a server given that the invite link is valid
+router.post("/join/:inviteLinkId", authenticatedValidator, async (req, res) => {
+  const { inviteLinkId } = req.params
+
+  const serverId = await redisClient.get(inviteLinkId)
+
+  const server = await ServersController.getServer(serverId as string)
+
+  if (!server) {
+    return res
+      .status(400)
+      .json({ joined: false, message: "Invalid invite link" })
+  }
+
+  const user = req.user
+
+  const userIsInServer = await isUserInServer({
+    serverId: server?.id,
+    userId: user?.id as string,
+  })
+
+  if (userIsInServer) {
+    return res.status(400).json({
+      joined: false,
+      message: "You are already part of this server",
+    })
+  }
+
+  await UserServers.save({ user, server })
+
+  res.status(200).json({ joined: true })
 })
 
 export default router

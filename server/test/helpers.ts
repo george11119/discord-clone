@@ -7,6 +7,7 @@ import { UserServers } from "../src/models/userServers"
 import { Channel } from "../src/models/channel"
 import { Message } from "../src/models/message"
 import { clearRedis, redisClient } from "../src/config/redis"
+import idGenerator from "../src/utils/idGenerator"
 
 export const dbSetupAndTeardown = () => {
   beforeAll(async () => {
@@ -91,11 +92,22 @@ const generateMessage = async ({
   return newMessage
 }
 
+const generateServerInviteLink = async ({
+  server,
+}: {
+  server: Server
+}): Promise<{ code: string }> => {
+  const inviteLinkId = idGenerator.generateInviteLinkId()
+  await redisClient.set(inviteLinkId, server.id, { EX: 60 * 60 * 24 }) // 1 day
+  return { code: inviteLinkId }
+}
+
 const testHelpers = {
   generateUser,
   generateServer,
   generateChannel,
   generateMessage,
+  generateServerInviteLink,
 }
 
 export default testHelpers

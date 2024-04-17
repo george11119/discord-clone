@@ -4,11 +4,14 @@ import { Server } from "../../models/server"
 import { UserServers } from "../../models/userServers"
 
 const getServer = async (serverId: string) => {
+  if (!serverId) return null
   const server = await Server.findOne({ where: { id: serverId } })
   return server
 }
 
 const getServers = async (userId: string) => {
+  if (!userId) return null
+
   const servers = await Server.createQueryBuilder("server")
     .innerJoin(UserServers, "user_servers", "user_servers.serverId = server.id")
     .innerJoin(User, "user", "user.id = user_servers.userId")
@@ -20,6 +23,8 @@ const getServers = async (userId: string) => {
 }
 
 const getServersWithChannels = async (userId: string) => {
+  if (!userId) return null
+
   const servers = await Server.createQueryBuilder("server")
     .innerJoin(UserServers, "user_servers", "user_servers.serverId = server.id")
     .innerJoin(User, "user", "user.id = user_servers.userId")
@@ -59,6 +64,7 @@ const updateServer = async ({
 }
 
 const deleteServer = async ({ serverId }: { serverId: string }) => {
+  if (!serverId) return null
   await Server.delete({ id: serverId })
 }
 
