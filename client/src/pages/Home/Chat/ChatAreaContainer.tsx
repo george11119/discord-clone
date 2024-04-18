@@ -2,7 +2,7 @@ import styled from "styled-components"
 import Header from "./components/Header.tsx"
 import ChatMessageDisplay from "./components/ChatMessageDisplay.tsx"
 import MessageInput from "./components/MessageInput.tsx"
-import { Channel } from "../../../../types.ts"
+import { Channel, Server } from "../../../../types.ts"
 import { matchPath, useLocation, useParams } from "react-router-dom"
 import { useQueryClient } from "@tanstack/react-query"
 
@@ -15,15 +15,19 @@ const Wrapper = styled.div`
 
 const ChatAreaContainer = () => {
   const queryClient = useQueryClient()
-  const { channelId } = useParams()
+  const { serverId, channelId } = useParams()
   const { pathname } = useLocation()
   const isHomeLink = matchPath(`/channels/@me/*`, pathname)
 
   const channels: Channel[] | undefined = queryClient.getQueryData(["channels"])
 
+  // TODO my god this is horrible code
+  // one of these will exist no matter what
   const channel = channels
-    ? (channels.find((c) => c.id === channelId) as Channel)
-    : null
+    ? channels.find((c) => c.id === channelId)
+    : (queryClient.getQueryData(["servers"]) as Server[])
+        .find((s) => s.id === serverId)
+        ?.channels?.find((c) => c.id === channelId)
 
   if (isHomeLink) {
     return (
