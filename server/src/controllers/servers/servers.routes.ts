@@ -137,6 +137,29 @@ router.post("/join/:inviteLinkId", async (req, res) => {
   res.status(200).json({ joined: true })
 })
 
-// router.get("/:serverId/users", authenticatedValidator, async (req, res) => {})
+router.get("/:serverId/users", authenticatedValidator, async (req, res) => {
+  const { serverId } = req.params
+
+  const server = await ServersController.getServer(serverId)
+
+  if (!server) {
+    return res.status(404).json({ message: "Server does not exist" })
+  }
+
+  const userIsInServer = await isUserInServer({
+    serverId,
+    userId: req.user?.id as string,
+  })
+
+  if (!userIsInServer) {
+    return res.status(401).json({
+      message: "You are not allowed to get users in this server",
+    })
+  }
+
+  const users = await ServersController.getUsersOfServer(serverId)
+
+  res.status(200).json(users)
+})
 
 export default router

@@ -71,6 +71,19 @@ const deleteServer = async ({ serverId }: { serverId: string }) => {
   await Server.delete({ id: serverId })
 }
 
+const getUsersOfServer = async (serverId: string) => {
+  if (!serverId) return null
+
+  const users = await User.createQueryBuilder("user")
+    .innerJoin(UserServers, "user_servers", "user_servers.userId = user.id")
+    .innerJoin(Server, "server", "server.id = user_servers.serverId")
+    .where("server.id = :serverId", { serverId })
+    .orderBy("user.username")
+    .getMany()
+
+  return users
+}
+
 export default {
   getServer,
   getServers,
@@ -78,4 +91,5 @@ export default {
   createServer,
   updateServer,
   deleteServer,
+  getUsersOfServer,
 }

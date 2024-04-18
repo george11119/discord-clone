@@ -45,6 +45,17 @@ describe(`${url}`, () => {
         user: user2,
       })
     }
+
+    // add 5 more users into user2's server 1
+    const server = await Server.findOne({ where: { name: "user2's server 1" } })
+    for (let i = 1; i <= 5; i++) {
+      const user = await testHelpers.generateUser({
+        username: `filleruser${i}`,
+        password: "password",
+        email: `filleruser${i}@test.com`,
+      })
+      await UserServers.save({ userId: user?.id, serverId: server?.id })
+    }
   })
 
   describe(`GET ${url}`, () => {
@@ -419,6 +430,61 @@ describe(`${url}`, () => {
 
       expect(userServer?.serverId).toBe(server?.id)
       expect(userServer?.userId).toBe(user2?.id)
+    })
+  })
+
+  describe.only(`${url}/:serverId/users`, () => {
+    it("Returns 401 if user is not logged in", async () => {
+      const server = await Server.findOne({
+        where: { name: "user2's server 1" },
+      })
+
+      await api.get(`${url}/${server?.id}/users`).expect(401)
+    })
+
+    it("Returns 401 if user is not in the server they are trying to get users of", async () => {
+      const user1 = await User.findOneBy({ username: "user1" })
+      const token = jwtUtils.signToken({ userId: user1?.id as string })
+
+      const server = await Server.findOne({
+        where: { name: "user2's server 1" },
+      })
+
+      await api
+        .get(`${url}/${server?.id}/users`)
+        .set("authorization", `Bearer ${token}`)
+        .expect(401)
+    })
+
+    it("Returns 404 if no server is found", async () => {
+      const user2 = await User.findOneBy({ username: "user2" })
+      const token = jwtUtils.signToken({ userId: user2?.id as string })
+
+      await api
+        .get(`${url}/d063e5e8-446a-480f-bc8b-83c0ad33f1a8/users`)
+        .set("authorization", `Bearer ${token}`)
+        .expect(404)
+    })
+
+    // note: there should be 6 users set in 'user2's server 1' in the beforeEach above
+    it("Gets all users in a server when user is in the server", async () => {
+      const user2 = await User.findOneBy({ username: "user2" })
+      const token = jwtUtils.signToken({ userId: user2?.id as string })
+
+      const server = await Server.findOne({
+        where: { name: "user2's server 1" },
+      })
+
+      const res = await api
+        .get(`${url}/${server?.id}/users`)
+        .set("authorization", `Bearer ${token}`)
+        .expect(200)
+
+      const users: User[] = res.body
+      expect(users.length).toBe(6)
+
+      const fillerUser5 = users.find((u) => u.username === "filleruser5")
+      expect(fillerUser5).toBeTruthy()
     })
   })
 })
