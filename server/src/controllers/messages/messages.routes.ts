@@ -6,9 +6,10 @@ import { Channel } from "../../models/channel"
 import { User } from "../../models/user"
 
 const router = express.Router()
+router.use(authenticatedValidator)
 
 // get all messages
-router.get("/:channelId", authenticatedValidator, async (req, res) => {
+router.get("/:channelId", async (req, res) => {
   const { channelId } = req.params
   const channel = await Channel.findOne({
     where: { id: channelId },
@@ -38,7 +39,7 @@ router.get("/:channelId", authenticatedValidator, async (req, res) => {
 })
 
 // create a message
-router.post("/:channelId", authenticatedValidator, async (req, res) => {
+router.post("/:channelId", async (req, res) => {
   const { channelId } = req.params
   const { content } = req.body
   const user = req.user as User
@@ -68,64 +69,56 @@ router.post("/:channelId", authenticatedValidator, async (req, res) => {
   res.status(201).json(message)
 })
 
-router.patch(
-  "/:channelId/:messageId",
-  authenticatedValidator,
-  async (req, res) => {
-    const { channelId, messageId } = req.params
-    const { content } = req.body
-    const user = req.user as User
+router.patch("/:channelId/:messageId", async (req, res) => {
+  const { channelId, messageId } = req.params
+  const { content } = req.body
+  const user = req.user as User
 
-    const channel = await Channel.findOne({
-      where: { id: channelId },
-      relations: { server: true },
+  const channel = await Channel.findOne({
+    where: { id: channelId },
+    relations: { server: true },
+  })
+
+  const userIsInServer = await isUserInServer({
+    serverId: channel?.server.id as string,
+    userId: user.id,
+  })
+
+  if (!channel || !userIsInServer) {
+    return res.status(401).json({
+      message: "You are not allowed to create messages on this channel",
     })
+  }
 
-    const userIsInServer = await isUserInServer({
-      serverId: channel?.server.id as string,
-      userId: user.id,
+  const message = await messagesController.updateMessage({
+    content,
+    messageId,
+  })
+  channel ? res.status(200).json(message) : res.status(500)
+})
+
+router.delete("/:channelId/:messageId", async (req, res) => {
+  const { channelId, messageId } = req.params
+  const user = req.user as User
+
+  const channel = await Channel.findOne({
+    where: { id: channelId },
+    relations: { server: true },
+  })
+
+  const userIsInServer = await isUserInServer({
+    serverId: channel?.server.id as string,
+    userId: user.id,
+  })
+
+  if (!channel || !userIsInServer) {
+    return res.status(401).json({
+      message: "You are not allowed to create messages on this channel",
     })
+  }
 
-    if (!channel || !userIsInServer) {
-      return res.status(401).json({
-        message: "You are not allowed to create messages on this channel",
-      })
-    }
-
-    const message = await messagesController.updateMessage({
-      content,
-      messageId,
-    })
-    channel ? res.status(200).json(message) : res.status(500)
-  },
-)
-
-router.delete(
-  "/:channelId/:messageId",
-  authenticatedValidator,
-  async (req, res) => {
-    const { channelId, messageId } = req.params
-    const user = req.user as User
-
-    const channel = await Channel.findOne({
-      where: { id: channelId },
-      relations: { server: true },
-    })
-
-    const userIsInServer = await isUserInServer({
-      serverId: channel?.server.id as string,
-      userId: user.id,
-    })
-
-    if (!channel || !userIsInServer) {
-      return res.status(401).json({
-        message: "You are not allowed to create messages on this channel",
-      })
-    }
-
-    await messagesController.deleteMessage({ messageId })
-    res.status(204).end()
-  },
-)
+  await messagesController.deleteMessage({ messageId })
+  res.status(204).end()
+})
 
 export default router

@@ -7,15 +7,16 @@ import { redisClient } from "../../config/redis"
 import { UserServers } from "../../models/userServers"
 
 const router = express.Router()
+router.use(authenticatedValidator)
 
-router.get("/", authenticatedValidator, async (req, res) => {
+router.get("/", async (req, res) => {
   const servers = await ServersController.getServersWithChannels(
     req.user?.id as string,
   )
   res.json({ servers })
 })
 
-router.post("/", authenticatedValidator, async (req, res) => {
+router.post("/", async (req, res) => {
   const { name } = req.body
   const user = req.user
 
@@ -28,7 +29,7 @@ router.post("/", authenticatedValidator, async (req, res) => {
   res.status(201).json(newServer)
 })
 
-router.patch("/:serverId", authenticatedValidator, async (req, res) => {
+router.patch("/:serverId", async (req, res) => {
   const { name } = req.body
   const { serverId } = req.params
 
@@ -54,7 +55,7 @@ router.patch("/:serverId", authenticatedValidator, async (req, res) => {
   res.json(updatedServer)
 })
 
-router.delete("/:serverId", authenticatedValidator, async (req, res) => {
+router.delete("/:serverId", async (req, res) => {
   const { serverId } = req.params
 
   const server = await ServersController.getServer(serverId)
@@ -78,7 +79,7 @@ router.delete("/:serverId", authenticatedValidator, async (req, res) => {
 })
 
 // creates a invite link for a user to join a server
-router.post("/:serverId/invites", authenticatedValidator, async (req, res) => {
+router.post("/:serverId/invites", async (req, res) => {
   const { serverId } = req.params
 
   const server = await ServersController.getServer(serverId)
@@ -104,7 +105,7 @@ router.post("/:serverId/invites", authenticatedValidator, async (req, res) => {
 })
 
 // allows a user to join a server given that the invite link is valid
-router.post("/join/:inviteLinkId", authenticatedValidator, async (req, res) => {
+router.post("/join/:inviteLinkId", async (req, res) => {
   const { inviteLinkId } = req.params
 
   const serverId = await redisClient.get(inviteLinkId)
@@ -135,5 +136,7 @@ router.post("/join/:inviteLinkId", authenticatedValidator, async (req, res) => {
 
   res.status(200).json({ joined: true })
 })
+
+// router.get("/:serverId/users", authenticatedValidator, async (req, res) => {})
 
 export default router

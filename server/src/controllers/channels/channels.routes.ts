@@ -4,8 +4,9 @@ import { authenticatedValidator } from "../../middleware/authenticatedValidator"
 import { isUserInServer } from "../helpers"
 
 const router = express.Router()
+router.use(authenticatedValidator)
 
-router.get("/:serverId", authenticatedValidator, async (req, res) => {
+router.get("/:serverId", async (req, res) => {
   const { serverId } = req.params
   const userId = req.user?.id as string
 
@@ -30,7 +31,7 @@ router.get("/:serverId", authenticatedValidator, async (req, res) => {
   res.json(channels)
 })
 
-router.post("/:serverId", authenticatedValidator, async (req, res) => {
+router.post("/:serverId", async (req, res) => {
   const { serverId } = req.params
   const userId = req.user?.id as string
   const { name } = req.body
@@ -48,43 +49,35 @@ router.post("/:serverId", authenticatedValidator, async (req, res) => {
   channel ? res.status(201).json(channel) : res.status(500)
 })
 
-router.patch(
-  "/:serverId/:channelId",
-  authenticatedValidator,
-  async (req, res) => {
-    const { serverId, channelId } = req.params
-    const userId = req.user?.id as string
-    const { name } = req.body
+router.patch("/:serverId/:channelId", async (req, res) => {
+  const { serverId, channelId } = req.params
+  const userId = req.user?.id as string
+  const { name } = req.body
 
-    const userIsInServer = await isUserInServer({ serverId, userId })
-    if (!userIsInServer) {
-      res.status(401).json({
-        message: "You are not allowed to update channels in this server",
-      })
-    }
+  const userIsInServer = await isUserInServer({ serverId, userId })
+  if (!userIsInServer) {
+    res.status(401).json({
+      message: "You are not allowed to update channels in this server",
+    })
+  }
 
-    const channel = await ChannelsController.updateChannel(name, channelId)
-    channel ? res.status(200).json(channel) : res.status(500)
-  },
-)
+  const channel = await ChannelsController.updateChannel(name, channelId)
+  channel ? res.status(200).json(channel) : res.status(500)
+})
 
-router.delete(
-  "/:serverId/:channelId",
-  authenticatedValidator,
-  async (req, res) => {
-    const { serverId, channelId } = req.params
-    const userId = req.user?.id as string
+router.delete("/:serverId/:channelId", async (req, res) => {
+  const { serverId, channelId } = req.params
+  const userId = req.user?.id as string
 
-    const userIsInServer = await isUserInServer({ serverId, userId })
-    if (!userIsInServer) {
-      res.status(401).json({
-        message: "You are not allowed to delete channels in this server",
-      })
-    }
+  const userIsInServer = await isUserInServer({ serverId, userId })
+  if (!userIsInServer) {
+    res.status(401).json({
+      message: "You are not allowed to delete channels in this server",
+    })
+  }
 
-    await ChannelsController.deleteChannel(channelId)
-    res.status(204).end()
-  },
-)
+  await ChannelsController.deleteChannel(channelId)
+  res.status(204).end()
+})
 
 export default router

@@ -40,7 +40,7 @@
             <li>Add socket operations to channels - DONE</li>
             <li>Add socket operations to messages - DONE</li>
         </ul>
-        <li>Create a way for users to join a server</li>
+        <li>Create a way for users to join a server - DONE</li>
         <li>Add a list of users for the server</li>
         <li>Create a user direct message home page</li>
         <li>Add ways to invite people into server</li>
