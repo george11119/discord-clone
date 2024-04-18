@@ -1,15 +1,15 @@
 import styled from "styled-components"
-import ChatMessage from "./ChatMessage/ChatMessage.tsx"
-import VerticalSpacer from "../../../../shared/components/VerticalSpacer.tsx"
+import ChatMessage from "../ChatMessage/ChatMessage.tsx"
+import VerticalSpacer from "../../../../../shared/components/VerticalSpacer.tsx"
 import { useContext, useEffect, useRef } from "react"
-import { Message } from "../../../../../types.ts"
+import { Message } from "../../../../../../types.ts"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
-import messageService from "../../../../api/services/messageService.ts"
-import AuthContext from "../../../Auth/AuthContext.ts"
+import messageService from "../../../../../api/services/messageService.ts"
+import AuthContext from "../../../../Auth/AuthContext.ts"
 import { useParams } from "react-router-dom"
-import { socket } from "../../../../config/socket.ts"
+import { socket } from "../../../../../config/socket.ts"
 
-const Wrapper = styled.ul`
+const ChatWrapper = styled.ul`
   flex: 1;
   list-style: none;
   overflow-y: scroll;
@@ -110,7 +110,7 @@ const ChatMessageDisplay = () => {
   }, [messages])
 
   return (
-    <Wrapper>
+    <ChatWrapper>
       <div style={{ width: "100%" }}>
         {messages &&
           messages.map((message: Message) => {
@@ -119,7 +119,7 @@ const ChatMessageDisplay = () => {
         <VerticalSpacer height={30} />
         <span ref={messagesEndRef}></span>
       </div>
-    </Wrapper>
+    </ChatWrapper>
   )
 }
 

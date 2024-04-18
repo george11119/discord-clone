@@ -9,12 +9,14 @@ const Wrapper = styled.div`
     rgba(2, 2, 2, 0.05) 0px 2px 0px 0px;
   height: 32px;
   padding: 8px;
+  min-height: 32px;
   display: flex;
   align-items: center;
   font-weight: 600;
   font-size: 14px;
   user-select: none;
   justify-content: space-between;
+  z-index: 1;
 `
 
 const Left = styled.div`
@@ -30,10 +32,13 @@ const Right = styled.div`
 
 const Header = ({
   chatTitle,
-  setUserListShown,
+  userList,
 }: {
   chatTitle: string
-  setUserListShown: (x: boolean) => void
+  userList: {
+    userListShown: boolean
+    setUserListShown: (x: boolean) => void
+  }
 }) => {
   return (
     <Wrapper>
@@ -42,7 +47,7 @@ const Header = ({
         <h1>{chatTitle}</h1>
       </Left>
       <Right>
-        <HeaderButtons />
+        <HeaderButtons userList={userList} />
       </Right>
     </Wrapper>
   )

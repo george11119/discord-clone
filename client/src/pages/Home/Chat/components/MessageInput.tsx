@@ -1,5 +1,5 @@
 import styled from "styled-components"
-import { FormEvent, useContext, useEffect, useState } from "react"
+import { FormEvent, useContext, useState } from "react"
 import UploadFileButton from "../../../../shared/svg/UploadFileButton.tsx"
 import messageService from "../../../../api/services/messageService.ts"
 import AuthContext from "../../../Auth/AuthContext.ts"

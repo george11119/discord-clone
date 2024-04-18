@@ -75,25 +75,51 @@ const IconButton = ({
   )
 }
 
-const HeaderButtons = () => {
+const HeaderButtons = ({
+  userList,
+}: {
+  userList: {
+    userListShown: boolean
+    setUserListShown: (x: boolean) => void
+  }
+}) => {
   return (
     <>
+      {/*Threads icon*/}
       <IconButton>
         <ThreadsIcon size={24} />
       </IconButton>
+
+      {/*Notifications icon*/}
       <IconButton>
         <NotificationsIcon size={24} />
       </IconButton>
+
+      {/*Pinned messages*/}
       <IconButton>
         <PinnedMessagesIcon size={24} />
       </IconButton>
-      <IconButton tooltip={"User list"}>
-        <MemberListIcon size={24} />
+
+      {/*User list*/}
+      <IconButton
+        tooltip={`${userList.userListShown ? "Hide" : "Show"} User list`}
+        onClick={() => userList.setUserListShown(!userList.userListShown)}
+      >
+        <MemberListIcon
+          size={24}
+          color={userList.userListShown ? "rgb(229, 232, 235)" : "currentColor"}
+        />
       </IconButton>
+
+      {/*search bar*/}
       <Searchbar />
+
+      {/*inbox button*/}
       <IconButton>
         <InboxIcon size={24} />
       </IconButton>
+
+      {/*Help button*/}
       <IconButton>
         <HelpIcon size={24} />
       </IconButton>

@@ -1,15 +1,26 @@
 import styled from "styled-components"
 import Header from "./components/Header/Header.tsx"
-import ChatMessageDisplay from "./components/ChatMessageDisplay.tsx"
+import ChatMessageDisplay from "./components/ChatMessageDisplay/ChatMessageDisplay.tsx"
 import MessageInput from "./components/MessageInput.tsx"
 import { Channel, Server } from "../../../../types.ts"
 import { matchPath, useLocation, useParams } from "react-router-dom"
 import { useQueryClient } from "@tanstack/react-query"
 import { useState } from "react"
+import UserList from "./components/ChatMessageDisplay/UserList.tsx"
 
 const Wrapper = styled.div`
   background-color: rgb(49, 51, 56);
   height: 100vh;
+  display: flex;
+  flex-direction: column;
+`
+
+const MainContainer = styled.div`
+  display: flex;
+  overflow: hidden;
+`
+
+const ChatContent = styled.div`
   display: flex;
   flex-direction: column;
 `
@@ -68,10 +79,15 @@ const ChatAreaContainer = () => {
       <>
         <Header
           chatTitle={channel ? channel.name : ""}
-          setUserListShown={setUserListShown}
+          userList={{ userListShown, setUserListShown }}
         />
-        <ChatMessageDisplay />
-        <MessageInput />
+        <MainContainer>
+          <ChatContent>
+            <ChatMessageDisplay />
+            <MessageInput />
+          </ChatContent>
+          {userListShown && <UserList />}
+        </MainContainer>
       </>
     </Wrapper>
   )
