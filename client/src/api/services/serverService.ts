@@ -52,6 +52,11 @@ const joinServer = async (token: string, inviteLinkId: string) => {
   return res.data
 }
 
+const getUsers = async (token: string, serverId: string) => {
+  const res = await apiCaller.get(`${url}/${serverId}/users`, apiConfig(token))
+  return res.data
+}
+
 export default {
   get,
   create,
@@ -59,4 +64,5 @@ export default {
   destroy,
   getInviteLink,
   joinServer,
+  getUsers,
 }

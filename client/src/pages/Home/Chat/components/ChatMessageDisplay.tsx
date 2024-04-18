@@ -1,13 +1,13 @@
 import styled from "styled-components"
-import ChatMessage from "../ChatMessage/ChatMessage.tsx"
-import VerticalSpacer from "../../../../../shared/components/VerticalSpacer.tsx"
+import ChatMessage from "./ChatMessage/ChatMessage.tsx"
+import VerticalSpacer from "../../../../shared/components/VerticalSpacer.tsx"
 import { useContext, useEffect, useRef } from "react"
-import { Message } from "../../../../../../types.ts"
+import { Message } from "../../../../../types.ts"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
-import messageService from "../../../../../api/services/messageService.ts"
-import AuthContext from "../../../../Auth/AuthContext.ts"
+import messageService from "../../../../api/services/messageService.ts"
+import AuthContext from "../../../Auth/AuthContext.ts"
 import { useParams } from "react-router-dom"
-import { socket } from "../../../../../config/socket.ts"
+import { socket } from "../../../../config/socket.ts"
 
 const ChatWrapper = styled.ul`
   flex: 1;

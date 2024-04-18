@@ -1,12 +1,12 @@
 import styled from "styled-components"
 import Header from "./components/Header/Header.tsx"
-import ChatMessageDisplay from "./components/ChatMessageDisplay/ChatMessageDisplay.tsx"
+import ChatMessageDisplay from "./components/ChatMessageDisplay.tsx"
 import MessageInput from "./components/MessageInput.tsx"
 import { Channel, Server } from "../../../../types.ts"
 import { matchPath, useLocation, useParams } from "react-router-dom"
 import { useQueryClient } from "@tanstack/react-query"
 import { useState } from "react"
-import UserList from "./components/ChatMessageDisplay/UserList.tsx"
+import UserList from "./components/UserList/UserList.tsx"
 
 const Wrapper = styled.div`
   background-color: rgb(49, 51, 56);
@@ -18,10 +18,12 @@ const Wrapper = styled.div`
 const MainContainer = styled.div`
   display: flex;
   overflow: hidden;
+  flex-grow: 1;
 `
 
 const ChatContent = styled.div`
   display: flex;
+  flex-grow: 1;
   flex-direction: column;
 `
 
