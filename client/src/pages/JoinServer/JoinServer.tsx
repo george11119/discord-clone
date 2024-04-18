@@ -1,6 +1,6 @@
 import { Navigate, useParams } from "react-router-dom"
 import { useEffect } from "react"
-import serverService from "../../services/serverService.ts"
+import serverService from "../../api/services/serverService.ts"
 
 const JoinServer = () => {
   const { inviteLinkId } = useParams()

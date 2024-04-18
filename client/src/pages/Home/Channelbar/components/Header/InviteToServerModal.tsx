@@ -8,7 +8,7 @@ import config from "../../../../../config/config.ts"
 import { useMutation } from "@tanstack/react-query"
 import AuthContext from "../../../../Auth/AuthContext.ts"
 import { useParams } from "react-router-dom"
-import serverService from "../../../../../services/serverService.ts"
+import serverService from "../../../../../api/services/serverService.ts"
 
 const CloseButton = styled.div`
   position: absolute;

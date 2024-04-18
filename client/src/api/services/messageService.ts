@@ -1,4 +1,4 @@
-import { Message } from "../../types.ts"
+import { Message } from "../../../types.ts"
 import apiCaller, { apiConfig } from "./apiCaller.ts"
 
 const url = "/messages"

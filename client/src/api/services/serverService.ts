@@ -1,5 +1,5 @@
 import apiCaller, { apiConfig } from "./apiCaller.ts"
-import { Server } from "../../types.ts"
+import { Server } from "../../../types.ts"
 
 const url = "/servers"
 

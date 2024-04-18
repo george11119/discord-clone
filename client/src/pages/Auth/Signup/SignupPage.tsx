@@ -3,7 +3,7 @@ import styled from "styled-components"
 import { Link } from "react-router-dom"
 import OAuthButtons from "../components/OAuthButtons.tsx"
 import Divider from "./Divider.tsx"
-import userService from "../../../services/userService.ts"
+import userService from "../../../api/services/userService.ts"
 import { useContext } from "react"
 import AuthContext from "../AuthContext.ts"
 

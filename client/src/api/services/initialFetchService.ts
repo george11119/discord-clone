@@ -1,5 +1,5 @@
 import apiCaller, { apiConfig } from "./apiCaller.ts"
-import { Server, User } from "../../types.ts"
+import { Server, User } from "../../../types.ts"
 
 const url = "/@me"
 

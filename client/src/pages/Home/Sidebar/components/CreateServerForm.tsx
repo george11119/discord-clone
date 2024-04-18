@@ -5,7 +5,7 @@ import UploadIcon from "../../../../shared/svg/UploadIcon.tsx"
 import Tooltip from "../../../../shared/components/Tooltip.tsx"
 import Button from "../../../../shared/components/Button.tsx"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import serverService from "../../../../services/serverService.ts"
+import serverService from "../../../../api/services/serverService.ts"
 import AuthContext from "../../../Auth/AuthContext.ts"
 import { Server } from "../../../../../types.ts"
 
@@ -77,6 +77,7 @@ const CreateServerForm = ({
           type="text"
           value={serverName}
           setValue={setServerName}
+          autoFocus
         />
       </Form>
       <Footer>

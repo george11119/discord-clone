@@ -11,7 +11,11 @@ const App = () => {
       <AuthContextProvider>
         <Routes />
       </AuthContextProvider>
-      <ReactQueryDevtools initialIsOpen={false} buttonPosition="bottom-left" />
+      <ReactQueryDevtools
+        initialIsOpen={false}
+        buttonPosition="bottom-left"
+        position="right"
+      />
     </QueryClientProvider>
   )
 }

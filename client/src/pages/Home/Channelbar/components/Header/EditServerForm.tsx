@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom"
 import { FormEvent, useContext, useId, useState } from "react"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import serverService from "../../../../../services/serverService.ts"
+import serverService from "../../../../../api/services/serverService.ts"
 import { Server } from "../../../../../../types.ts"
 import AuthContext from "../../../../Auth/AuthContext.ts"
 import styled from "styled-components"

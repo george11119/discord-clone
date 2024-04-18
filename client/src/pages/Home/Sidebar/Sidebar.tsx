@@ -23,7 +23,7 @@ const Wrapper = styled.nav`
   scrollbar-width: none;
 `
 
-const Sidebar = () => {
+const Sidebar = ({ servers }: { servers: Server[] }) => {
   const queryClient = useQueryClient()
 
   useEffect(() => {
@@ -40,8 +40,6 @@ const Sidebar = () => {
       socket.off("server:delete", onServerDelete)
     }
   }, [])
-
-  const servers = queryClient.getQueryData(["servers"]) as Server[]
 
   return (
     <Wrapper>

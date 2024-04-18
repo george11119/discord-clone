@@ -1,7 +1,7 @@
 import LoginForm from "./LoginForm.tsx"
 import OAuthButtons from "../components/OAuthButtons.tsx"
 import HorizontalSpacer from "../../../shared/components/HorizontalSpacer.tsx"
-import loginService from "../../../services/loginService.ts"
+import loginService from "../../../api/services/loginService.ts"
 import { useContext } from "react"
 import AuthContext from "../AuthContext.ts"
 

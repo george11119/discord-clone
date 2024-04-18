@@ -2,12 +2,12 @@ import styled from "styled-components"
 import VerticalSpacer from "../../../../../shared/components/VerticalSpacer.tsx"
 import ConversationSearchButton from "./ConversationSearchButton.tsx"
 import ChannelTitle from "./ChannelTitle.tsx"
-import {matchPath, useLocation, useParams} from "react-router-dom"
-import {useState} from "react"
+import { matchPath, useLocation, useParams } from "react-router-dom"
+import { useState } from "react"
 import ServerOptionsPopout from "./ServerOptionsPopout.tsx"
-import {Server} from "../../../../../../types.ts"
-import {useQueryClient} from "@tanstack/react-query"
-import {AnimatePresence} from "framer-motion"
+import { Server } from "../../../../../../types.ts"
+import { useQueryClient } from "@tanstack/react-query"
+import { AnimatePresence } from "framer-motion"
 import useModal from "../../../../../hooks/useModal.ts"
 import EditServerModal from "./EditServerModal.tsx"
 import ChannelModal from "../ChannelList/ChannelModal.tsx"
@@ -28,19 +28,19 @@ const Wrapper = styled.div<{ $isHomeLink: boolean }>`
   user-select: none;
 
   &:hover {
-    background-color: ${(props) =>
-        props.$isHomeLink ? "inherit" : " #35373c"};
+    background-color: ${(props) => {
+      return props.$isHomeLink ? "inherit" : " #35373c"
+    }};
   }
-;
 }
 `
 
 const Header = () => {
   const queryClient = useQueryClient()
-  const {serverId} = useParams()
+  const { serverId } = useParams()
 
   const [popoutOpen, setPopoutOpen] = useState(false)
-  const {pathname} = useLocation()
+  const { pathname } = useLocation()
   const isHomeLink = matchPath(`/channels/@me/*`, pathname) ? true : false
   const editChannel = useModal()
   const createChannel = useModal()
@@ -77,7 +77,7 @@ const Header = () => {
         )}
       </AnimatePresence>
 
-      <div style={{position: "relative"}}>
+      <div style={{ position: "relative" }}>
         {popoutOpen && (
           <ServerOptionsPopout
             setPopoutOpen={setPopoutOpen}
@@ -88,7 +88,7 @@ const Header = () => {
         )}
         <Wrapper
           onClick={isHomeLink ? () => null : togglePopoutVisibility}
-          style={popoutOpen ? {backgroundColor: "#35373c"} : {}}
+          style={popoutOpen ? { backgroundColor: "#35373c" } : {}}
           $isHomeLink={isHomeLink}
         >
           {isHomeLink ? (

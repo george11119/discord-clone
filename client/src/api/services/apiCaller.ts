@@ -1,5 +1,5 @@
 import axios from "axios"
-import config from "../config/config.ts"
+import config from "../../config/config.ts"
 
 export const apiConfig = (token: string) => {
   return {

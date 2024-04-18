@@ -7,8 +7,7 @@ import { socket } from "../../config/socket.ts"
 import { useParams } from "react-router-dom"
 import AuthContext from "../Auth/AuthContext.ts"
 import { useQuery } from "@tanstack/react-query"
-import serverService from "../../services/serverService.ts"
-import { Channel } from "../../../types.ts"
+import serverService from "../../api/services/serverService.ts"
 
 const Wrapper = styled.div`
   display: grid;
@@ -22,10 +21,10 @@ const BlankPage = styled.div`
   background-color: #1e1f22;
 `
 
-const Home = () => {
+const useSocketConnection = () => {
   const { serverId, channelId } = useParams()
-  const { token } = useContext(AuthContext)
 
+  // initial connection to socket
   useEffect(() => {
     socket.connect()
     return () => {
@@ -56,6 +55,12 @@ const Home = () => {
       }
     }
   }, [channelId])
+}
+
+const Home = () => {
+  const { token } = useContext(AuthContext)
+
+  useSocketConnection()
 
   const result = useQuery({
     queryKey: ["servers"],
@@ -64,9 +69,11 @@ const Home = () => {
 
   if (result.isLoading) return <BlankPage />
 
+  const servers = result.data!
+
   return (
     <Wrapper>
-      <Sidebar />
+      <Sidebar servers={servers} />
       <Channelbar />
       <ChatAreaContainer />
     </Wrapper>

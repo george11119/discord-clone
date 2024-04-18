@@ -40,7 +40,7 @@ const createServer = async ({ user, name }: { user: User; name: string }) => {
   const newServer = await Server.save({ name })
   await UserServers.save({ user, server: newServer })
 
-  return newServer
+  return { ...newServer, channels: [] }
 }
 
 const updateServer = async ({
@@ -50,15 +50,18 @@ const updateServer = async ({
   name: string
   serverId: string
 }) => {
-  const updatedServer = (
-    await db
-      .createQueryBuilder()
-      .update(Server)
-      .set({ name })
-      .where("id = :serverId", { serverId })
-      .returning("*")
-      .execute()
-  ).raw[0]
+  await db
+    .createQueryBuilder()
+    .update(Server)
+    .set({ name })
+    .where("id = :serverId", { serverId })
+    .returning("*")
+    .execute()
+
+  const updatedServer = Server.findOne({
+    where: { id: serverId },
+    relations: { channels: true },
+  })
 
   return updatedServer
 }
