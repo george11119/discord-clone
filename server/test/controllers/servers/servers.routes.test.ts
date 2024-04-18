@@ -433,7 +433,7 @@ describe(`${url}`, () => {
     })
   })
 
-  describe.only(`${url}/:serverId/users`, () => {
+  describe(`${url}/:serverId/users`, () => {
     it("Returns 401 if user is not logged in", async () => {
       const server = await Server.findOne({
         where: { name: "user2's server 1" },

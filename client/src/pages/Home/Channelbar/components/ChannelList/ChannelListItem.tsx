@@ -55,7 +55,13 @@ const Right = styled.div<{ $isActive: any; $isHovered: boolean }>`
   margin-left: 12px;
 `
 
-const SettingsButtonContainer = styled.div``
+const SettingsButtonContainer = styled.div`
+  color: rgb(181, 186, 193);
+
+  &:hover {
+    color: rgb(229, 232, 235);
+  }
+`
 
 const ChannelListItem = ({ channel }: { channel: Channel }) => {
   const [hovered, setHovered] = useState(false)
@@ -95,7 +101,7 @@ const ChannelListItem = ({ channel }: { channel: Channel }) => {
         <Right $isActive={isActive} $isHovered={hovered}>
           <Tooltip tooltip="Edit Channel" placement="top">
             <SettingsButtonContainer onClick={handleClick}>
-              <SettingsButton size={16} color={"rgb(181, 186, 193)"} />
+              <SettingsButton size={16} />
             </SettingsButtonContainer>
           </Tooltip>
         </Right>
