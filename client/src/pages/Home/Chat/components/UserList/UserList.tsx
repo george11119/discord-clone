@@ -12,6 +12,10 @@ const Wrapper = styled.div`
   flex-shrink: 0;
   background-color: rgb(43, 45, 49);
   padding-bottom: 20px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  scrollbar-color: rgb(26, 27, 30) rgb(43, 45, 49);
+  scrollbar-width: thin;
 `
 
 const ListTitle = styled.div`
@@ -38,7 +42,7 @@ const UserList = () => {
 
   return (
     <Wrapper>
-      <ListTitle>MEMBERS—{users.length}</ListTitle>
+      <ListTitle>MEMBERS — {users.length}</ListTitle>
       <List>
         {users.map((user) => (
           <UserListItem key={user.id} user={user} />

@@ -62,8 +62,19 @@ const seedDatabase = async () => {
 
   const channel = server?.channels[0]
 
+  // 10 messages in server 1
   for (let i = 1; i <= 10; i++) {
     await Message.save({ content: `Hello ${i}`, user: user1, channel })
+  }
+
+  // create 45 more users in 'Server 1'
+  for (let i = 5; i < 50; i++) {
+    const fillerUser = await User.save({
+      username: `testusername${i}`,
+      passwordHash: await bcrypt.hash("password", 10), // password is "password"
+      email: `test${i}@test.com`,
+    })
+    await UserServers.save({ user: fillerUser, server: server! })
   }
 }
 
