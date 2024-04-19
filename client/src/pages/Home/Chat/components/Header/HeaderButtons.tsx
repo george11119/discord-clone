@@ -50,6 +50,7 @@ const IconContainer = styled.div`
 `
 
 const IconWrapper = styled.div`
+  cursor: pointer;
   color: #b5bac1;
 
   &:hover {

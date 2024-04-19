@@ -1,7 +1,9 @@
 import styled from "styled-components"
-import { useId } from "react"
+import { useContext, useId } from "react"
 // import Tooltip from "./Tooltip.tsx"
 import DiscordIcon from "../../pages/Auth/assets/DiscordIcon.tsx"
+import AuthContext from "../../pages/Auth/AuthContext.ts"
+import { stringToColor } from "../../utils/stringToColor.ts"
 
 const Wrapper = styled.div<{ $profileDiameter: number }>`
   position: relative;
@@ -21,6 +23,8 @@ const UserProfilePicture = ({
 }: {
   profileDiameter: number
 }) => {
+  const { user } = useContext(AuthContext)
+  const color = user ? stringToColor(user.username) : "#5865f2"
   const id = useId()
   const idString = `url(#${id})`
 
@@ -84,7 +88,7 @@ const UserProfilePicture = ({
             style={{
               height: profileDiameter,
               width: profileDiameter,
-              backgroundColor: "#5865f2",
+              backgroundColor: color,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
