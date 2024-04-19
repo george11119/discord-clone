@@ -28,4 +28,5 @@ export type Channel = {
   serverId: string
   createdAt: Date
   updatedAt: Date
+  server?: Server
 }
