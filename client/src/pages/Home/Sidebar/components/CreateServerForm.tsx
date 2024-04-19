@@ -78,6 +78,7 @@ const CreateServerForm = ({
           value={serverName}
           setValue={setServerName}
           autoFocus
+          data-testid="new-server-name"
         />
       </Form>
       <Footer>

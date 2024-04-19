@@ -5,7 +5,7 @@ const router = express.Router()
 
 router.post("/reset", async (req, res) => {
   await clearDatabase()
-  res.status(204).end()
+  res.status(200).json({ cleared: true })
 })
 
 export default router

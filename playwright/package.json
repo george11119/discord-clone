@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "test:ui": "playwright test --ui",
     "test": "playwright test --project chromium",
     "test-all": "playwright test",
     "test:report": "playwright show-report"

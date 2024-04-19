@@ -83,11 +83,13 @@ const EditServerForm = ({ handleClose }: { handleClose: () => void }) => {
           type="text"
           value={serverName}
           setValue={setServerName}
+          autoFocus
+          data-testid="edit-server-name"
         />
       </Form>
       <Footer>
         <Button
-          text="Create"
+          text="Edit"
           isLoading={editServerMutation.isPending}
           form={serverFormId}
           style={{

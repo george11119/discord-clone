@@ -26,7 +26,7 @@ const Button = ({
   text: string
   isLoading?: boolean
   hoverColor?: string
-  style: React.CSSProperties
+  style?: React.CSSProperties
   [rest: string]: any
 }) => {
   return (

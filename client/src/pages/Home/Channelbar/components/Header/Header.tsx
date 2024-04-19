@@ -77,7 +77,7 @@ const Header = () => {
         )}
       </AnimatePresence>
 
-      <div style={{ position: "relative" }}>
+      <div style={{ position: "relative" }} data-testid="channelbar-header">
         {popoutOpen && (
           <ServerOptionsPopout
             setPopoutOpen={setPopoutOpen}

@@ -61,7 +61,7 @@ const Icon = ({
   }
 
   return (
-    <div>
+    <div data-testid={name}>
       <Tooltip tooltip={tooltip ? tooltip : name} placement="right">
         <LinkWrapper
           to={`${link}`}

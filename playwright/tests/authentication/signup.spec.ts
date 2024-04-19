@@ -11,12 +11,13 @@ test.describe("User sign up", () => {
     const usernameInput = page.getByTestId("username-input")
     const passwordInput = page.getByTestId("password-input")
 
-    await emailInput.fill("test@test.com")
-    await usernameInput.fill("testuser1")
+    await emailInput.fill("test2@test.com")
+    await usernameInput.fill("testuser2")
     await passwordInput.fill("password")
 
     await page.getByText("Continue").click()
 
-    // TODO: Add expect assertion here
+    await expect(page).toHaveURL("/channels/@me")
+    await expect(page.getByText("testuser2")).toBeVisible()
   })
 })
