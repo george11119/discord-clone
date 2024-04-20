@@ -68,8 +68,6 @@ const useDeleteServer = (serverId: string | undefined) => {
         ["servers"],
         servers.filter((s) => s.id !== serverId),
       )
-
-      socket.emit("server:delete", serverId)
     },
   })
 }

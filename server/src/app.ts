@@ -16,7 +16,6 @@ import usersRouter from "./controllers/users/users.routes"
 import serverRouter from "./controllers/servers/servers.routes"
 import initialDataFetchRouter from "./controllers/initialDataFetch/initialDataFetch.routes"
 import channelsRouter from "./controllers/channels/channels.routes"
-import serverSocket from "./controllers/servers/server.socket"
 
 import { requestLogger } from "./middleware/requestLogger"
 import { unknownEndpoint } from "./middleware/unknownEndpoint"
@@ -109,12 +108,6 @@ io.on("connection", (socket) => {
   socket.on("leaveChannelRoom", (channelId) => {
     socket.leave(`channel-${channelId}`)
   })
-
-  // server socket stuff
-  socket.on("server:edit", (s) => serverSocket.emitEditedServer(s, socket))
-  socket.on("server:delete", (serverId) =>
-    serverSocket.emitServerDelete(serverId, socket),
-  )
 })
 
 // let i = 0

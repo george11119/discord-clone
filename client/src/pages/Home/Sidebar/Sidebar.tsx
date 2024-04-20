@@ -23,6 +23,7 @@ const Wrapper = styled.nav`
 
 const Sidebar = ({ servers }: { servers: Server[] }) => {
   serverSocketHandlers.useServerDeleteListener()
+  serverSocketHandlers.useServerEditListener()
 
   return (
     <Wrapper>

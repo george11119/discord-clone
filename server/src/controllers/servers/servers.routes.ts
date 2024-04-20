@@ -5,6 +5,7 @@ import { isUserInServer } from "../helpers"
 import idGenerator from "../../utils/idGenerator"
 import { redisClient } from "../../config/redis"
 import { UserServers } from "../../models/userServers"
+import { io } from "../../app"
 
 const router = express.Router()
 router.use(authenticatedValidator)
@@ -52,6 +53,8 @@ router.patch("/:serverId", async (req, res) => {
 
   const updatedServer = await ServersController.updateServer({ name, serverId })
 
+  io.except(`${req.user?.id}`).emit("server:edit", updatedServer)
+
   res.json(updatedServer)
 })
 
@@ -75,6 +78,9 @@ router.delete("/:serverId", async (req, res) => {
   }
 
   await ServersController.deleteServer({ serverId })
+
+  io.except(`${req.user?.id}`).emit("server:delete", serverId)
+
   res.status(204).end()
 })
 

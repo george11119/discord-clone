@@ -4,6 +4,24 @@ import { socket } from "../../config/socket.ts"
 import { useQueryClient } from "@tanstack/react-query"
 import { useLocation, useNavigate } from "react-router-dom"
 
+const useServerEditListener = () => {
+  const queryClient = useQueryClient()
+
+  const onServerEdit = (editedServer: Server) => {
+    const servers = queryClient.getQueryData(["servers"]) as Server[]
+    queryClient.setQueryData(
+      ["servers"],
+      servers.map((s) => (s.id === editedServer.id ? editedServer : s)),
+    )
+  }
+
+  socket.on("server:edit", onServerEdit)
+
+  return () => {
+    socket.off("server:edit", onServerEdit)
+  }
+}
+
 const useServerDeleteListener = () => {
   const queryClient = useQueryClient()
   const navigate = useNavigate()
@@ -29,6 +47,7 @@ const useServerDeleteListener = () => {
 }
 
 const serverSocketHandlers = {
+  useServerEditListener,
   useServerDeleteListener,
 }
 
