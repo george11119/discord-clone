@@ -4,10 +4,8 @@ import VerticalSpacer from "../../../shared/components/VerticalSpacer.tsx"
 import HomeIcon from "./components/HomeIcon.tsx"
 import ServerIcon from "./components/ServerIcon.tsx"
 import CreateServerButton from "./components/CreateServerButton.tsx"
-import { useQueryClient } from "@tanstack/react-query"
 import { Server } from "../../../../types.ts"
-import { useEffect } from "react"
-import { socket } from "../../../config/socket.ts"
+import serverSocketHandlers from "../../../api/sockets/serverSocketHandlers.ts"
 
 const Wrapper = styled.nav`
   background: rgb(30, 31, 34);
@@ -24,22 +22,7 @@ const Wrapper = styled.nav`
 `
 
 const Sidebar = ({ servers }: { servers: Server[] }) => {
-  const queryClient = useQueryClient()
-
-  useEffect(() => {
-    const onServerDelete = (serverId: string) => {
-      const oldServers = queryClient.getQueryData(["servers"]) as Server[]
-      const newServers = oldServers.filter((s) => s.id !== serverId)
-
-      queryClient.setQueryData(["servers"], newServers)
-    }
-
-    socket.on("server:delete", onServerDelete)
-
-    return () => {
-      socket.off("server:delete", onServerDelete)
-    }
-  }, [])
+  serverSocketHandlers.useServerDeleteListener()
 
   return (
     <Wrapper>
