@@ -19,7 +19,7 @@ const useGetChannels = (serverId: string | undefined) => {
         serverId as string,
       )
 
-      if (channels.length === 0) return
+      if (channels.length === 0) return []
 
       const channel: Channel = channels[0]
       if (!pathname.match(new RegExp(`.*/${channel.serverId}/.*`))) {

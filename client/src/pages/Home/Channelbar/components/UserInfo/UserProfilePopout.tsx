@@ -9,6 +9,7 @@ import useOnOutsideClick from "../../../../../hooks/useOnOutsideClick.ts"
 import UserProfilePicture from "../../../../../shared/components/UserProfilePicture.tsx"
 import useOnKeyDown from "../../../../../hooks/useOnKeyDown.ts"
 import { KeyCodes } from "../../../../../shared/constants/keycodes.ts"
+import { stringToColor } from "../../../../../utils/stringToColor.ts"
 
 const Wrapper = styled.div`
   display: flex;
@@ -24,9 +25,10 @@ const Wrapper = styled.div`
   z-index: 2;
 `
 
-const Banner = styled.div`
+const Banner = styled.div<{ $backgroundColor?: string }>`
   height: 60px;
-  background-color: rgb(181, 135, 74);
+  background-color: ${(props) =>
+    props.$backgroundColor ? props.$backgroundColor : "#242428"};
   border-radius: 8px 8px 0 0;
 `
 const ProfilePictureBorder = styled.div`
@@ -80,7 +82,7 @@ const UserProfilePopout = ({
         duration: 0.08,
       }}
     >
-      <Banner />
+      <Banner $backgroundColor={stringToColor(user?.username as string)} />
       <ProfilePictureBorder>
         <ProfilePictureContainer>
           <UserProfilePicture profileDiameter={80} />

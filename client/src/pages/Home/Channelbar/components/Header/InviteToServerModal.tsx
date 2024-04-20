@@ -100,7 +100,7 @@ const InviteToServerModal = ({ handleClose }: { handleClose: () => void }) => {
                 width: 75,
                 marginRight: 4,
                 backgroundColor: copyButtonClicked
-                  ? "rgb(28, 141, 26)"
+                  ? "rgb(36, 128, 70)"
                   : "rgb(88, 101, 242)",
               }}
               onClick={() => setCopyButtonClicked(true)}
