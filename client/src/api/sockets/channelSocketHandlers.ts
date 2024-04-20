@@ -8,9 +8,15 @@ const useChannelCreateListener = () => {
 
   return useEffect(() => {
     const onChannelCreate = (newChannel: Channel) => {
-      const oldChannels = queryClient.getQueryData(["channels"]) as Channel[]
+      const oldChannels = queryClient.getQueryData([
+        "channels",
+        `${newChannel.serverId}`,
+      ]) as Channel[]
       const newChannels = oldChannels.concat(newChannel)
-      queryClient.setQueryData(["channels"], newChannels)
+      queryClient.setQueryData(
+        ["channels", `${newChannel.serverId}`],
+        newChannels,
+      )
     }
 
     socket.on("channel:create", onChannelCreate)
@@ -26,11 +32,17 @@ const useChannelEditListener = () => {
 
   return useEffect(() => {
     const onChannelEdit = (editedChannel: Channel) => {
-      const oldChannels = queryClient.getQueryData(["channels"]) as Channel[]
+      const oldChannels = queryClient.getQueryData([
+        "channels",
+        `${editedChannel.serverId}`,
+      ]) as Channel[]
       const newChannels = oldChannels.map((c) =>
         c.id === editedChannel.id ? editedChannel : c,
       )
-      queryClient.setQueryData(["channels"], newChannels)
+      queryClient.setQueryData(
+        ["channels", `${editedChannel.serverId}`],
+        newChannels,
+      )
     }
 
     socket.on("channel:edit", onChannelEdit)
@@ -45,10 +57,13 @@ const useChannelDeleteListener = () => {
   const queryClient = useQueryClient()
 
   return useEffect(() => {
-    const onChannelDelete = (channelId: string) => {
-      const oldChannels = queryClient.getQueryData(["channels"]) as Channel[]
+    const onChannelDelete = (channelId: string, serverId: string) => {
+      const oldChannels = queryClient.getQueryData([
+        "channels",
+        serverId,
+      ]) as Channel[]
       const newChannels = oldChannels.filter((c) => c.id !== channelId)
-      queryClient.setQueryData(["channels"], newChannels)
+      queryClient.setQueryData(["channels", serverId], newChannels)
     }
 
     socket.on("channel:delete", onChannelDelete)

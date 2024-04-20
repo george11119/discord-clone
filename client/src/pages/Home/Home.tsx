@@ -4,6 +4,12 @@ import Channelbar from "./Channelbar/Channelbar.tsx"
 import ChatAreaContainer from "./Chat/ChatAreaContainer.tsx"
 import useSocketConnection from "../../api/sockets/useSocketConnection.ts"
 import serverQueries from "../../api/queries/serverQueries.ts"
+import { Channel, Server } from "../../../types.ts"
+import { useQueries, useQueryClient } from "@tanstack/react-query"
+import channelService from "../../api/services/channelService.ts"
+import { useContext } from "react"
+import AuthContext from "../Auth/AuthContext.ts"
+import { socket } from "../../config/socket.ts"
 
 const Wrapper = styled.div`
   display: grid;
@@ -19,12 +25,39 @@ const BlankPage = styled.div`
 
 const Home = () => {
   useSocketConnection()
+  const { token } = useContext(AuthContext)
+  const queryClient = useQueryClient()
 
   const result = serverQueries.useGetServers()
+  const servers = result.data as Server[]
+  const channelsQueries = useQueries({
+    queries: servers
+      ? servers.map((s) => {
+          return {
+            queryKey: ["channels", `${s.id}`],
+            queryFn: async () => {
+              const data = await channelService.get(token as string, s.id)
+              return data
+            },
+          }
+        })
+      : [],
+  })
 
-  if (result.isLoading) return <BlankPage />
+  if (result.isLoading || channelsQueries.some((q) => q.isLoading)) {
+    return <BlankPage />
+  }
 
-  const servers = result.data!
+  for (const server of servers) {
+    socket.emit("joinServerRoom", server.id)
+    const channels = queryClient.getQueryData([
+      "channels",
+      server.id,
+    ]) as Channel[]
+    for (const channel of channels) {
+      socket.emit("joinChannelRoom", channel.id)
+    }
+  }
 
   return (
     <Wrapper>

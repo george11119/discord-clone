@@ -51,7 +51,7 @@ const Header = () => {
     setPopoutOpen(!popoutOpen)
   }
 
-  const servers: Server[] | undefined = queryClient.getQueryData(["servers"])
+  const servers = queryClient.getQueryData(["servers"]) as Server[]
 
   const server = servers
     ? (servers.find((s) => s.id === serverId) as Server)

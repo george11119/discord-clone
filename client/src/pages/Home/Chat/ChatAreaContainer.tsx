@@ -2,7 +2,7 @@ import styled from "styled-components"
 import Header from "./components/Header/Header.tsx"
 import ChatMessageDisplay from "./components/ChatMessageDisplay.tsx"
 import MessageInput from "./components/MessageInput.tsx"
-import { Channel, Server } from "../../../../types.ts"
+import { Channel } from "../../../../types.ts"
 import { matchPath, useLocation, useParams } from "react-router-dom"
 import { useQueryClient } from "@tanstack/react-query"
 import { useState } from "react"
@@ -38,15 +38,12 @@ const ChatAreaContainer = () => {
     return shown === "hide" ? false : true
   })
 
-  const channels: Channel[] | undefined = queryClient.getQueryData(["channels"])
+  const channels = queryClient.getQueryData([
+    "channels",
+    `${serverId}`,
+  ]) as Channel[]
 
-  // TODO my god this is horrible code
-  // one of these will exist no matter what, both get the current channel
-  const channel = channels
-    ? channels.find((c) => c.id === channelId)
-    : (queryClient.getQueryData(["servers"]) as Server[])
-        .find((s) => s.id === serverId)
-        ?.channels?.find((c) => c.id === channelId)
+  const channel = channels?.find((c) => c.id === channelId)
 
   // home page
   if (isHomeLink) {

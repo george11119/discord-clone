@@ -12,7 +12,7 @@ const useGetChannels = (serverId: string | undefined) => {
   const { pathname } = useLocation()
 
   return useQuery({
-    queryKey: ["channels"],
+    queryKey: ["channels", `${serverId}`],
     queryFn: async () => {
       const channels = await channelService.get(
         token as string,
@@ -45,9 +45,12 @@ const useCreateChannel = (serverId: string | undefined) => {
       )
     },
     onSuccess: (newChannel) => {
-      const oldChannels = queryClient.getQueryData(["channels"]) as Channel[]
+      const oldChannels = queryClient.getQueryData([
+        "channels",
+        `${serverId}`,
+      ]) as Channel[]
       const newChannels = oldChannels.concat(newChannel)
-      queryClient.setQueryData(["channels"], newChannels)
+      queryClient.setQueryData(["channels", `${serverId}`], newChannels)
 
       socket.emit("channel:create", newChannel)
       navigate(`/channels/${newChannel.serverId}/${newChannel.id}`)
@@ -72,11 +75,14 @@ const useEditChannel = (
       )
     },
     onSuccess: (editedChannel: Channel) => {
-      const oldChannels = queryClient.getQueryData(["channels"]) as Channel[]
+      const oldChannels = queryClient.getQueryData([
+        "channels",
+        `${serverId}`,
+      ]) as Channel[]
       const newChannels = oldChannels.map((c) =>
         c.id === editedChannel.id ? editedChannel : c,
       )
-      queryClient.setQueryData(["channels"], newChannels)
+      queryClient.setQueryData(["channels", `${serverId}`], newChannels)
 
       socket.emit("channel:edit", editedChannel, serverId)
     },
@@ -101,9 +107,12 @@ const useDeleteChannel = (
       )
     },
     onSuccess: () => {
-      const oldChannels = queryClient.getQueryData(["channels"]) as Channel[]
+      const oldChannels = queryClient.getQueryData([
+        "channels",
+        `${serverId}`,
+      ]) as Channel[]
       const newChannels = oldChannels.filter((c) => c.id !== channelId)
-      queryClient.setQueryData(["channels"], newChannels)
+      queryClient.setQueryData(["channels", `${serverId}`], newChannels)
 
       socket.emit("channel:delete", { channelId, serverId })
 

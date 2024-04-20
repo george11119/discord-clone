@@ -2,10 +2,8 @@ import styled from "styled-components"
 import ChannelListItem from "./ChannelListItem.tsx"
 import ChannelListCategory from "./ChannelListCategory.tsx"
 import { useParams } from "react-router-dom"
-import { useEffect } from "react"
 import { Channel } from "../../../../../../types.ts"
-import { useQueryClient } from "@tanstack/react-query"
-import channelQueries from "../../../../../api/queries/channelQueries.ts"
+import { useQuery, useQueryClient } from "@tanstack/react-query"
 import channelSocketHandlers from "../../../../../api/sockets/channelSocketHandlers.ts"
 
 const Wrapper = styled.div`
@@ -19,13 +17,12 @@ const ChannelList = () => {
   const { serverId } = useParams()
   const queryClient = useQueryClient()
 
-  const result = channelQueries.useGetChannels(serverId)
-
-  useEffect(() => {
-    queryClient.invalidateQueries({
-      queryKey: ["channels"],
-    })
-  }, [serverId])
+  const result = useQuery({
+    queryKey: ["channels", `${serverId}`],
+    queryFn: async () => {
+      return queryClient.getQueryData(["channels", `${serverId}`]) as Channel[]
+    },
+  })
 
   channelSocketHandlers.useChannelCreateListener()
   channelSocketHandlers.useChannelEditListener()
@@ -35,7 +32,7 @@ const ChannelList = () => {
     return <ChannelListCategory title="" />
   }
 
-  const channels: Channel[] = result.data
+  const channels: Channel[] = result.data!
 
   return (
     <Wrapper>
