@@ -1,11 +1,8 @@
 import styled from "styled-components"
-import { useQuery } from "@tanstack/react-query"
 import { useParams } from "react-router-dom"
-import serverService from "../../../../../api/services/serverService.ts"
-import { useContext } from "react"
-import AuthContext from "../../../../Auth/AuthContext.ts"
 import { User } from "../../../../../../types.ts"
 import UserListItem from "./UserListItem.tsx"
+import serverQueries from "../../../../../api/queries/serverQueries.ts"
 
 const Wrapper = styled.div`
   width: 240px;
@@ -28,13 +25,9 @@ const ListTitle = styled.div`
 const List = styled.div``
 
 const UserList = () => {
-  const { token } = useContext(AuthContext)
   const { serverId } = useParams()
 
-  const result = useQuery({
-    queryKey: [`users-${serverId}`],
-    queryFn: () => serverService.getUsers(token as string, serverId as string),
-  })
+  const result = serverQueries.useGetUsersOfServer(serverId)
 
   if (result.isLoading) return <Wrapper />
 

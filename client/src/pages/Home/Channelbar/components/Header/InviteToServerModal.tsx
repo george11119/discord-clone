@@ -5,7 +5,6 @@ import FormInput from "../../../../../shared/components/FormInput.tsx"
 import { FormEvent, useContext, useEffect, useState } from "react"
 import Button from "../../../../../shared/components/Button.tsx"
 import config from "../../../../../config/config.ts"
-import { useMutation } from "@tanstack/react-query"
 import AuthContext from "../../../../Auth/AuthContext.ts"
 import { useParams } from "react-router-dom"
 import serverService from "../../../../../api/services/serverService.ts"
@@ -53,18 +52,14 @@ const InviteToServerModal = ({ handleClose }: { handleClose: () => void }) => {
   // so url doesnt get fetched twice in dev mode (vite refreshes page causing another invite link fetch)
   const [called, setCalled] = useState(false)
 
-  const newInviteLinkMutation = useMutation({
-    mutationFn: () =>
-      serverService.getInviteLink(token as string, serverId as string),
-    onSuccess: ({ code }) => {
-      setInviteLink(`${inviteLink}/${code}`)
-      setCalled(true)
-    },
-  })
-
   useEffect(() => {
     if (!called) {
-      newInviteLinkMutation.mutate()
+      serverService
+        .getInviteLink(token as string, serverId as string)
+        .then(({ code }) => {
+          setInviteLink(`${inviteLink}/${code}`)
+          setCalled(true)
+        })
     }
   }, [])
 

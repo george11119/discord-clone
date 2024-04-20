@@ -74,11 +74,21 @@ const useDeleteServer = (serverId: string | undefined) => {
   })
 }
 
+const useGetUsersOfServer = (serverId: string | undefined) => {
+  const { token } = useContext(AuthContext)
+
+  return useQuery({
+    queryKey: [`users-${serverId}`],
+    queryFn: () => serverService.getUsers(token as string, serverId as string),
+  })
+}
+
 const serverQueries = {
   useCreateServer,
   useGetServers,
   useEditServer,
   useDeleteServer,
+  useGetUsersOfServer,
 }
 
 export default serverQueries
