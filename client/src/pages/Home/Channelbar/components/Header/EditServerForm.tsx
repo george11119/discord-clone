@@ -1,14 +1,13 @@
 import { useParams } from "react-router-dom"
-import { FormEvent, useContext, useId, useState } from "react"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
-import serverService from "../../../../../api/services/serverService.ts"
+import { FormEvent, useId, useState } from "react"
+import { useQueryClient } from "@tanstack/react-query"
 import { Server } from "../../../../../../types.ts"
-import AuthContext from "../../../../Auth/AuthContext.ts"
 import styled from "styled-components"
 import Tooltip from "../../../../../shared/components/Tooltip.tsx"
 import FormInput from "../../../../../shared/components/FormInput.tsx"
 import UploadIcon from "../../../../../shared/svg/UploadIcon.tsx"
 import Button from "../../../../../shared/components/Button.tsx"
+import serverQueries from "../../../../../api/queries/serverQueries.ts"
 
 const Form = styled.form`
   padding: 16px;
@@ -29,7 +28,6 @@ const Footer = styled.div`
 `
 
 const EditServerForm = ({ handleClose }: { handleClose: () => void }) => {
-  const { token } = useContext(AuthContext)
   const { serverId } = useParams()
   const serverFormId = useId()
 
@@ -39,24 +37,7 @@ const EditServerForm = ({ handleClose }: { handleClose: () => void }) => {
 
   const [serverName, setServerName] = useState(server ? server.name : "")
 
-  const editServerMutation = useMutation({
-    mutationFn: (updatedServer: { name: string }) => {
-      return serverService.update(
-        serverId as string,
-        updatedServer,
-        token as string,
-      )
-    },
-    onSuccess: (editedServer) => {
-      const servers = queryClient.getQueryData(["servers"]) as Server[]
-      queryClient.setQueryData(
-        ["servers"],
-        servers.map((s) => (s.id === serverId ? editedServer : s)),
-      )
-
-      handleClose()
-    },
-  })
+  const editServerMutation = serverQueries.useEditServer(serverId)
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
@@ -68,6 +49,7 @@ const EditServerForm = ({ handleClose }: { handleClose: () => void }) => {
     }
 
     editServerMutation.mutate(serverObject)
+    handleClose()
   }
 
   return (

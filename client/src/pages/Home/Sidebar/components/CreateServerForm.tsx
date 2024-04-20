@@ -1,13 +1,10 @@
 import FormInput from "../../../../shared/components/FormInput.tsx"
 import styled from "styled-components"
-import { FormEvent, useContext, useId, useState } from "react"
+import { FormEvent, useId, useState } from "react"
 import UploadIcon from "../../../../shared/svg/UploadIcon.tsx"
 import Tooltip from "../../../../shared/components/Tooltip.tsx"
 import Button from "../../../../shared/components/Button.tsx"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
-import serverService from "../../../../api/services/serverService.ts"
-import AuthContext from "../../../Auth/AuthContext.ts"
-import { Server } from "../../../../../types.ts"
+import serverQueries from "../../../../api/queries/serverQueries.ts"
 
 const Form = styled.form`
   padding: 16px;
@@ -34,23 +31,10 @@ const CreateServerForm = ({
   handleClose: () => void
   initialServerName?: string
 }) => {
-  const { token } = useContext(AuthContext)
   const serverFormId = useId()
   const [serverName, setServerName] = useState(initialServerName)
 
-  const queryClient = useQueryClient()
-
-  const newServerMutation = useMutation({
-    mutationFn: (newServer: { name: string }) => {
-      return serverService.create(newServer, token as string)
-    },
-    onSuccess: (newServer) => {
-      const servers = queryClient.getQueryData(["servers"]) as Server[]
-      queryClient.setQueryData(["servers"], servers?.concat(newServer))
-
-      handleClose()
-    },
-  })
+  const newServerMutation = serverQueries.useCreateServer()
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
@@ -62,6 +46,7 @@ const CreateServerForm = ({
     }
 
     newServerMutation.mutate(serverObject)
+    handleClose()
   }
 
   return (

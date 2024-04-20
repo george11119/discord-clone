@@ -2,12 +2,10 @@ import styled from "styled-components"
 import Sidebar from "./Sidebar/Sidebar.tsx"
 import Channelbar from "./Channelbar/Channelbar.tsx"
 import ChatAreaContainer from "./Chat/ChatAreaContainer.tsx"
-import { useContext, useEffect } from "react"
+import { useEffect } from "react"
 import { socket } from "../../config/socket.ts"
 import { useParams } from "react-router-dom"
-import AuthContext from "../Auth/AuthContext.ts"
-import { useQuery } from "@tanstack/react-query"
-import serverService from "../../api/services/serverService.ts"
+import serverQueries from "../../api/queries/serverQueries.ts"
 
 const Wrapper = styled.div`
   display: grid;
@@ -58,14 +56,9 @@ const useSocketConnection = () => {
 }
 
 const Home = () => {
-  const { token } = useContext(AuthContext)
-
   useSocketConnection()
 
-  const result = useQuery({
-    queryKey: ["servers"],
-    queryFn: () => serverService.get(token as string),
-  })
+  const result = serverQueries.useGetServers()
 
   if (result.isLoading) return <BlankPage />
 

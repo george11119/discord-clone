@@ -39,6 +39,10 @@ const ChannelForm = ({
 
   const newChannelMutation = channelQueries.useCreateChannel(serverId)
   const editChannelMutation = channelQueries.useEditChannel(serverId, channelId)
+  const deleteChannelMutation = channelQueries.useDeleteChannel(
+    serverId,
+    channelId,
+  )
 
   const mutator = type === "create" ? newChannelMutation : editChannelMutation
 
@@ -55,10 +59,10 @@ const ChannelForm = ({
     handleClose()
   }
 
-  const deleteChannelMutation = channelQueries.useDeleteChannel(
-    serverId,
-    channelId,
-  )
+  const handleChannelDelete = () => {
+    deleteChannelMutation.mutate()
+    handleClose()
+  }
 
   return (
     <>
@@ -87,10 +91,7 @@ const ChannelForm = ({
               fontSize: "14px",
               width: "125px",
             }}
-            onClick={() => {
-              deleteChannelMutation.mutate()
-              handleClose()
-            }}
+            onClick={handleChannelDelete}
             onMouseOver={() => setDeleteButtonHovered(true)}
             onMouseOut={() => setDeleteButtonHovered(false)}
           />
