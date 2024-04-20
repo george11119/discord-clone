@@ -1,13 +1,12 @@
 import styled from "styled-components"
 import ChannelListItem from "./ChannelListItem.tsx"
 import ChannelListCategory from "./ChannelListCategory.tsx"
-import { useNavigate, useParams } from "react-router-dom"
-import { useContext, useEffect } from "react"
+import { useParams } from "react-router-dom"
+import { useEffect } from "react"
 import { Channel } from "../../../../../../types.ts"
-import channelService from "../../../../../api/services/channelService.ts"
-import AuthContext from "../../../../Auth/AuthContext.ts"
-import { useQuery, useQueryClient } from "@tanstack/react-query"
+import { useQueryClient } from "@tanstack/react-query"
 import { socket } from "../../../../../config/socket.ts"
+import channelQueries from "../../../../../api/queries/channelQueries.ts"
 
 const Wrapper = styled.div`
   list-style: none;
@@ -17,22 +16,10 @@ const Wrapper = styled.div`
 `
 
 const ChannelList = () => {
-  const { token } = useContext(AuthContext)
   const { serverId } = useParams()
   const queryClient = useQueryClient()
-  const navigate = useNavigate()
 
-  const result = useQuery({
-    queryKey: ["channels"],
-    queryFn: async () => {
-      const data = await channelService.get(token as string, serverId as string)
-      if (data.length === 0) return data
-      const channel: Channel = data[0]
-      console.log(channel)
-      navigate(`/channels/${channel.serverId}/${channel.id}`)
-      return data
-    },
-  })
+  const result = channelQueries.useGetChannels(serverId)
 
   useEffect(() => {
     queryClient.invalidateQueries({

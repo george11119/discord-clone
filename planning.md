@@ -41,7 +41,9 @@
             <li>Add socket operations to messages - DONE</li>
         </ul>
         <li>Create a way for users to join a server - DONE</li>
-        <li>Add a list of users for the server</li>
+        <li>Add a list of users for the server - DONE</li>
+        <li>Reorganize react query code</li>
+        <li>add some sort of client side state management library?</li>
         <li>Create a user direct message home page</li>
         <li>Add ways to invite people into server</li>
         <li>Add pagination fetching for messages in channels</li>
