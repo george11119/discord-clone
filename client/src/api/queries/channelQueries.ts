@@ -3,7 +3,6 @@ import channelService from "../services/channelService.ts"
 import { useContext } from "react"
 import AuthContext from "../../pages/Auth/AuthContext.ts"
 import { Channel } from "../../../types.ts"
-import { socket } from "../../config/socket.ts"
 import { useLocation, useNavigate } from "react-router-dom"
 
 const useGetChannels = (serverId: string | undefined) => {
@@ -52,7 +51,6 @@ const useCreateChannel = (serverId: string | undefined) => {
       const newChannels = oldChannels.concat(newChannel)
       queryClient.setQueryData(["channels", `${serverId}`], newChannels)
 
-      socket.emit("channel:create", newChannel)
       navigate(`/channels/${newChannel.serverId}/${newChannel.id}`)
     },
   })
@@ -83,8 +81,6 @@ const useEditChannel = (
         c.id === editedChannel.id ? editedChannel : c,
       )
       queryClient.setQueryData(["channels", `${serverId}`], newChannels)
-
-      socket.emit("channel:edit", editedChannel, serverId)
     },
   })
 }
@@ -113,8 +109,6 @@ const useDeleteChannel = (
       ]) as Channel[]
       const newChannels = oldChannels.filter((c) => c.id !== channelId)
       queryClient.setQueryData(["channels", `${serverId}`], newChannels)
-
-      socket.emit("channel:delete", { channelId, serverId })
 
       // redirect back to server home page if no channels left after delete
       if (newChannels.length === 0) {

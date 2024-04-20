@@ -6,13 +6,10 @@ import AuthContext from "../../pages/Auth/AuthContext.ts"
 
 const useMessageCreateListener = (channelId: string | undefined) => {
   const queryClient = useQueryClient()
-  const { user } = useContext(AuthContext)
 
   // handle a message create emit from socket
   return useEffect(() => {
     const onMessageCreate = (newMessage: Message) => {
-      if (newMessage.user.id === user?.id) return
-
       const oldMessages = queryClient.getQueryData([
         `messages-${channelId}`,
       ]) as Message[]

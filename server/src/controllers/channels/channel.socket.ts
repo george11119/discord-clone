@@ -24,7 +24,7 @@ const emitChannelDelete = async (
   },
   socket: Socket,
 ) => {
-  socket.to(`server-${serverId}`).emit("channel:delete", channelId)
+  socket.to(`server-${serverId}`).emit("channel:delete", channelId, serverId)
 }
 
 export default {

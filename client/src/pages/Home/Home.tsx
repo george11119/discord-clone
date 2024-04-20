@@ -48,6 +48,9 @@ const Home = () => {
     return <BlankPage />
   }
 
+  // listen to all server, channel, and message changes of a user
+  // dont think subscribing to channel and message changes are needed to be here
+  // TODO make subscribing to channel only happen when user navigates to said channel
   for (const server of servers) {
     socket.emit("joinServerRoom", server.id)
     const channels = queryClient.getQueryData([

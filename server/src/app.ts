@@ -16,7 +16,6 @@ import usersRouter from "./controllers/users/users.routes"
 import serverRouter from "./controllers/servers/servers.routes"
 import initialDataFetchRouter from "./controllers/initialDataFetch/initialDataFetch.routes"
 import channelsRouter from "./controllers/channels/channels.routes"
-import messageSocket from "./controllers/messages/messages.socket"
 import channelSocket from "./controllers/channels/channel.socket"
 import serverSocket from "./controllers/servers/server.socket"
 
@@ -25,6 +24,8 @@ import { unknownEndpoint } from "./middleware/unknownEndpoint"
 import { errorHandler } from "./middleware/errorHandler"
 import { tokenExtractor } from "./middleware/tokenExtractor"
 import logger from "./utils/logger"
+import jwtUtils from "./utils/jwtUtils"
+import { User } from "./models/user"
 
 initializeDatabase()
 initializeRedisClient()
@@ -71,6 +72,27 @@ app.use("/api/channels", channelsRouter)
 app.use(unknownEndpoint)
 app.use(errorHandler)
 
+io.use(async (socket, next) => {
+  const authorization = socket.handshake.headers.authorization
+  if (authorization && authorization.startsWith("Bearer ")) {
+    socket.token = authorization.replace("Bearer ", "")
+  }
+  next()
+})
+
+io.use(async (socket, next) => {
+  const decodedToken = jwtUtils.verifyToken(socket.token as string)
+
+  if (!decodedToken.userId) {
+    next(new Error("No user"))
+  }
+
+  const user = await User.findOneBy({ id: decodedToken.userId })
+  socket.userId = user?.id
+  socket.join(`${user?.id}`)
+  next()
+})
+
 // websocket stuff
 io.on("connection", (socket) => {
   // server room stuff
@@ -88,13 +110,6 @@ io.on("connection", (socket) => {
   socket.on("leaveChannelRoom", (channelId) => {
     socket.leave(`channel-${channelId}`)
   })
-
-  // message socket stuff
-  socket.on("message:create", (m) => messageSocket.emitCreatedMessage(m))
-  socket.on("message:edit", (m) => messageSocket.emitEditedMessage(m))
-  socket.on("message:delete", ({ messageId, channelId }) =>
-    messageSocket.emitMessageDelete({ messageId, channelId }),
-  )
 
   // channel socket stuff
   socket.on("channel:create", (c) =>

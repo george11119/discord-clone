@@ -4,6 +4,7 @@ import { authenticatedValidator } from "../../middleware/authenticatedValidator"
 import { isUserInServer } from "../helpers"
 import { Channel } from "../../models/channel"
 import { User } from "../../models/user"
+import { io } from "../../app"
 
 const router = express.Router()
 router.use(authenticatedValidator)
@@ -66,6 +67,10 @@ router.post("/:channelId", async (req, res) => {
     channel,
   })
 
+  io.to(`channel-${message.channel.id}`)
+    .except(`${user.id}`)
+    .emit("message:create", message)
+
   res.status(201).json(message)
 })
 
@@ -94,7 +99,12 @@ router.patch("/:channelId/:messageId", async (req, res) => {
     content,
     messageId,
   })
-  channel ? res.status(200).json(message) : res.status(500)
+
+  io.to(`channel-${message?.channel.id}`)
+    .except(`${user.id}`)
+    .emit("message:edit", message)
+
+  res.status(200).json(message)
 })
 
 router.delete("/:channelId/:messageId", async (req, res) => {
@@ -118,6 +128,11 @@ router.delete("/:channelId/:messageId", async (req, res) => {
   }
 
   await messagesController.deleteMessage({ messageId })
+
+  io.to(`channel-${channelId}`)
+    .except(`${user.id}`)
+    .emit("message:delete", messageId)
+
   res.status(204).end()
 })
 
