@@ -8,6 +8,7 @@
     "build": "npx tsc",
     "start": "NODE_ENV=production node build/index.js",
     "dev": "NODE_ENV=development nodemon src/index.ts",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "dev:test": "NODE_ENV=test nodemon src/index.ts",
     "typeorm": "typeorm-ts-node-esm",
     "db:seed": "ts-node src/config/seeds.ts"

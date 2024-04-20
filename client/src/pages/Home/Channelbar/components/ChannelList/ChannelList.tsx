@@ -5,8 +5,8 @@ import { useParams } from "react-router-dom"
 import { useEffect } from "react"
 import { Channel } from "../../../../../../types.ts"
 import { useQueryClient } from "@tanstack/react-query"
-import { socket } from "../../../../../config/socket.ts"
 import channelQueries from "../../../../../api/queries/channelQueries.ts"
+import channelSocketHandlers from "../../../../../api/sockets/channelSocketHandlers.ts"
 
 const Wrapper = styled.div`
   list-style: none;
@@ -27,49 +27,9 @@ const ChannelList = () => {
     })
   }, [serverId])
 
-  useEffect(() => {
-    const onChannelCreate = (newChannel: Channel) => {
-      const oldChannels = queryClient.getQueryData(["channels"]) as Channel[]
-      const newChannels = oldChannels.concat(newChannel)
-      queryClient.setQueryData(["channels"], newChannels)
-    }
-
-    socket.on("channel:create", onChannelCreate)
-
-    return () => {
-      socket.off("channel:create", onChannelCreate)
-    }
-  }, [])
-
-  useEffect(() => {
-    const onChannelEdit = (editedChannel: Channel) => {
-      const oldChannels = queryClient.getQueryData(["channels"]) as Channel[]
-      const newChannels = oldChannels.map((c) =>
-        c.id === editedChannel.id ? editedChannel : c,
-      )
-      queryClient.setQueryData(["channels"], newChannels)
-    }
-
-    socket.on("channel:edit", onChannelEdit)
-
-    return () => {
-      socket.off("channel:edit", onChannelEdit)
-    }
-  }, [])
-
-  useEffect(() => {
-    const onChannelDelete = (channelId: string) => {
-      const oldChannels = queryClient.getQueryData(["channels"]) as Channel[]
-      const newChannels = oldChannels.filter((c) => c.id !== channelId)
-      queryClient.setQueryData(["channels"], newChannels)
-    }
-
-    socket.on("channel:delete", onChannelDelete)
-
-    return () => {
-      socket.off("channel:delete", onChannelDelete)
-    }
-  }, [])
+  channelSocketHandlers.useChannelCreateListener()
+  channelSocketHandlers.useChannelEditListener()
+  channelSocketHandlers.useChannelDeleteListener()
 
   if (result.isLoading) {
     return <ChannelListCategory title="" />

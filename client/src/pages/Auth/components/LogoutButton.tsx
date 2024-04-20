@@ -27,6 +27,7 @@ const LogoutButton = () => {
   const handleLogout = () => {
     localStorage.removeItem("discord-clone-jwt-token")
     checkLoginState()
+    socket.disconnect()
   }
 
   return (
