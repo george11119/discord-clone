@@ -1,7 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import messageService from "../services/messageService.ts"
 import { Message } from "../../../types.ts"
-import { socket } from "../../config/socket.ts"
 import { useContext } from "react"
 import AuthContext from "../../pages/Auth/AuthContext.ts"
 
@@ -37,8 +36,6 @@ const useCreateMessage = (channelId: string | undefined) => {
         [`messages-${channelId}`],
         messages?.concat(newMessage),
       )
-
-      socket.emit("message:create", newMessage)
     },
   })
 }
@@ -65,8 +62,6 @@ const useEditMessage = (channelId: string | undefined, message: Message) => {
         [`messages-${channelId}`],
         messages.map((m) => (m.id === editedMessage.id ? editedMessage : m)),
       )
-
-      socket.emit("message:edit", editedMessage)
     },
   })
 }
@@ -95,8 +90,6 @@ const useDeleteMessage = (
         [`messages-${channelId}`],
         messages.filter((m) => m.id !== messageId),
       )
-
-      socket.emit("message:delete", { channelId, messageId })
     },
   })
 }

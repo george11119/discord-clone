@@ -2,6 +2,7 @@ import express from "express"
 import ChannelsController from "./channels.db"
 import { authenticatedValidator } from "../../middleware/authenticatedValidator"
 import { isUserInServer } from "../helpers"
+import { io } from "../../app"
 
 const router = express.Router()
 router.use(authenticatedValidator)
@@ -46,6 +47,11 @@ router.post("/:serverId", async (req, res) => {
 
   // attempt to create the channel
   const channel = await ChannelsController.createChannel(name, serverId)
+
+  io.to(`server-${channel?.server.id}`)
+    .except(`${userId}`)
+    .emit("channel:create", channel)
+
   channel ? res.status(201).json(channel) : res.status(500)
 })
 
@@ -62,6 +68,9 @@ router.patch("/:serverId/:channelId", async (req, res) => {
   }
 
   const channel = await ChannelsController.updateChannel(name, channelId)
+
+  io.to(`server-${serverId}`).except(`${userId}`).emit("channel:edit", channel)
+
   channel ? res.status(200).json(channel) : res.status(500)
 })
 
@@ -77,6 +86,11 @@ router.delete("/:serverId/:channelId", async (req, res) => {
   }
 
   await ChannelsController.deleteChannel(channelId)
+
+  io.to(`server-${serverId}`)
+    .except(`${userId}`)
+    .emit("channel:delete", channelId, serverId)
+
   res.status(204).end()
 })
 
