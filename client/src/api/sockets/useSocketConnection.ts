@@ -5,7 +5,6 @@ import { socket } from "../../config/socket.ts"
 
 const useSocketConnection = () => {
   const { serverId, channelId } = useParams()
-
   // initial connection to socket
   useEffect(() => {
     socket.connect()

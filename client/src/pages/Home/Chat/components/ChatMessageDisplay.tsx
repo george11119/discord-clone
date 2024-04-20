@@ -6,8 +6,8 @@ import { Message } from "../../../../../types.ts"
 import { useQueryClient } from "@tanstack/react-query"
 import AuthContext from "../../../Auth/AuthContext.ts"
 import { useParams } from "react-router-dom"
-import { socket } from "../../../../config/socket.ts"
-import messagesQueries from "../../../../api/queries/messagesQueries.ts"
+import messageQueries from "../../../../api/queries/messageQueries.ts"
+import messageSocketHandlers from "../../../../api/sockets/messageSocketHandlers.ts"
 
 const ChatWrapper = styled.ul`
   flex: 1;
@@ -24,7 +24,7 @@ const ChatMessageDisplay = () => {
   const { channelId } = useParams()
   const queryClient = useQueryClient()
 
-  messagesQueries.useGetMessages(channelId)
+  messageQueries.useGetMessages(channelId)
   const messages: Message[] | undefined = queryClient.getQueryData([
     `messages-${channelId}`,
   ])
@@ -41,64 +41,9 @@ const ChatMessageDisplay = () => {
     }
   }
 
-  // handle a message create emit from socket
-  useEffect(() => {
-    const onMessageCreate = (newMessage: Message) => {
-      if (newMessage.user.id !== user?.id) {
-        queryClient.setQueryData(
-          [`messages-${channelId}`],
-          messages?.concat(newMessage),
-        )
-      }
-    }
-
-    socket.on("message:create", onMessageCreate)
-
-    return () => {
-      socket.off("message:create", onMessageCreate)
-    }
-  }, [messages])
-
-  // handle a message edit emit from socket
-  useEffect(() => {
-    const onMessageEdit = (editedMessage: Message) => {
-      if (editedMessage.user.id !== user?.id) {
-        const messages: Message[] | undefined = queryClient.getQueryData([
-          `messages-${channelId}`,
-        ]) as Message[]
-
-        const editedMessages = messages.map((m) =>
-          m.id === editedMessage.id ? editedMessage : m,
-        )
-        queryClient.setQueryData([`messages-${channelId}`], editedMessages)
-      }
-    }
-
-    socket.on("message:edit", onMessageEdit)
-
-    return () => {
-      socket.off("message:edit", onMessageEdit)
-    }
-  }, [messages])
-
-  // handle a message delete emit from socket
-  useEffect(() => {
-    const onMessageDelete = (deletedMessageId: string) => {
-      const messages: Message[] | undefined = queryClient.getQueryData([
-        `messages-${channelId}`,
-      ]) as Message[]
-
-      // messages without the deleted message
-      const alteredMessages = messages.filter((m) => m.id !== deletedMessageId)
-      queryClient.setQueryData([`messages-${channelId}`], alteredMessages)
-    }
-
-    socket.on("message:delete", onMessageDelete)
-
-    return () => {
-      socket.off("message:delete", onMessageDelete)
-    }
-  }, [messages])
+  messageSocketHandlers.useMessageCreateListener(channelId)
+  messageSocketHandlers.useMessageEditListener(channelId)
+  messageSocketHandlers.useMessageDeleteListener(channelId)
 
   useEffect(() => {
     scrollToBottom()

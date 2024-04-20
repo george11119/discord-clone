@@ -32,7 +32,11 @@ const ChatAreaContainer = () => {
   const { serverId, channelId } = useParams()
   const { pathname } = useLocation()
   const isHomeLink = matchPath(`/channels/@me/*`, pathname)
-  const [userListShown, setUserListShown] = useState(true)
+
+  const [userListShown, setUserListShown] = useState(() => {
+    const shown = localStorage.getItem("discord-clone-userlist-shown")
+    return shown === "hide" ? false : true
+  })
 
   const channels: Channel[] | undefined = queryClient.getQueryData(["channels"])
 

@@ -101,11 +101,11 @@ const useDeleteMessage = (
   })
 }
 
-const messagesQueries = {
+const messageQueries = {
   useGetMessages,
   useCreateMessage,
   useEditMessage,
   useDeleteMessage,
 }
 
-export default messagesQueries
+export default messageQueries

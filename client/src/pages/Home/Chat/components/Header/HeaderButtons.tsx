@@ -104,7 +104,11 @@ const HeaderButtons = ({
       {/*User list*/}
       <IconButton
         tooltip={`${userList.userListShown ? "Hide" : "Show"} User list`}
-        onClick={() => userList.setUserListShown(!userList.userListShown)}
+        onClick={() => {
+          const val = userList.userListShown ? "hide" : "show"
+          localStorage.setItem("discord-clone-userlist-shown", val)
+          userList.setUserListShown(!userList.userListShown)
+        }}
       >
         <MemberListIcon
           size={24}

@@ -2,7 +2,7 @@ import styled from "styled-components"
 import { useParams } from "react-router-dom"
 import TrashIcon from "../../../../../shared/svg/TrashIcon.tsx"
 import EditIcon from "../../../../../shared/svg/EditIcon.tsx"
-import messagesQueries from "../../../../../api/queries/messagesQueries.ts"
+import messageQueries from "../../../../../api/queries/messageQueries.ts"
 
 const PopoutWrapper = styled.div`
   position: absolute;
@@ -41,7 +41,7 @@ const MessageOptionsPopout = ({
 }) => {
   const { channelId } = useParams()
 
-  const deleteMessageMutation = messagesQueries.useDeleteMessage(
+  const deleteMessageMutation = messageQueries.useDeleteMessage(
     channelId,
     messageId,
   )

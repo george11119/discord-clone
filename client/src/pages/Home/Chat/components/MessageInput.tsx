@@ -2,7 +2,7 @@ import styled from "styled-components"
 import { FormEvent, useState } from "react"
 import UploadFileButton from "../../../../shared/svg/UploadFileButton.tsx"
 import { useParams } from "react-router-dom"
-import messagesQueries from "../../../../api/queries/messagesQueries.ts"
+import messageQueries from "../../../../api/queries/messageQueries.ts"
 
 const Wrapper = styled.form`
   height: 68px;
@@ -41,7 +41,7 @@ const MessageInput = () => {
   const { channelId } = useParams()
   const [content, setContent] = useState("")
 
-  const newMessageMutation = messagesQueries.useCreateMessage(channelId)
+  const newMessageMutation = messageQueries.useCreateMessage(channelId)
 
   const sendMessage = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault()

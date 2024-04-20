@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom"
 import useAutosizeTextArea from "../../../../../hooks/useAutosizeTextArea.ts"
 import useOnKeyDown from "../../../../../hooks/useOnKeyDown.ts"
 import { KeyCodes } from "../../../../../shared/constants/keycodes.ts"
-import messagesQueries from "../../../../../api/queries/messagesQueries.ts"
+import messageQueries from "../../../../../api/queries/messageQueries.ts"
 
 const EditMessageFormWrapper = styled.form``
 
@@ -79,7 +79,7 @@ const EditMessageForm = ({
     return () => window.removeEventListener("resize", resizeTextArea)
   }, [])
 
-  const editMessageMutation = messagesQueries.useEditMessage(channelId, message)
+  const editMessageMutation = messageQueries.useEditMessage(channelId, message)
 
   const onEnterPress = (e: any) => {
     if (submitButtonRef.current && e.keyCode == 13 && e.shiftKey == false) {
