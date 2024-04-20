@@ -1,13 +1,8 @@
 import styled from "styled-components"
-import { useContext } from "react"
-import AuthContext from "../../../../Auth/AuthContext.ts"
 import { useParams } from "react-router-dom"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
-import messageService from "../../../../../api/services/messageService.ts"
-import { Message } from "../../../../../../types.ts"
 import TrashIcon from "../../../../../shared/svg/TrashIcon.tsx"
 import EditIcon from "../../../../../shared/svg/EditIcon.tsx"
-import { socket } from "../../../../../config/socket.ts"
+import messagesQueries from "../../../../../api/queries/messagesQueries.ts"
 
 const PopoutWrapper = styled.div`
   position: absolute;
@@ -44,31 +39,12 @@ const MessageOptionsPopout = ({
   messageId: string
   setBeingEditted: (beingEditted: boolean) => void
 }) => {
-  const { token } = useContext(AuthContext)
   const { channelId } = useParams()
-  const queryClient = useQueryClient()
 
-  const deleteMessageMutation = useMutation({
-    mutationFn: () => {
-      return messageService.destroy(
-        token as string,
-        channelId as string,
-        messageId,
-      )
-    },
-    onSuccess: () => {
-      const messages = queryClient.getQueryData([
-        `messages-${channelId}`,
-      ]) as Message[]
-
-      queryClient.setQueryData(
-        [`messages-${channelId}`],
-        messages.filter((m) => m.id !== messageId),
-      )
-
-      socket.emit("message:delete", { channelId, messageId })
-    },
-  })
+  const deleteMessageMutation = messagesQueries.useDeleteMessage(
+    channelId,
+    messageId,
+  )
 
   return (
     <PopoutWrapper>

@@ -1,21 +1,11 @@
 import styled from "styled-components"
 import { Message } from "../../../../../../types.ts"
-import {
-  FormEvent,
-  useContext,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react"
-import AuthContext from "../../../../Auth/AuthContext.ts"
+import { FormEvent, useEffect, useLayoutEffect, useRef, useState } from "react"
 import { useParams } from "react-router-dom"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
 import useAutosizeTextArea from "../../../../../hooks/useAutosizeTextArea.ts"
-import messageService from "../../../../../api/services/messageService.ts"
 import useOnKeyDown from "../../../../../hooks/useOnKeyDown.ts"
 import { KeyCodes } from "../../../../../shared/constants/keycodes.ts"
-import { socket } from "../../../../../config/socket.ts"
+import messagesQueries from "../../../../../api/queries/messagesQueries.ts"
 
 const EditMessageFormWrapper = styled.form``
 
@@ -61,9 +51,7 @@ const EditMessageForm = ({
   message: Message
   setBeingEdited: (beingEdited: boolean) => void
 }) => {
-  const { token } = useContext(AuthContext)
   const { channelId } = useParams()
-  const queryClient = useQueryClient()
 
   const [content, setContent] = useState(message.content) // content for the edited message
   const textAreaRef = useRef<HTMLTextAreaElement>(null)
@@ -91,29 +79,7 @@ const EditMessageForm = ({
     return () => window.removeEventListener("resize", resizeTextArea)
   }, [])
 
-  const editMessageMutation = useMutation({
-    mutationFn: (editedMessage: { content: string }) => {
-      return messageService.update(
-        token as string,
-        editedMessage,
-        channelId as string,
-        message.id,
-      )
-    },
-    onSuccess: (editedMessage) => {
-      const messages = queryClient.getQueryData([
-        `messages-${channelId}`,
-      ]) as Message[]
-
-      queryClient.setQueryData(
-        [`messages-${channelId}`],
-        messages.map((m) => (m.id === editedMessage.id ? editedMessage : m)),
-      )
-
-      socket.emit("message:edit", editedMessage)
-      setBeingEdited(false)
-    },
-  })
+  const editMessageMutation = messagesQueries.useEditMessage(channelId, message)
 
   const onEnterPress = (e: any) => {
     if (submitButtonRef.current && e.keyCode == 13 && e.shiftKey == false) {
@@ -133,7 +99,9 @@ const EditMessageForm = ({
     }
 
     const messageObject = { content }
+
     editMessageMutation.mutate(messageObject)
+    setBeingEdited(false)
   }
 
   return (

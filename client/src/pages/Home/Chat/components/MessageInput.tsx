@@ -1,12 +1,8 @@
 import styled from "styled-components"
-import { FormEvent, useContext, useState } from "react"
+import { FormEvent, useState } from "react"
 import UploadFileButton from "../../../../shared/svg/UploadFileButton.tsx"
-import messageService from "../../../../api/services/messageService.ts"
-import AuthContext from "../../../Auth/AuthContext.ts"
 import { useParams } from "react-router-dom"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { Message } from "../../../../../types.ts"
-import { socket } from "../../../../config/socket.ts"
+import messagesQueries from "../../../../api/queries/messagesQueries.ts"
 
 const Wrapper = styled.form`
   height: 68px;
@@ -42,33 +38,10 @@ const UploadIconWrapper = styled.svg`
 `
 
 const MessageInput = () => {
-  const { token } = useContext(AuthContext)
   const { channelId } = useParams()
   const [content, setContent] = useState("")
-  const queryClient = useQueryClient()
 
-  const newMessageMutation = useMutation({
-    mutationFn: (newMessage: { content: string }) => {
-      const res = messageService.create(
-        token as string,
-        newMessage,
-        channelId as string,
-      )
-      return res
-    },
-    onSuccess: (newMessage) => {
-      const messages = queryClient.getQueryData([
-        `messages-${channelId}`,
-      ]) as Message[]
-
-      queryClient.setQueryData(
-        [`messages-${channelId}`],
-        messages?.concat(newMessage),
-      )
-
-      socket.emit("message:create", newMessage)
-    },
-  })
+  const newMessageMutation = messagesQueries.useCreateMessage(channelId)
 
   const sendMessage = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault()

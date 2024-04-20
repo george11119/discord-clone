@@ -3,11 +3,11 @@ import ChatMessage from "./ChatMessage/ChatMessage.tsx"
 import VerticalSpacer from "../../../../shared/components/VerticalSpacer.tsx"
 import { useContext, useEffect, useRef } from "react"
 import { Message } from "../../../../../types.ts"
-import { useQuery, useQueryClient } from "@tanstack/react-query"
-import messageService from "../../../../api/services/messageService.ts"
+import { useQueryClient } from "@tanstack/react-query"
 import AuthContext from "../../../Auth/AuthContext.ts"
 import { useParams } from "react-router-dom"
 import { socket } from "../../../../config/socket.ts"
+import messagesQueries from "../../../../api/queries/messagesQueries.ts"
 
 const ChatWrapper = styled.ul`
   flex: 1;
@@ -20,21 +20,16 @@ const ChatWrapper = styled.ul`
 `
 
 const ChatMessageDisplay = () => {
-  const { token, user } = useContext(AuthContext)
+  const { user } = useContext(AuthContext)
   const { channelId } = useParams()
   const queryClient = useQueryClient()
 
-  useQuery({
-    queryKey: [`messages-${channelId}`],
-    queryFn: () => messageService.get(token as string, channelId as string),
-    enabled: channelId ? true : false,
-  })
-
-  const messagesEndRef = useRef<HTMLDivElement>(null)
-
+  messagesQueries.useGetMessages(channelId)
   const messages: Message[] | undefined = queryClient.getQueryData([
     `messages-${channelId}`,
   ])
+
+  const messagesEndRef = useRef<HTMLDivElement>(null)
 
   const scrollToBottom = () => {
     if (messages?.length && messages.length > 0) {
