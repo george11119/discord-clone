@@ -43,12 +43,22 @@
         <li>Create a way for users to join a server - DONE</li>
         <li>Add a list of users for the server - DONE</li>
         <li>Reorganize react query code - DONE</li>
-        <li>add some sort of client side state management library?</li>
+        <li>Add authentication to socket connection - DONE</li>
+        <li>Add ways to invite people into server - DONE</li>
+        <li>Add a welcome users channel and add socket stuff to have a live view of which users are online or not in users list</li>
+        <li>Automatically create a general channel when a server is created</li>
         <li>Create a user direct message home page</li>
-        <li>Add ways to invite people into server</li>
         <li>Add pagination fetching for messages in channels</li>
         <li>Add loading animations</li>
-        <li>Add authentication to socket connection</li>
+        <li>Add more detail to chat messages display</li>
+        <li>Emoji button</li>
+        <li>Authorization - DONE</li>
+        <ul>
+            <li>Add authorization to servers DONE</li>
+            <li>Add authorization to channels - DONE</li>
+            <li>Add authorization to messages - DONE</li>
+        </ul>
+        <li>Voice/video call stuff</li>
     </ul>
 </ul>
 
@@ -100,8 +110,8 @@ erDiagram
 ### Frontend:
 
 <ul>
-    <li>Inefficient data fetching</li>
-    <li>Clicking on server sends you to empty channel page</li>
+    <li>Inefficient data fetching - FIXED</li>
+    <li>Clicking on server sends you to empty channel page - FIXED</li>
 </ul>
 
 should have used github projects kanban board instead of this :/
