@@ -131,7 +131,7 @@ router.delete("/:channelId/:messageId", async (req, res) => {
 
   io.to(`channel-${channelId}`)
     .except(`${user.id}`)
-    .emit("message:delete", messageId)
+    .emit("message:delete", messageId, channelId)
 
   res.status(204).end()
 })

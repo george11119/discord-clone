@@ -7,10 +7,10 @@ import AuthContext from "../../pages/Auth/AuthContext.ts"
 const useGetMessages = (channelId: string | undefined) => {
   const { token } = useContext(AuthContext)
 
-  useQuery({
-    queryKey: [`messages-${channelId}`],
+  return useQuery({
+    queryKey: ["messages", `${channelId}`],
     queryFn: () => messageService.get(token as string, channelId as string),
-    enabled: channelId ? true : false,
+    staleTime: Infinity,
   })
 }
 
@@ -27,13 +27,14 @@ const useCreateMessage = (channelId: string | undefined) => {
       )
       return res
     },
-    onSuccess: (newMessage) => {
+    onSuccess: (newMessage: Message) => {
       const messages = queryClient.getQueryData([
-        `messages-${channelId}`,
+        "messages",
+        `${newMessage.channel?.id}`,
       ]) as Message[]
 
       queryClient.setQueryData(
-        [`messages-${channelId}`],
+        ["messages", `${newMessage.channel?.id}`],
         messages?.concat(newMessage),
       )
     },
@@ -53,13 +54,14 @@ const useEditMessage = (channelId: string | undefined, message: Message) => {
         message.id,
       )
     },
-    onSuccess: (editedMessage) => {
+    onSuccess: (editedMessage: Message) => {
       const messages = queryClient.getQueryData([
-        `messages-${channelId}`,
+        "messages",
+        `${editedMessage.channel?.id}`,
       ]) as Message[]
 
       queryClient.setQueryData(
-        [`messages-${channelId}`],
+        ["messages", `${editedMessage.channel?.id}`],
         messages.map((m) => (m.id === editedMessage.id ? editedMessage : m)),
       )
     },
@@ -83,11 +85,12 @@ const useDeleteMessage = (
     },
     onSuccess: () => {
       const messages = queryClient.getQueryData([
-        `messages-${channelId}`,
+        "messages",
+        `${channelId}`,
       ]) as Message[]
 
       queryClient.setQueryData(
-        [`messages-${channelId}`],
+        ["messages", `${channelId}`],
         messages.filter((m) => m.id !== messageId),
       )
     },

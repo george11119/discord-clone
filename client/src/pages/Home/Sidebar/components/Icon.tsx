@@ -53,7 +53,9 @@ const Icon = ({
   onClick?: () => void
 }) => {
   const { pathname } = useLocation()
-  const isActive = matchPath(`${link}/*`, pathname)
+
+  const splitLink = link.split("/")
+  const isActive = matchPath(`/${splitLink[1]}/${splitLink[2]}/*`, pathname)
 
   const activeStyle = {
     backgroundColor: hoverColor,

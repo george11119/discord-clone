@@ -1,13 +1,9 @@
 import styled from "styled-components"
-import ChatMessage from "./ChatMessage/ChatMessage.tsx"
-import VerticalSpacer from "../../../../shared/components/VerticalSpacer.tsx"
-import { useContext, useEffect, useRef } from "react"
 import { Message } from "../../../../../types.ts"
-import { useQueryClient } from "@tanstack/react-query"
-import AuthContext from "../../../Auth/AuthContext.ts"
 import { useParams } from "react-router-dom"
 import messageQueries from "../../../../api/queries/messageQueries.ts"
-import messageSocketHandlers from "../../../../api/sockets/messageSocketHandlers.ts"
+import ChatMessages from "../../Channelbar/components/ChannelList/ChatMessages.tsx"
+import MessagesLoadingSkeleton from "./MessagesLoadingSkeleton.tsx"
 
 const ChatWrapper = styled.ul`
   flex: 1;
@@ -20,45 +16,23 @@ const ChatWrapper = styled.ul`
 `
 
 const ChatMessageDisplay = () => {
-  const { user } = useContext(AuthContext)
   const { channelId } = useParams()
-  const queryClient = useQueryClient()
 
-  messageQueries.useGetMessages(channelId)
-  const messages: Message[] | undefined = queryClient.getQueryData([
-    `messages-${channelId}`,
-  ])
+  const result = messageQueries.useGetMessages(channelId)
 
-  const messagesEndRef = useRef<HTMLDivElement>(null)
-
-  const scrollToBottom = () => {
-    if (messages?.length && messages.length > 0) {
-      const message = messages[messages.length - 1]
-
-      if (message.user.id === user?.id) {
-        messagesEndRef.current?.scrollIntoView({ behavior: "instant" })
-      }
-    }
+  if (result.isLoading) {
+    return (
+      <ChatWrapper>
+        <MessagesLoadingSkeleton />
+      </ChatWrapper>
+    )
   }
 
-  messageSocketHandlers.useMessageCreateListener(channelId)
-  messageSocketHandlers.useMessageEditListener(channelId)
-  messageSocketHandlers.useMessageDeleteListener(channelId)
-
-  useEffect(() => {
-    scrollToBottom()
-  }, [messages])
+  const messages = result.data as Message[]
 
   return (
     <ChatWrapper>
-      <div style={{ width: "100%" }}>
-        {messages &&
-          messages.map((message: Message) => {
-            return <ChatMessage key={message.id} message={message} />
-          })}
-        <VerticalSpacer height={30} />
-        <span ref={messagesEndRef}></span>
-      </div>
+      <ChatMessages messages={messages} />
     </ChatWrapper>
   )
 }

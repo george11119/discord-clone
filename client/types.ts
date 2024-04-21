@@ -12,6 +12,7 @@ export type Message = {
   createdAt: Date
   updatedAt: Date
   user: User
+  channel?: Channel
 }
 
 export type Server = {

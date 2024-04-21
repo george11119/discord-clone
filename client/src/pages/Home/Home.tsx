@@ -25,6 +25,7 @@ const BlankPage = styled.div`
 
 const Home = () => {
   useSocketConnection()
+
   const { token } = useContext(AuthContext)
   const queryClient = useQueryClient()
 
@@ -53,13 +54,6 @@ const Home = () => {
   // TODO make subscribing to channel only happen when user navigates to said channel
   for (const server of servers) {
     socket.emit("joinServerRoom", server.id)
-    const channels = queryClient.getQueryData([
-      "channels",
-      server.id,
-    ]) as Channel[]
-    for (const channel of channels) {
-      socket.emit("joinChannelRoom", channel.id)
-    }
   }
 
   return (

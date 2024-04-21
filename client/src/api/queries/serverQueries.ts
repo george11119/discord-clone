@@ -3,7 +3,6 @@ import serverService from "../services/serverService.ts"
 import { Server } from "../../../types.ts"
 import { useContext } from "react"
 import AuthContext from "../../pages/Auth/AuthContext.ts"
-import { socket } from "../../config/socket.ts"
 
 const useGetServers = () => {
   const { token } = useContext(AuthContext)
