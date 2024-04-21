@@ -1,8 +1,7 @@
-import { useContext, useEffect } from "react"
+import { useEffect } from "react"
 import { Message } from "../../../types.ts"
 import { socket } from "../../config/socket.ts"
 import { useQueryClient } from "@tanstack/react-query"
-import AuthContext from "../../pages/Auth/AuthContext.ts"
 
 const useMessageCreateListener = () => {
   const queryClient = useQueryClient()
@@ -33,13 +32,10 @@ const useMessageCreateListener = () => {
 
 const useMessageEditListener = () => {
   const queryClient = useQueryClient()
-  const { user } = useContext(AuthContext)
 
   // handle a message edit emit from socket
   return useEffect(() => {
     const onMessageEdit = (editedMessage: Message) => {
-      if (editedMessage.user.id === user?.id) return
-
       const oldMessages = queryClient.getQueryData([
         "messages",
         `${editedMessage.channel?.id}`,

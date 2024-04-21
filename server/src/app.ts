@@ -79,16 +79,20 @@ io.use(async (socket, next) => {
 })
 
 io.use(async (socket, next) => {
-  const decodedToken = jwtUtils.verifyToken(socket.token as string)
+  try {
+    const decodedToken = jwtUtils.verifyToken(socket.token as string)
 
-  if (!decodedToken.userId) {
+    if (!decodedToken.userId) {
+      next(new Error("No user"))
+    }
+
+    const user = await User.findOneBy({ id: decodedToken.userId })
+    socket.userId = user?.id
+    socket.join(`${user?.id}`)
+    next()
+  } catch (e) {
     next(new Error("No user"))
   }
-
-  const user = await User.findOneBy({ id: decodedToken.userId })
-  socket.userId = user?.id
-  socket.join(`${user?.id}`)
-  next()
 })
 
 // websocket stuff
