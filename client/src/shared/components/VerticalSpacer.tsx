@@ -5,7 +5,7 @@ const VerticalSpacer = ({
   height: number
   [rest: string]: any
 }) => {
-  return <div style={{ height }} ref={ref}></div>
+  return <div style={{ minHeight: height }} ref={ref}></div>
 }
 
 export default VerticalSpacer

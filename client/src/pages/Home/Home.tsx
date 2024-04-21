@@ -4,8 +4,8 @@ import Channelbar from "./Channelbar/Channelbar.tsx"
 import ChatAreaContainer from "./Chat/ChatAreaContainer.tsx"
 import useSocketConnection from "../../api/sockets/useSocketConnection.ts"
 import serverQueries from "../../api/queries/serverQueries.ts"
-import { Channel, Server } from "../../../types.ts"
-import { useQueries, useQueryClient } from "@tanstack/react-query"
+import { Server } from "../../../types.ts"
+import { useQueries } from "@tanstack/react-query"
 import channelService from "../../api/services/channelService.ts"
 import { useContext } from "react"
 import AuthContext from "../Auth/AuthContext.ts"
@@ -27,7 +27,6 @@ const Home = () => {
   useSocketConnection()
 
   const { token } = useContext(AuthContext)
-  const queryClient = useQueryClient()
 
   const result = serverQueries.useGetServers()
   const servers = result.data as Server[]
@@ -49,9 +48,7 @@ const Home = () => {
     return <BlankPage />
   }
 
-  // listen to all server, channel, and message changes of a user
-  // dont think subscribing to channel and message changes are needed to be here
-  // TODO make subscribing to channel only happen when user navigates to said channel
+  // listen to all server and channel changes of a user
   for (const server of servers) {
     socket.emit("joinServerRoom", server.id)
   }

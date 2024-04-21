@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom"
 import messageQueries from "../../../../api/queries/messageQueries.ts"
 import ChatMessages from "../../Channelbar/components/ChannelList/ChatMessages.tsx"
 import MessagesLoadingSkeleton from "./MessagesLoadingSkeleton.tsx"
+import { useMemo } from "react"
 
 const ChatWrapper = styled.ul`
   flex: 1;
@@ -18,14 +19,15 @@ const ChatWrapper = styled.ul`
 const ChatMessageDisplay = () => {
   const { channelId } = useParams()
 
+  const loadingSkeleton = useMemo(
+    () => <MessagesLoadingSkeleton />,
+    [channelId],
+  )
+
   const result = messageQueries.useGetMessages(channelId)
 
   if (result.isLoading) {
-    return (
-      <ChatWrapper>
-        <MessagesLoadingSkeleton />
-      </ChatWrapper>
-    )
+    return <ChatWrapper>{loadingSkeleton}</ChatWrapper>
   }
 
   const messages = result.data as Message[]
