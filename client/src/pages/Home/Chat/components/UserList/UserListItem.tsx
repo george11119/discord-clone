@@ -12,7 +12,19 @@ const PopoutWrapper = styled.div`
 `
 
 const Popout = () => {
-  return <PopoutWrapper></PopoutWrapper>
+  const [count, setCount] = useState(0)
+  return (
+    <PopoutWrapper>
+      <button
+        onClick={() => {
+          setCount(count + 1)
+          console.log(count + 1)
+        }}
+      >
+        Click me
+      </button>
+    </PopoutWrapper>
+  )
 }
 
 const Wrapper = styled.div`

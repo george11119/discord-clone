@@ -6,13 +6,25 @@ import PopoutContainer from "../../../../../shared/components/PopoutContainer.ts
 import { useState } from "react"
 
 const PopoutWrapper = styled.div`
-  height: 500px;
+  height: 100px;
   width: 100px;
   background-color: red;
 `
 
 const Popout = () => {
-  return <PopoutWrapper></PopoutWrapper>
+  const [count, setCount] = useState(0)
+  return (
+    <PopoutWrapper>
+      <button
+        onClick={() => {
+          setCount(count + 1)
+          console.log(count + 1)
+        }}
+      >
+        Click me
+      </button>
+    </PopoutWrapper>
+  )
 }
 
 const Img = styled.div<{ $backgroundColor: string }>`

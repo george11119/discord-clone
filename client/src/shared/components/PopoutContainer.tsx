@@ -1,5 +1,13 @@
-import { MutableRefObject, ReactNode, useRef, useState } from "react"
+import {
+  MutableRefObject,
+  ReactNode,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react"
 import styled from "styled-components"
+import useOnScreen from "../../hooks/useOnScreen.ts"
 
 // just assume the math works, dont try to understand it
 const calculatePopoutWidthPos = (
@@ -70,21 +78,53 @@ const PopoutContainer = ({
   const ref = useRef<HTMLDivElement | null>(null) // ref for the element the popout will be attached to
   const [popoutRef, setPopoutRef] = useState<HTMLDivElement | null>(null)
 
+  const isVisible = useOnScreen(ref)
+
+  // close the popout if the div that it is attached to goes out of view
+  useEffect(() => {
+    if (!isVisible) setIsOpen(false)
+  }, [isVisible])
+
+  // close the popout if clicked outside of it
+  useEffect(() => {
+    const handleClick = (e: Event) => {
+      if (
+        popoutRef &&
+        !popoutRef.contains(e.target as Node) &&
+        !ref.current?.contains(e.target as Node)
+      ) {
+        setIsOpen(false)
+      }
+    }
+
+    document.addEventListener("click", handleClick)
+
+    return () => {
+      document.removeEventListener("click", handleClick)
+    }
+  }, [popoutRef])
+
+  // so the position of the popout doesnt change when the "children" rerenders
+  const memoizedPopout = useMemo(
+    () => (
+      <PopoutWrapper
+        ref={setPopoutRef}
+        $ref={ref}
+        $popoutRef={popoutRef}
+        $position={position}
+      >
+        {popout}
+      </PopoutWrapper>
+    ),
+    [popoutRef],
+  )
+
   return (
     <>
       <div onClick={() => setIsOpen(!isOpen)} ref={ref}>
         {children}
       </div>
-      {isOpen && (
-        <PopoutWrapper
-          ref={setPopoutRef}
-          $ref={ref}
-          $popoutRef={popoutRef}
-          $position={position}
-        >
-          {popout}
-        </PopoutWrapper>
-      )}
+      {isOpen && memoizedPopout}
     </>
   )
 }
