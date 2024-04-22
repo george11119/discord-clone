@@ -37,7 +37,7 @@ const Tooltip = ({
           backgroundColor: "#070707",
           fontSize: fontSize ? `${fontSize}px` : "16px",
           borderRadius: "4px",
-          zIndex: 2,
+          zIndex: 10,
           userSelect: "none",
           ...style,
         }}

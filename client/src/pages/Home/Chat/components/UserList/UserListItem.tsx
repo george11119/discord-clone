@@ -3,7 +3,17 @@ import styled from "styled-components"
 import DiscordIcon from "../../../../Auth/assets/DiscordIcon.tsx"
 import { stringToColor } from "../../../../../utils/stringToColor.ts"
 import PopoutContainer from "../../../../../shared/components/PopoutContainer.tsx"
-import { useRef, useState } from "react"
+import { CSSProperties, useState } from "react"
+
+const PopoutWrapper = styled.div`
+  height: 500px;
+  width: 100px;
+  background-color: red;
+`
+
+const Popout = () => {
+  return <PopoutWrapper></PopoutWrapper>
+}
 
 const Wrapper = styled.div`
   display: flex;
@@ -37,58 +47,28 @@ const Img = styled.div<{ $backgroundColor: string }>`
   align-items: center;
 `
 
-const PopoutWrapper = styled.div`
-  isolation: isolate;
-`
-
-const Popout = () => {
-  return (
-    <PopoutWrapper
-      style={{ height: 100, width: 100, backgroundColor: "red" }}
-    ></PopoutWrapper>
-  )
-}
-
 const UserListItem = ({ user }: { user: User }) => {
-  const color = stringToColor(user.username)
   const [isOpen, setIsOpen] = useState(false)
-  const ref = useRef<HTMLDivElement | null>(null)
+
+  const color = stringToColor(user.username)
+  const style: CSSProperties = isOpen
+    ? { color: "rgb(229, 232, 235)", backgroundColor: "#404249" }
+    : {}
 
   return (
-    <>
-      <PopoutContainer
-        isOpen={isOpen}
-        setIsOpen={setIsOpen}
-        placement="left-start"
-        popout={<Popout />}
-        modifiers={[
-          { name: "offset", options: { offset: [0, 10] } },
-          {
-            name: "preventOverflow",
-            options: {
-              padding: {
-                top: 48,
-              },
-              tether: false,
-            },
-          },
-        ]}
-      >
-        <Wrapper
-          ref={ref}
-          onClick={() => {
-            const pos = ref.current?.getBoundingClientRect()
-            console.log(pos?.right)
-            console.log(pos?.top)
-          }}
-        >
-          <Img $backgroundColor={color}>
-            <DiscordIcon size={19} />
-          </Img>
-          {user.username}
-        </Wrapper>
-      </PopoutContainer>
-    </>
+    <PopoutContainer
+      isOpen={isOpen}
+      setIsOpen={setIsOpen}
+      popout={<Popout />}
+      position="left"
+    >
+      <Wrapper style={style}>
+        <Img $backgroundColor={color}>
+          <DiscordIcon size={19} />
+        </Img>
+        {user.username}
+      </Wrapper>
+    </PopoutContainer>
   )
 }
 

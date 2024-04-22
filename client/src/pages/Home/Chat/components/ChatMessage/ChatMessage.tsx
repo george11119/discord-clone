@@ -11,7 +11,6 @@ const Wrapper = styled.li<{ $beingEdited: boolean }>`
   margin-top: 16px;
   display: flex;
   line-height: 1.375rem;
-  position: relative;
   background-color: ${(props) =>
     props.$beingEdited ? "rgba(2, 2, 2, 0.06)" : "inherit"};
 
@@ -21,6 +20,8 @@ const Wrapper = styled.li<{ $beingEdited: boolean }>`
 `
 
 const MessageWrapper = styled.div`
+  margin-left: 16px;
+  position: relative;
   width: 100%;
   white-space: initial;
 `
@@ -77,13 +78,13 @@ const ChatMessage = ({ message }: { message: Message }) => {
             {edited ? <EditedIndicator>(edited)</EditedIndicator> : ""}
           </MessageContentWrapper>
         )}
+        {hovered && (
+          <MessageOptionsPopout
+            messageId={message.id}
+            setBeingEditted={setBeingEdited}
+          />
+        )}
       </MessageWrapper>
-      {hovered && (
-        <MessageOptionsPopout
-          messageId={message.id}
-          setBeingEditted={setBeingEdited}
-        />
-      )}
     </Wrapper>
   )
 }
