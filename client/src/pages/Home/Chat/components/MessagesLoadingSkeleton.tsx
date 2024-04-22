@@ -1,6 +1,7 @@
 import styled from "styled-components"
 import VerticalSpacer from "../../../../shared/components/VerticalSpacer.tsx"
 import { genRandomInt } from "../../../../utils/genRandomInt.ts"
+import { genRandomDecimal } from "../../../../utils/genRandomDecimal.ts"
 
 const AttachmentSkeletonWrapper = styled.div`
   background-color: rgb(219, 222, 225);
@@ -36,7 +37,6 @@ const ProfilePictureSkeleton = styled.div`
 
 const NameDisplaySkeleton = styled.div`
   background-color: rgb(219, 222, 225);
-  opacity: 0.17;
   height: 16px;
   width: 120px;
   border-radius: 8px;
@@ -50,7 +50,12 @@ const MessageSkeleton = () => {
         <ProfilePictureSkeleton />
       </div>
       <div>
-        <NameDisplaySkeleton style={{ width: genRandomInt(75, 125) }} />
+        <NameDisplaySkeleton
+          style={{
+            width: genRandomInt(75, 125),
+            opacity: genRandomDecimal(0.1, 0.2, 6),
+          }}
+        />
         {Array.from({ length: genRandomInt(1, 3) }, (_, i) => {
           return <ChatContentRowSkeleton key={i} />
         })}

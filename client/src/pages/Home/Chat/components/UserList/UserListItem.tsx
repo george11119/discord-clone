@@ -2,6 +2,8 @@ import { User } from "../../../../../../types.ts"
 import styled from "styled-components"
 import DiscordIcon from "../../../../Auth/assets/DiscordIcon.tsx"
 import { stringToColor } from "../../../../../utils/stringToColor.ts"
+import PopoutContainer from "../../../../../shared/components/PopoutContainer.tsx"
+import { useRef, useState } from "react"
 
 const Wrapper = styled.div`
   display: flex;
@@ -35,15 +37,58 @@ const Img = styled.div<{ $backgroundColor: string }>`
   align-items: center;
 `
 
+const PopoutWrapper = styled.div`
+  isolation: isolate;
+`
+
+const Popout = () => {
+  return (
+    <PopoutWrapper
+      style={{ height: 100, width: 100, backgroundColor: "red" }}
+    ></PopoutWrapper>
+  )
+}
+
 const UserListItem = ({ user }: { user: User }) => {
   const color = stringToColor(user.username)
+  const [isOpen, setIsOpen] = useState(false)
+  const ref = useRef<HTMLDivElement | null>(null)
+
   return (
-    <Wrapper>
-      <Img $backgroundColor={color}>
-        <DiscordIcon size={19} />
-      </Img>
-      {user.username}
-    </Wrapper>
+    <>
+      <PopoutContainer
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        placement="left-start"
+        popout={<Popout />}
+        modifiers={[
+          { name: "offset", options: { offset: [0, 10] } },
+          {
+            name: "preventOverflow",
+            options: {
+              padding: {
+                top: 48,
+              },
+              tether: false,
+            },
+          },
+        ]}
+      >
+        <Wrapper
+          ref={ref}
+          onClick={() => {
+            const pos = ref.current?.getBoundingClientRect()
+            console.log(pos?.right)
+            console.log(pos?.top)
+          }}
+        >
+          <Img $backgroundColor={color}>
+            <DiscordIcon size={19} />
+          </Img>
+          {user.username}
+        </Wrapper>
+      </PopoutContainer>
+    </>
   )
 }
 

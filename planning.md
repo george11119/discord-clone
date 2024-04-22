@@ -45,6 +45,7 @@
         <li>Reorganize react query code - DONE</li>
         <li>Add authentication to socket connection - DONE</li>
         <li>Add ways to invite people into server - DONE</li>
+        <li>Popout that displays user info of the user clicked</li>
         <li>Add a welcome users channel and add socket stuff to have a live view of which users are online or not in users list</li>
         <li>Automatically create a general channel when a server is created</li>
         <li>Create a user direct message home page</li>
@@ -52,11 +53,11 @@
         <li>Add loading animations</li>
         <li>Add more detail to chat messages display</li>
         <li>Emoji button</li>
-        <li>Authorization - DONE</li>
+        <li>Authorization</li>
         <ul>
-            <li>Add authorization to servers DONE</li>
-            <li>Add authorization to channels - DONE</li>
-            <li>Add authorization to messages - DONE</li>
+            <li>Add authorization to servers</li>
+            <li>Add authorization to channels</li>
+            <li>Add authorization to messages</li>
         </ul>
         <li>Voice/video call stuff</li>
     </ul>
