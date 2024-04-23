@@ -1,7 +1,7 @@
 import styled from "styled-components"
 import { useState } from "react"
 import { Message } from "../../../../../../types.ts"
-import { formatDateTime } from "../../../../../utils/dateTime.ts"
+import { messageDateFormatter } from "../../../../../utils/dateTime.ts"
 import MessageOptionsPopout from "./MessageOptionsPopout.tsx"
 import EditMessageForm from "./EditMessageForm.tsx"
 import ChatMessageProfilePicture from "./ChatMessageProfilePicture.tsx"
@@ -69,7 +69,7 @@ const ChatMessage = ({ message }: { message: Message }) => {
       <ChatMessageProfilePicture user={message.user} />
       <MessageWrapper>
         <Sender>{message.user.username}</Sender>
-        <DateWrapper>{formatDateTime(message.createdAt)}</DateWrapper>
+        <DateWrapper>{messageDateFormatter(message.createdAt)}</DateWrapper>
         {beingEdited ? (
           <EditMessageForm message={message} setBeingEdited={setBeingEdited} />
         ) : (

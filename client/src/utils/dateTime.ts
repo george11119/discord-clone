@@ -1,4 +1,10 @@
-import { format } from "date-fns"
+import {
+  differenceInCalendarDays,
+  format,
+  isToday,
+  isYesterday,
+} from "date-fns"
+import { Message } from "../../types.ts"
 // adds "hour" number of hours to the passed in date object
 // const addHours = (date: Date, hour: number): Date => {
 //   date.setTime(date.getTime() + hour * 60 * 60 * 1000)
@@ -7,21 +13,32 @@ import { format } from "date-fns"
 
 // formats date to look like: MM/DD/YYYY, HH:MM PM
 
-export const formatDateTime = (date: Date): string => {
-  // get current timezone
-  const { timeZone } = Intl.DateTimeFormat().resolvedOptions()
-
-  // idk what this does, it just works :/
-  return new Intl.DateTimeFormat("en-US", {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-    timeZone,
-  }).format(new Date(date))
-}
-
 export const dateFormatter = (date: Date, formatString: string): string => {
   return format(date, formatString)
+}
+
+export const messageDateFormatter = (
+  date: Date,
+  formatString: string = "MM/dd/yyyy hh:mm a",
+): string => {
+  if (isToday(date)) {
+    return `Today at ${format(date, "hh:mm a")}`
+  }
+
+  if (isYesterday(date)) {
+    return `Yesterday at ${format(date, "hh:mm a")}`
+  }
+
+  return format(date, formatString)
+}
+
+export const messagesSentOnDifferentDays = (
+  message1: Message,
+  message2: Message,
+) => {
+  if (differenceInCalendarDays(message1.createdAt, message2.createdAt) !== 0) {
+    return true
+  } else {
+    return false
+  }
 }

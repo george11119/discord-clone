@@ -32,6 +32,7 @@ const LoginForm = ({
       setIsLoading(true)
       await handleLogin(email, password)
       setIsLoading(false)
+      window.location.reload()
     } catch (e) {
       setIsLoading(false)
       setIsError(true)

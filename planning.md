@@ -45,7 +45,7 @@
         <li>Reorganize react query code - DONE</li>
         <li>Add authentication to socket connection - DONE</li>
         <li>Add ways to invite people into server - DONE</li>
-        <li>Popout that displays user info of the user clicked</li>
+        <li>Popout that displays user info of the user clicked - DONE</li>
         <li>Add a welcome users channel and add socket stuff to have a live view of which users are online or not in users list</li>
         <li>Automatically create a general channel when a server is created</li>
         <li>Create a user direct message home page</li>

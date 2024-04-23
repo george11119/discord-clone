@@ -2,7 +2,7 @@ import styled from "styled-components"
 import { Message } from "../../../../../types.ts"
 import { useParams } from "react-router-dom"
 import messageQueries from "../../../../api/queries/messageQueries.ts"
-import ChatMessages from "../../Channelbar/components/ChannelList/ChatMessages.tsx"
+import ChatMessages from "./ChatMessages.tsx"
 import MessagesLoadingSkeleton from "./MessagesLoadingSkeleton.tsx"
 import { useMemo } from "react"
 

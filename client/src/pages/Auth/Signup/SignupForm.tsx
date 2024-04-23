@@ -44,6 +44,7 @@ const SignupForm = ({
       setIsLoading(true)
       await handleSignup(username, password, email)
       setIsLoading(false)
+      window.location.reload()
     } catch (e) {
       setIsLoading(false)
       setIsError(true)

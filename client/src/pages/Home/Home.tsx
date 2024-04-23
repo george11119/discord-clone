@@ -37,6 +37,7 @@ const Home = () => {
             queryKey: ["channels", `${s.id}`],
             queryFn: async () => {
               const data = await channelService.get(token as string, s.id)
+
               return data
             },
           }

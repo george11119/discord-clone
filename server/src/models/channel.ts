@@ -11,6 +11,11 @@ import {
 import { Message } from "./message"
 import { Server } from "./server"
 
+export enum ChannelType {
+  TEXT = "text",
+  WELCOME = "welcome",
+}
+
 @Entity()
 export class Channel extends BaseEntity {
   @PrimaryGeneratedColumn("uuid")
@@ -18,6 +23,13 @@ export class Channel extends BaseEntity {
 
   @Column()
   name: string
+
+  @Column({
+    type: "enum",
+    enum: ChannelType,
+    default: ChannelType.TEXT,
+  })
+  channelType: ChannelType
 
   @CreateDateColumn()
   createdAt: Date
