@@ -6,6 +6,7 @@ import idGenerator from "../../utils/idGenerator"
 import { redisClient } from "../../config/redis"
 import { UserServers } from "../../models/userServers"
 import { io } from "../../app"
+import ChannelsController from "../channels/channels.db"
 
 const router = express.Router()
 router.use(authenticatedValidator)
@@ -26,6 +27,7 @@ router.post("/", async (req, res) => {
   }
 
   const newServer = await ServersController.createServer({ name, user })
+  await ChannelsController.createChannel("general", newServer.id)
 
   res.status(201).json(newServer)
 })

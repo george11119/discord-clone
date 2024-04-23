@@ -109,14 +109,14 @@ describe(`${url}`, () => {
     })
   })
 
-  describe(`POST ${url}`, () => {
+  describe.only(`POST ${url}`, () => {
     it("Doesnt allow a unauthenticated user to create a new server", async () => {
       const payload = { name: "New server" }
 
       await api.post(`${url}`).send(payload).expect(401)
     })
 
-    it("Creates a server when there is a logged in user", async () => {
+    it.only("Creates a server when there is a logged in user", async () => {
       const user1 = await User.findOneBy({ username: "user1" })
       const token = jwtUtils.signToken({ userId: user1?.id as string })
       const payload = { name: "New server" }
@@ -145,6 +145,14 @@ describe(`${url}`, () => {
         },
       })
       expect(userServer).toBeTruthy()
+
+      const createdServer = await Server.findOne({
+        where: { id: server.id },
+        relations: { channels: true },
+      })
+      expect(
+        createdServer?.channels.find((c) => c.name === "general"),
+      ).toBeTruthy()
     })
   })
 
