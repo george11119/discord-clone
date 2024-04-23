@@ -1,7 +1,10 @@
 import styled from "styled-components"
 import { useState } from "react"
 import { Message } from "../../../../../../types.ts"
-import { messageDateFormatter } from "../../../../../utils/dateTime.ts"
+import {
+  dateFormatter,
+  messageDateFormatter,
+} from "../../../../../utils/dateTime.ts"
 import MessageOptionsPopout from "./MessageOptionsPopout.tsx"
 import EditMessageForm from "./EditMessageForm.tsx"
 import ChatMessageProfilePicture from "./ChatMessageProfilePicture.tsx"
@@ -33,6 +36,15 @@ const DateWrapper = styled.span`
   font-size: 12px;
 `
 
+const Timestamp = styled.div`
+  min-width: 72px;
+  max-width: 72px;
+  display: flex;
+  justify-content: center;
+  font-size: 11px;
+  color: rgb(148, 155, 164);
+`
+
 const MessageContentWrapper = styled.div`
   font-weight: 500;
   font-size: 14px;
@@ -46,11 +58,55 @@ const EditedIndicator = styled.span`
   user-select: none;
 `
 
-const ChatMessage = ({ message }: { message: Message }) => {
+const ChatMessage = ({
+  message,
+  withProfilePicture = true,
+}: {
+  message: Message
+  withProfilePicture?: boolean
+}) => {
   const [beingEdited, setBeingEdited] = useState(false)
   const [hovered, setHovered] = useState(false)
 
   const edited = message.createdAt !== message.updatedAt
+
+  if (!withProfilePicture) {
+    return (
+      <Wrapper
+        style={{ marginTop: 0, marginLeft: 0 }}
+        $beingEdited={beingEdited}
+        onMouseOver={() => {
+          if (!beingEdited) setHovered(true)
+        }}
+        onMouseOut={() => {
+          if (!beingEdited) setHovered(false)
+        }}
+      >
+        <Timestamp>
+          {hovered && dateFormatter(message.createdAt, "h:mm a")}
+        </Timestamp>
+        <MessageWrapper style={{ marginLeft: 0 }}>
+          {beingEdited ? (
+            <EditMessageForm
+              message={message}
+              setBeingEdited={setBeingEdited}
+            />
+          ) : (
+            <MessageContentWrapper>
+              {message.content}{" "}
+              {edited ? <EditedIndicator>(edited)</EditedIndicator> : ""}
+            </MessageContentWrapper>
+          )}
+          {hovered && (
+            <MessageOptionsPopout
+              messageId={message.id}
+              setBeingEditted={setBeingEdited}
+            />
+          )}
+        </MessageWrapper>
+      </Wrapper>
+    )
+  }
 
   return (
     <Wrapper

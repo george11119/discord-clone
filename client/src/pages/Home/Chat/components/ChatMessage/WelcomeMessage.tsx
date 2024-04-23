@@ -1,11 +1,11 @@
-import { Message } from "../../../../../types.ts"
+import { Message } from "../../../../../../types.ts"
 import styled from "styled-components"
-import UserJoinIcon from "../../../../shared/svg/UserJoinIcon.tsx"
-import { messageDateFormatter } from "../../../../utils/dateTime.ts"
-import UsernameContainer from "./ChatMessage/UsernameContainer.tsx"
+import UserJoinIcon from "../../../../../shared/svg/UserJoinIcon.tsx"
+import { messageDateFormatter } from "../../../../../utils/dateTime.ts"
+import UsernameContainer from "./UsernameContainer.tsx"
 import { useState } from "react"
-import MessageOptionsPopout from "./ChatMessage/MessageOptionsPopout.tsx"
-import { stringToNum } from "../../../../utils/stringToNum.ts"
+import MessageOptionsPopout from "./MessageOptionsPopout.tsx"
+import { stringToNum } from "../../../../../utils/stringToNum.ts"
 
 const Wrapper = styled.li`
   margin-top: 16px;

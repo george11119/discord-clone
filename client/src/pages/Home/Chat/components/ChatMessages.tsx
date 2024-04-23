@@ -8,8 +8,9 @@ import messageSocketHandlers from "../../../../api/sockets/messageSocketHandlers
 import { useParams } from "react-router-dom"
 import { socket } from "../../../../config/socket.ts"
 import { messagesSentOnDifferentDays } from "../../../../utils/dateTime.ts"
-import MessageSeparator from "./MessageSeparator.tsx"
-import WelcomeMessage from "./WelcomeMessage.tsx"
+import MessageSeparator from "./ChatMessage/MessageSeparator.tsx"
+import WelcomeMessage from "./ChatMessage/WelcomeMessage.tsx"
+import { differenceInMinutes } from "date-fns"
 
 const chooseMessage = (message: Message) => {
   if (message.messageType === MessageType.NORMAL) {
@@ -32,6 +33,20 @@ const mapMessages = (messages: Message[]) => {
         <div key={message.id}>
           <MessageSeparator date={message.createdAt} />
           {chooseMessage(message)}
+        </div>
+      )
+    }
+
+    if (
+      previousMessage &&
+      previousMessage.user.id === message.user.id &&
+      previousMessage.messageType !== MessageType.WELCOME &&
+      differenceInMinutes(message.createdAt, previousMessage.createdAt) === 0
+    ) {
+      previousMessage = message
+      return (
+        <div key={message.id}>
+          <ChatMessage message={message} withProfilePicture={false} />
         </div>
       )
     }
