@@ -46,14 +46,15 @@
         <li>Add authentication to socket connection - DONE</li>
         <li>Add ways to invite people into server - DONE</li>
         <li>Popout that displays user info of the user clicked - DONE</li>
-        <li>Add a welcome users channel and add socket stuff to have a live view of which users are online or not in users list</li>
-        <li>Automatically create a general channel when a server is created</li>
+        <li>Automatically create a general channel when a server is created - DONE</li>
+        <li>Add friending users</li>
         <li>Create a user direct message home page</li>
         <li>Add pagination fetching for messages in channels</li>
         <li>Add loading animations</li>
         <li>Add more detail to chat messages display</li>
         <li>Emoji button</li>
         <li>Authorization</li>
+        <li>add socket stuff to have a live view of which users are online or not in users list</li>
         <ul>
             <li>Add authorization to servers</li>
             <li>Add authorization to channels</li>

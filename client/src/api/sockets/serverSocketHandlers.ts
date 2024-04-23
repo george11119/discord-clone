@@ -3,6 +3,7 @@ import { Server, User } from "../../../types.ts"
 import { socket } from "../../config/socket.ts"
 import { useQueryClient } from "@tanstack/react-query"
 import { useLocation, useNavigate } from "react-router-dom"
+import { insertIntoUserArray } from "../../utils/insertIntoUserArray.ts"
 
 const useServerEditListener = () => {
   const queryClient = useQueryClient()
@@ -51,9 +52,12 @@ const useUserJoinServerListener = () => {
 
   return useEffect(() => {
     const onUserJoinServer = (user: User, serverId: string) => {
-      const oldUsers = queryClient.getQueryData([`users-${serverId}`]) as User[]
-      const newUsers = oldUsers.concat(user)
-      queryClient.setQueryData([`users-${serverId}`], newUsers)
+      const oldUsers = queryClient.getQueryData([
+        `users`,
+        `${serverId}`,
+      ]) as User[]
+      const newUsers = insertIntoUserArray(oldUsers, user)
+      queryClient.setQueryData([`users`, `${serverId}`], newUsers)
     }
 
     socket.on("user:join", onUserJoinServer)

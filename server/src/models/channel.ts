@@ -13,7 +13,6 @@ import { Server } from "./server"
 
 export enum ChannelType {
   TEXT = "text",
-  WELCOME = "welcome",
 }
 
 @Entity()

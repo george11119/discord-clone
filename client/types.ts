@@ -31,7 +31,7 @@ export type Channel = {
   createdAt: Date
   updatedAt: Date
   server?: Server
-  channelType: "text" | "welcome"
+  channelType: "text"
 }
 
 export enum MessageType {

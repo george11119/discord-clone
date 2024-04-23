@@ -75,7 +75,7 @@ const useGetUsersOfServer = (serverId: string | undefined) => {
   const { token } = useContext(AuthContext)
 
   return useQuery({
-    queryKey: [`users-${serverId}`],
+    queryKey: [`users`, `${serverId}`],
     queryFn: () => serverService.getUsers(token as string, serverId as string),
     staleTime: Infinity,
   })
