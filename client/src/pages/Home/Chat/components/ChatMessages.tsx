@@ -11,23 +11,32 @@ import MessageSeparator from "./ChatMessage/MessageSeparator.tsx"
 import WelcomeMessage from "./ChatMessage/WelcomeMessage.tsx"
 import { differenceInMinutes } from "date-fns"
 
-const chooseMessage = (message: Message) => {
-  if (message.messageType === MessageType.NORMAL) {
-    return <ChatMessage message={message} />
-  } else {
-    return <WelcomeMessage message={message} />
-  }
-}
-
 const mapMessages = (messages: Message[]) => {
   let previousMessage: Message | null = null
 
-  const processedMessages = messages.map((message: Message) => {
-    if (
+  const chooseMessage = (message: Message) => {
+    if (message.messageType === MessageType.NORMAL) {
+      return <ChatMessage message={message} />
+    } else {
+      return <WelcomeMessage message={message} />
+    }
+  }
+
+  const processMessage = (message: Message) => {
+    // message is sent on a different day than the previous day
+    const isNewDay =
+      previousMessage && messagesSentOnDifferentDays(previousMessage, message)
+    // the previous message was sent by the user sending the current message
+    const isSameUser =
+      previousMessage && previousMessage.user.id === message.user.id
+    // time between the current message sent and the previous message sent does not exceed 1 minute
+    const isSentInSameMinute =
       previousMessage &&
-      messagesSentOnDifferentDays(previousMessage, message)
-    ) {
-      previousMessage = message
+      differenceInMinutes(message.createdAt, previousMessage.createdAt) === 0
+
+    previousMessage = message
+
+    if (isNewDay) {
       return (
         <div key={message.id}>
           <MessageSeparator date={message.createdAt} />
@@ -37,12 +46,10 @@ const mapMessages = (messages: Message[]) => {
     }
 
     if (
-      previousMessage &&
-      previousMessage.user.id === message.user.id &&
-      previousMessage.messageType !== MessageType.WELCOME &&
-      differenceInMinutes(message.createdAt, previousMessage.createdAt) === 0
+      isSameUser &&
+      previousMessage?.messageType !== MessageType.WELCOME &&
+      isSentInSameMinute
     ) {
-      previousMessage = message
       return (
         <div key={message.id}>
           <ChatMessage message={message} withProfilePicture={false} />
@@ -50,11 +57,10 @@ const mapMessages = (messages: Message[]) => {
       )
     }
 
-    previousMessage = message
     return <div key={message.id}>{chooseMessage(message)}</div>
-  })
+  }
 
-  return processedMessages
+  return messages.map((message) => processMessage(message))
 }
 
 const ChatMessages = ({ messages }: { messages: Message[] }) => {
