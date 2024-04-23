@@ -8,6 +8,9 @@ import {
 } from "react"
 import styled from "styled-components"
 import useOnScreen from "../../hooks/useOnScreen.ts"
+// WARNING: IF YOU EVER USE THIS POPOUT CONTAINER FOR ANYTHING EXCEPT THE USER INFO POPOUTS,
+// MAKE SURE TO FIX THE BUG WHERE THE OFFSET HEIGHT AND WIDTH DONT UPDATE, CAUSING THE POPOUT
+// TO BE POSITIONED WRONG
 
 // just assume the math works, dont try to understand it
 const calculatePopoutWidthPos = (
@@ -91,8 +94,7 @@ const PopoutContainer = ({
   useEffect(() => {
     const handleClick = (e: Event) => {
       if (
-        popoutRef &&
-        !popoutRef.contains(e.target as Node) &&
+        !popoutRef?.contains(e.target as Node) &&
         !ref.current?.contains(e.target as Node)
       ) {
         setIsOpen(false)
@@ -120,6 +122,15 @@ const PopoutContainer = ({
     ),
     [popoutRef],
   )
+
+  useEffect(() => {
+    if (!popoutRef) return
+    const resizeObserver = new ResizeObserver(() => {
+      // Do what you want to do when the size of the element changes
+    })
+    resizeObserver.observe(popoutRef)
+    return () => resizeObserver.disconnect() // clean up
+  }, [popoutRef])
 
   return (
     <>

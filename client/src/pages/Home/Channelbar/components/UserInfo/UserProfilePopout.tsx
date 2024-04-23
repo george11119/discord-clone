@@ -1,11 +1,10 @@
 import styled from "styled-components"
 import Separator from "../../../Sidebar/components/Separator.tsx"
-import { useContext } from "react"
+import { MutableRefObject, useContext, useEffect, useRef } from "react"
 import AuthContext from "../../../../Auth/AuthContext.ts"
 import VerticalSpacer from "../../../../../shared/components/VerticalSpacer.tsx"
 import LogoutButton from "../../../../Auth/components/LogoutButton.tsx"
 import { motion } from "framer-motion"
-import useOnOutsideClick from "../../../../../hooks/useOnOutsideClick.ts"
 import UserProfilePicture from "../../../../../shared/components/UserProfilePicture.tsx"
 import useOnKeyDown from "../../../../../hooks/useOnKeyDown.ts"
 import { KeyCodes } from "../../../../../shared/constants/keycodes.ts"
@@ -66,12 +65,31 @@ const BoldText = styled.div`
 
 const UserProfilePopout = ({
   setPopoutOpen,
+  userInfoRef,
 }: {
   setPopoutOpen: (popoutOpen: boolean) => void
+  userInfoRef: MutableRefObject<HTMLDivElement | null>
 }) => {
   const { user } = useContext(AuthContext)
 
-  const ref = useOnOutsideClick(() => setPopoutOpen(false))
+  const ref = useRef<HTMLDivElement | null>(null)
+
+  useEffect(() => {
+    const handleClick = (e: Event) => {
+      if (
+        !ref.current?.contains(e.target as Node) &&
+        !userInfoRef.current?.contains(e.target as Node)
+      ) {
+        setPopoutOpen(false)
+      }
+    }
+
+    document.addEventListener("click", handleClick)
+
+    return () => {
+      document.removeEventListener("click", handleClick)
+    }
+  }, [ref, userInfoRef])
 
   useOnKeyDown(KeyCodes.ESCAPE, () => setPopoutOpen(false))
 

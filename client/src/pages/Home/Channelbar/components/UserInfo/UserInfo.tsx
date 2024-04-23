@@ -1,4 +1,4 @@
-import { useContext, useState } from "react"
+import { useContext, useRef, useState } from "react"
 import AuthContext from "../../../../Auth/AuthContext.ts"
 import styled from "styled-components"
 import UserProfilePopout from "./UserProfilePopout.tsx"
@@ -50,17 +50,21 @@ const Status = styled.div`
 
 const UserInfo = () => {
   const [popoutOpen, setPopoutOpen] = useState(false)
+  const userInfoRef = useRef<HTMLDivElement | null>(null)
+
   const { user } = useContext(AuthContext)
 
-  const togglePopoutVisibility = (e: any) => {
-    e.stopPropagation()
-    setPopoutOpen(!popoutOpen)
-  }
+  const togglePopoutVisibility = () => setPopoutOpen(!popoutOpen)
 
   return (
     <Wrapper>
-      {popoutOpen && <UserProfilePopout setPopoutOpen={setPopoutOpen} />}
-      <UserInfoWrapper onClick={togglePopoutVisibility}>
+      {popoutOpen && (
+        <UserProfilePopout
+          userInfoRef={userInfoRef}
+          setPopoutOpen={setPopoutOpen}
+        />
+      )}
+      <UserInfoWrapper ref={userInfoRef} onClick={togglePopoutVisibility}>
         <ProfilePictureContainer>
           <UserProfilePicture profileDiameter={32} user={user} />
         </ProfilePictureContainer>

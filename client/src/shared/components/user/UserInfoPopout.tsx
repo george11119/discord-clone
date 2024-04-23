@@ -11,6 +11,9 @@ import VerticalSpacer from "../VerticalSpacer.tsx"
 import Separator from "../../../pages/Home/Sidebar/components/Separator.tsx"
 import { dateFormatter } from "../../../utils/dateTime.ts"
 import AddIcon from "../../svg/AddIcon.tsx"
+import { motion } from "framer-motion"
+import useOnKeyDown from "../../../hooks/useOnKeyDown.ts"
+import { KeyCodes } from "../../constants/keycodes.ts"
 
 const LoadingSpinnerWrapper = styled.div`
   height: 32px;
@@ -25,6 +28,7 @@ const Wrapper = styled.div`
   flex-direction: column;
   border-radius: 8px;
   line-height: 16px;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 8px 16px 0px;
 `
 
 const Banner = styled.div<{ $backgroundColor?: string }>`
@@ -95,7 +99,15 @@ const Input = styled.input`
   border-radius: 3px;
 `
 
-const UserInfoPopout = ({ user }: { user: User }) => {
+const UserInfoPopout = ({
+  user,
+  setIsOpen,
+  position,
+}: {
+  user: User
+  setIsOpen: (x: boolean) => void
+  position: "left" | "right"
+}) => {
   const { token } = useContext(AuthContext)
   const [message, setMessage] = useState("")
 
@@ -104,6 +116,8 @@ const UserInfoPopout = ({ user }: { user: User }) => {
     queryFn: () => userService.getOne(token as string, user.id),
     staleTime: 60 * 1000,
   })
+
+  useOnKeyDown(KeyCodes.ESCAPE, () => setIsOpen(false))
 
   if (result.isLoading) {
     return (
@@ -118,12 +132,20 @@ const UserInfoPopout = ({ user }: { user: User }) => {
   const onSubmit = (e: FormEvent) => {
     e.preventDefault()
 
+    // TODO redirect user to dm page and send the message to them
     console.log(`Message sent: ${message}`)
     setMessage("")
   }
 
   return (
-    <Wrapper>
+    <Wrapper
+      as={motion.div}
+      initial={{ translateX: position === "left" ? "-12px" : "12px" }}
+      animate={{ translateX: "0px" }}
+      transition={{
+        duration: 0.12,
+      }}
+    >
       <Banner
         $backgroundColor={stringToColor(fetchedUser.username as string)}
       />

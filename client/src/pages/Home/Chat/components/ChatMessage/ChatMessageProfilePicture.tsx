@@ -31,7 +31,9 @@ const ChatMessageProfilePicture = ({ user }: { user: User }) => {
 
   return (
     <PopoutContainer
-      popout={<UserInfoPopout user={user} />}
+      popout={
+        <UserInfoPopout user={user} setIsOpen={setIsOpen} position="right" />
+      }
       isOpen={isOpen}
       setIsOpen={setIsOpen}
       position="right"
