@@ -1,4 +1,4 @@
-import { Message } from "../../../../../types.ts"
+import { Message, MessageType } from "../../../../../types.ts"
 import { useContext, useEffect, useRef } from "react"
 import useOnScreen from "../../../../hooks/useOnScreen.ts"
 import AuthContext from "../../../Auth/AuthContext.ts"
@@ -9,8 +9,17 @@ import { useParams } from "react-router-dom"
 import { socket } from "../../../../config/socket.ts"
 import { messagesSentOnDifferentDays } from "../../../../utils/dateTime.ts"
 import MessageSeparator from "./MessageSeparator.tsx"
+import WelcomeMessage from "./WelcomeMessage.tsx"
 
-const renderMessages = (messages: Message[]) => {
+const chooseMessage = (message: Message) => {
+  if (message.messageType === MessageType.NORMAL) {
+    return <ChatMessage message={message} />
+  } else {
+    return <WelcomeMessage message={message} />
+  }
+}
+
+const mapMessages = (messages: Message[]) => {
   let previousMessage: Message | null = null
 
   const processedMessages = messages.map((message: Message) => {
@@ -22,13 +31,13 @@ const renderMessages = (messages: Message[]) => {
       return (
         <div key={message.id}>
           <MessageSeparator date={message.createdAt} />
-          <ChatMessage message={message} />
+          {chooseMessage(message)}
         </div>
       )
     }
 
     previousMessage = message
-    return <ChatMessage key={message.id} message={message} />
+    return <div key={message.id}>{chooseMessage(message)}</div>
   })
 
   return processedMessages
@@ -71,7 +80,7 @@ const ChatMessages = ({ messages }: { messages: Message[] }) => {
 
   return (
     <div>
-      {renderMessages(messages)}
+      {mapMessages(messages)}
       <VerticalSpacer height={30} />
       <span style={{ height: 1 }} ref={messagesEndRef}></span>
     </div>

@@ -34,9 +34,11 @@ const AddChannelButton = styled.div`
 const ChannelListCategory = ({
   title,
   children,
+  showAddChannelButton = true,
 }: {
   title: string
   children?: ReactNode
+  showAddChannelButton?: boolean
 }) => {
   const [dropdownIsOpen, setDropdownIsOpen] = useState(true)
   const [isHovered, setIsHovered] = useState(false)
@@ -54,17 +56,19 @@ const ChannelListCategory = ({
           {title.toUpperCase()}
         </Title>
 
-        <Tooltip tooltip="Create Channel" placement="right">
-          <AddChannelButton
-            onClick={(e) => {
-              e.stopPropagation()
-              modalOpen ? close() : open()
-            }}
-            style={{ marginRight: "8px" }}
-          >
-            <AddIcon size={18} />
-          </AddChannelButton>
-        </Tooltip>
+        {showAddChannelButton && (
+          <Tooltip tooltip="Create Channel" placement="right">
+            <AddChannelButton
+              onClick={(e) => {
+                e.stopPropagation()
+                modalOpen ? close() : open()
+              }}
+              style={{ marginRight: "8px" }}
+            >
+              <AddIcon size={18} />
+            </AddChannelButton>
+          </Tooltip>
+        )}
       </Wrapper>
       <div style={{ display: dropdownIsOpen ? "block" : "none" }}>
         {children}

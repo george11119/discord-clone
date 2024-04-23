@@ -35,9 +35,13 @@ const IconWrapper = styled.div<{ $type?: string }>`
 const MessageOptionsPopout = ({
   messageId,
   setBeingEditted,
+  canEdit = true,
+  canDelete = true,
 }: {
   messageId: string
-  setBeingEditted: (beingEditted: boolean) => void
+  setBeingEditted?: (beingEditted: boolean) => void
+  canEdit?: boolean
+  canDelete?: boolean
 }) => {
   const { channelId } = useParams()
 
@@ -48,16 +52,20 @@ const MessageOptionsPopout = ({
 
   return (
     <PopoutWrapper>
-      <IconWrapper
-        $type="delete"
-        onClick={() => deleteMessageMutation.mutate()}
-      >
-        <TrashIcon size={20} />
-      </IconWrapper>
+      {canDelete && (
+        <IconWrapper
+          $type="delete"
+          onClick={() => deleteMessageMutation.mutate()}
+        >
+          <TrashIcon size={20} />
+        </IconWrapper>
+      )}
 
-      <IconWrapper onClick={() => setBeingEditted(true)}>
-        <EditIcon size={20} />
-      </IconWrapper>
+      {canEdit && setBeingEditted && (
+        <IconWrapper onClick={() => setBeingEditted(true)}>
+          <EditIcon size={20} />
+        </IconWrapper>
+      )}
     </PopoutWrapper>
   )
 }

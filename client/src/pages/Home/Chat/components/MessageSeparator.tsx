@@ -12,6 +12,7 @@ const DateContainer = styled.div`
 `
 
 const DateSpan = styled.span`
+  user-select: none;
   padding: 4px;
   margin-top: -1px;
   font-weight: 600;

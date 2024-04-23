@@ -1,5 +1,5 @@
 import { db } from "../../config/db"
-import { Channel } from "../../models/channel"
+import { Channel, ChannelType } from "../../models/channel"
 import { Server } from "../../models/server"
 
 const getChannels = async (userId: string, serverId: string) => {
@@ -19,11 +19,16 @@ const getChannels = async (userId: string, serverId: string) => {
   return channels
 }
 
-const createChannel = async (name: string, serverId: string) => {
+const createChannel = async (
+  name: string,
+  serverId: string,
+  channelType?: ChannelType,
+) => {
   const server = await Server.findOne({
     where: { id: serverId },
   })
-  const channel = Channel.create({ name })
+  const ct: ChannelType = channelType ? channelType : ChannelType.TEXT
+  const channel = Channel.create({ name, channelType: ct })
 
   if (server) {
     channel.server = server

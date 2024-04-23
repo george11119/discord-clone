@@ -3,9 +3,15 @@ import { User } from "../../models/user"
 import { Server } from "../../models/server"
 import { UserServers } from "../../models/userServers"
 
-const getServer = async (serverId: string) => {
+const getServer = async (
+  serverId: string,
+  options?: { withChannels?: boolean },
+) => {
   if (!serverId) return null
-  const server = await Server.findOne({ where: { id: serverId } })
+  const server = await Server.findOne({
+    where: { id: serverId },
+    relations: { channels: options?.withChannels },
+  })
   return server
 }
 

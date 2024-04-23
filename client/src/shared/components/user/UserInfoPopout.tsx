@@ -29,6 +29,7 @@ const Wrapper = styled.div`
   border-radius: 8px;
   line-height: 16px;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 8px 16px 0px;
+  color: rgb(219, 222, 225);
 `
 
 const Banner = styled.div<{ $backgroundColor?: string }>`
@@ -108,7 +109,7 @@ const UserInfoPopout = ({
   setIsOpen: (x: boolean) => void
   position: "left" | "right"
 }) => {
-  const { token } = useContext(AuthContext)
+  const { token, user: currentUser } = useContext(AuthContext)
   const [message, setMessage] = useState("")
 
   const result = useQuery({
@@ -190,14 +191,16 @@ const UserInfoPopout = ({
           <NoteContainer>note</NoteContainer>
         </div>
 
-        <Form onSubmit={onSubmit}>
-          <Input
-            placeholder={`Message @${user.username}`}
-            type="text"
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-          />
-        </Form>
+        {currentUser?.id !== user.id && (
+          <Form onSubmit={onSubmit}>
+            <Input
+              placeholder={`Message @${user.username}`}
+              type="text"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+            />
+          </Form>
+        )}
       </InnerWrapper>
       <VerticalSpacer height={1} />
     </Wrapper>

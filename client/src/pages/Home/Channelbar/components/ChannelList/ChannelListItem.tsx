@@ -69,7 +69,7 @@ const ChannelListItem = ({ channel }: { channel: Channel }) => {
   const { pathname } = useLocation()
   const isActive = matchPath(
     `/channels/${channel.serverId}/${channel.id}`,
-    pathname,
+    pathname
   )
 
   const activeStyle = {

@@ -10,6 +10,11 @@ import {
 import { Channel } from "./channel"
 import { User } from "./user"
 
+export enum MessageType {
+  NORMAL = 1,
+  WELCOME = 2,
+}
+
 @Entity()
 export class Message extends BaseEntity {
   @PrimaryGeneratedColumn("uuid")
@@ -17,6 +22,13 @@ export class Message extends BaseEntity {
 
   @Column()
   content: string
+
+  @Column({
+    type: "enum",
+    enum: MessageType,
+    default: MessageType.NORMAL,
+  })
+  messageType: MessageType
 
   @CreateDateColumn()
   createdAt: Date

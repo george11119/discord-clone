@@ -77,6 +77,7 @@ const useGetUsersOfServer = (serverId: string | undefined) => {
   return useQuery({
     queryKey: [`users-${serverId}`],
     queryFn: () => serverService.getUsers(token as string, serverId as string),
+    staleTime: Infinity,
   })
 }
 

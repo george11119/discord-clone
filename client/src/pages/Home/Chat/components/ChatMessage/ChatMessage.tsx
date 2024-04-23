@@ -5,6 +5,7 @@ import { messageDateFormatter } from "../../../../../utils/dateTime.ts"
 import MessageOptionsPopout from "./MessageOptionsPopout.tsx"
 import EditMessageForm from "./EditMessageForm.tsx"
 import ChatMessageProfilePicture from "./ChatMessageProfilePicture.tsx"
+import UsernameContainer from "./UsernameContainer.tsx"
 
 const Wrapper = styled.li<{ $beingEdited: boolean }>`
   margin-left: 16px;
@@ -39,11 +40,6 @@ const MessageContentWrapper = styled.div`
   word-break: break-word;
 `
 
-const Sender = styled.span`
-  font-size: 14px;
-  font-weight: 600;
-`
-
 const EditedIndicator = styled.span`
   font-size: 10px;
   color: rgb(148, 155, 164);
@@ -68,7 +64,7 @@ const ChatMessage = ({ message }: { message: Message }) => {
     >
       <ChatMessageProfilePicture user={message.user} />
       <MessageWrapper>
-        <Sender>{message.user.username}</Sender>
+        <UsernameContainer user={message.user} />
         <DateWrapper>{messageDateFormatter(message.createdAt)}</DateWrapper>
         {beingEdited ? (
           <EditMessageForm message={message} setBeingEdited={setBeingEdited} />

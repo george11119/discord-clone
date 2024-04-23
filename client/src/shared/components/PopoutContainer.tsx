@@ -1,4 +1,5 @@
 import {
+  CSSProperties,
   MutableRefObject,
   ReactNode,
   useEffect,
@@ -59,7 +60,7 @@ const PopoutWrapper = styled.div<{
   $popoutRef: HTMLDivElement | null
   $position: "left" | "right"
 }>`
-  position: absolute;
+  position: fixed;
   right: ${(props) =>
     calculatePopoutWidthPos(props.$ref, props.$popoutRef, props.$position)}px;
   top: ${(props) => calculatePopoutHeightPos(props.$ref, props.$popoutRef)}px;
@@ -73,12 +74,14 @@ const PopoutContainer = ({
   isOpen,
   setIsOpen,
   position,
+  style,
 }: {
   popout: ReactNode
   children: ReactNode
   isOpen: boolean
   setIsOpen: (x: boolean) => void
   position: "left" | "right"
+  style?: CSSProperties
 }) => {
   const ref = useRef<HTMLDivElement | null>(null) // ref for the element the popout will be attached to
   const [popoutRef, setPopoutRef] = useState<HTMLDivElement | null>(null)
@@ -134,7 +137,11 @@ const PopoutContainer = ({
 
   return (
     <>
-      <div onClick={() => setIsOpen(!isOpen)} ref={ref}>
+      <div
+        style={style ? style : {}}
+        onClick={() => setIsOpen(!isOpen)}
+        ref={ref}
+      >
         {children}
       </div>
       {isOpen && memoizedPopout}

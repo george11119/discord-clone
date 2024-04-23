@@ -1,4 +1,4 @@
-import { Message } from "../../models/message"
+import { Message, MessageType } from "../../models/message"
 import { User } from "../../models/user"
 import { Channel } from "../../models/channel"
 import { db } from "../../config/db"
@@ -19,12 +19,14 @@ const createMessage = async ({
   content,
   user,
   channel,
+  messageType = MessageType.NORMAL,
 }: {
   content: string
   user: User
   channel: Channel
+  messageType?: MessageType
 }): Promise<Message> => {
-  const message = await Message.save({ content, user, channel })
+  const message = await Message.save({ content, user, channel, messageType })
   return message
 }
 

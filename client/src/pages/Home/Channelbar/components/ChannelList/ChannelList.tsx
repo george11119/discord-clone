@@ -37,9 +37,11 @@ const ChannelList = () => {
   return (
     <Wrapper>
       <ChannelListCategory title={"Text Channels"}>
-        {channels?.map((channel) => {
-          return <ChannelListItem key={channel.id} channel={channel} />
-        })}
+        {channels
+          ?.filter((channel) => channel.channelType === "text")
+          .map((channel) => {
+            return <ChannelListItem key={channel.id} channel={channel} />
+          })}
       </ChannelListCategory>
       {/*TODO add voice channels*/}
       <ChannelListCategory title={"Voice Channels"}></ChannelListCategory>

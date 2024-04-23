@@ -13,6 +13,7 @@ export type Message = {
   updatedAt: Date
   user: User
   channel?: Channel
+  messageType: MessageType
 }
 
 export type Server = {
@@ -30,4 +31,10 @@ export type Channel = {
   createdAt: Date
   updatedAt: Date
   server?: Server
+  channelType: "text" | "welcome"
+}
+
+export enum MessageType {
+  NORMAL = 1,
+  WELCOME = 2,
 }

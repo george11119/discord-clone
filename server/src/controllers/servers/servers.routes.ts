@@ -7,6 +7,9 @@ import { redisClient } from "../../config/redis"
 import { UserServers } from "../../models/userServers"
 import { io } from "../../app"
 import ChannelsController from "../channels/channels.db"
+import MessagesController from "../messages/messages.db"
+import { User } from "../../models/user"
+import { MessageType } from "../../models/message"
 
 const router = express.Router()
 router.use(authenticatedValidator)
@@ -118,7 +121,9 @@ router.post("/join/:inviteLinkId", async (req, res) => {
 
   const serverId = await redisClient.get(inviteLinkId)
 
-  const server = await ServersController.getServer(serverId as string)
+  const server = await ServersController.getServer(serverId as string, {
+    withChannels: true,
+  })
 
   if (!server) {
     return res
@@ -126,7 +131,7 @@ router.post("/join/:inviteLinkId", async (req, res) => {
       .json({ joined: false, message: "Invalid invite link" })
   }
 
-  const user = req.user
+  const user = req.user as User
 
   const userIsInServer = await isUserInServer({
     serverId: server?.id,
@@ -141,6 +146,24 @@ router.post("/join/:inviteLinkId", async (req, res) => {
   }
 
   await UserServers.save({ user, server })
+
+  io.to(`server-${serverId}`).emit("user:join", user, serverId)
+
+  const channels = server.channels.filter((c) => c.channelType === "text")
+
+  if (channels.length !== 0) {
+    const channel = channels[0]
+    const welcomeMessage = await MessagesController.createMessage({
+      content: "",
+      user,
+      channel: channel,
+      messageType: MessageType.WELCOME,
+    })
+
+    io.to(`channel-${channel.id}`)
+      .except(`${user.id}`)
+      .emit("message:create", welcomeMessage)
+  }
 
   res.status(200).json({ joined: true })
 })

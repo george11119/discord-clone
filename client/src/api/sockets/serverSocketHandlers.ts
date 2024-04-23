@@ -1,5 +1,5 @@
 import { useEffect } from "react"
-import { Server } from "../../../types.ts"
+import { Server, User } from "../../../types.ts"
 import { socket } from "../../config/socket.ts"
 import { useQueryClient } from "@tanstack/react-query"
 import { useLocation, useNavigate } from "react-router-dom"
@@ -46,9 +46,28 @@ const useServerDeleteListener = () => {
   }, [])
 }
 
+const useUserJoinServerListener = () => {
+  const queryClient = useQueryClient()
+
+  return useEffect(() => {
+    const onUserJoinServer = (user: User, serverId: string) => {
+      const oldUsers = queryClient.getQueryData([`users-${serverId}`]) as User[]
+      const newUsers = oldUsers.concat(user)
+      queryClient.setQueryData([`users-${serverId}`], newUsers)
+    }
+
+    socket.on("user:join", onUserJoinServer)
+
+    return () => {
+      socket.off("user:join", onUserJoinServer)
+    }
+  }, [])
+}
+
 const serverSocketHandlers = {
   useServerEditListener,
   useServerDeleteListener,
+  useUserJoinServerListener,
 }
 
 export default serverSocketHandlers

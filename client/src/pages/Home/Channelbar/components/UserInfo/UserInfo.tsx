@@ -18,6 +18,7 @@ const UserInfoWrapper = styled.div`
   border-radius: 4px;
   padding: 1px 4px 1px 0;
   line-height: 16px;
+  min-width: 124px;
 
   &:hover {
     background-color: rgba(78, 80, 88, 0.6);
