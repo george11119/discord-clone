@@ -1,5 +1,5 @@
 import styled from "styled-components"
-import LoadingSpinner from "../../pages/Auth/components/LoadingSpinner.tsx"
+import LoadingDots from "../../pages/Auth/components/LoadingDots.tsx"
 import * as React from "react"
 
 const Wrapper = styled.button`
@@ -31,7 +31,7 @@ const Button = ({
 }) => {
   return (
     <Wrapper style={style} {...rest}>
-      {isLoading ? <LoadingSpinner /> : text}
+      {isLoading ? <LoadingDots /> : text}
     </Wrapper>
   )
 }

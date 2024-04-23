@@ -12,7 +12,7 @@ import useOnScreen from "../../hooks/useOnScreen.ts"
 // just assume the math works, dont try to understand it
 const calculatePopoutWidthPos = (
   ref: MutableRefObject<HTMLDivElement | null>,
-  popoutRef: HTMLDivElement | null,
+  _popoutRef: HTMLDivElement | null,
   position: "left" | "right",
 ) => {
   const pos = ref.current?.getBoundingClientRect()
@@ -26,7 +26,8 @@ const calculatePopoutWidthPos = (
   if (position === "right") {
     const y = pos ? pos.right : 0
     const padding = 8
-    const popoutWidth = popoutRef ? popoutRef.offsetWidth : 0
+    // console.log(popoutRef?.offsetWidth)
+    const popoutWidth = 340
     return window.innerWidth - y - popoutWidth - padding
   }
 }
@@ -34,11 +35,12 @@ const calculatePopoutWidthPos = (
 // just assume the math works, dont try to understand it
 const calculatePopoutHeightPos = (
   ref: MutableRefObject<HTMLDivElement | null>,
-  popoutRef: HTMLDivElement | null,
+  _popoutRef: HTMLDivElement | null,
 ) => {
   const pos = ref.current?.getBoundingClientRect()
   const x = pos ? pos.top : 0
-  const popoutHeight = popoutRef ? popoutRef.offsetHeight : 0
+  // console.log(popoutRef?.offsetHeight)
+  const popoutHeight = 414 // TODO make this not hardcoded
 
   // if popout will overflow when opened, position it so it doesnt
   if (x + popoutHeight > window.innerHeight) {

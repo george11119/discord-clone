@@ -1,9 +1,9 @@
 import styled from "styled-components"
-import { useContext, useId } from "react"
+import { useId } from "react"
 // import Tooltip from "./Tooltip.tsx"
 import DiscordIcon from "../../pages/Auth/assets/DiscordIcon.tsx"
-import AuthContext from "../../pages/Auth/AuthContext.ts"
 import { stringToColor } from "../../utils/stringToColor.ts"
+import { User } from "../../../types.ts"
 
 const Wrapper = styled.div<{ $profileDiameter: number }>`
   position: relative;
@@ -20,10 +20,11 @@ const StatusIcon = styled.svg<{ $translateDistance: number }>`
 
 const UserProfilePicture = ({
   profileDiameter,
+  user,
 }: {
   profileDiameter: number
+  user: User | null
 }) => {
-  const { user } = useContext(AuthContext)
   const color = user ? stringToColor(user.username) : "#5865f2"
   const id = useId()
   const idString = `url(#${id})`

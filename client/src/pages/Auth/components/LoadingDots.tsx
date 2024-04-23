@@ -38,7 +38,7 @@ const Wrapper = styled.div`
   }
 `
 
-const LoadingSpinner = () => {
+const LoadingDots = () => {
   return (
     <Wrapper>
       <SpinnerItem></SpinnerItem>
@@ -48,4 +48,4 @@ const LoadingSpinner = () => {
   )
 }
 
-export default LoadingSpinner
+export default LoadingDots

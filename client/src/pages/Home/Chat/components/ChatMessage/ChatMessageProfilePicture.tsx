@@ -4,28 +4,7 @@ import styled from "styled-components"
 import { stringToColor } from "../../../../../utils/stringToColor.ts"
 import PopoutContainer from "../../../../../shared/components/PopoutContainer.tsx"
 import { useState } from "react"
-
-const PopoutWrapper = styled.div`
-  height: 100px;
-  width: 100px;
-  background-color: red;
-`
-
-const Popout = () => {
-  const [count, setCount] = useState(0)
-  return (
-    <PopoutWrapper>
-      <button
-        onClick={() => {
-          setCount(count + 1)
-          console.log(count + 1)
-        }}
-      >
-        Click me
-      </button>
-    </PopoutWrapper>
-  )
-}
+import UserInfoPopout from "../../../../../shared/components/user/UserInfoPopout.tsx"
 
 const Img = styled.div<{ $backgroundColor: string }>`
   min-height: 40px;
@@ -52,7 +31,7 @@ const ChatMessageProfilePicture = ({ user }: { user: User }) => {
 
   return (
     <PopoutContainer
-      popout={<Popout />}
+      popout={<UserInfoPopout user={user} />}
       isOpen={isOpen}
       setIsOpen={setIsOpen}
       position="right"

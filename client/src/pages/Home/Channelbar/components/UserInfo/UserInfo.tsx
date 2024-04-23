@@ -62,7 +62,7 @@ const UserInfo = () => {
       {popoutOpen && <UserProfilePopout setPopoutOpen={setPopoutOpen} />}
       <UserInfoWrapper onClick={togglePopoutVisibility}>
         <ProfilePictureContainer>
-          <UserProfilePicture profileDiameter={32} />
+          <UserProfilePicture profileDiameter={32} user={user} />
         </ProfilePictureContainer>
         <InfoDisplay>
           <Username>{user?.username}</Username>

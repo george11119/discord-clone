@@ -10,6 +10,7 @@ import UserProfilePicture from "../../../../../shared/components/UserProfilePict
 import useOnKeyDown from "../../../../../hooks/useOnKeyDown.ts"
 import { KeyCodes } from "../../../../../shared/constants/keycodes.ts"
 import { stringToColor } from "../../../../../utils/stringToColor.ts"
+import { dateFormatter } from "../../../../../utils/dateTime.ts"
 
 const Wrapper = styled.div`
   display: flex;
@@ -23,6 +24,7 @@ const Wrapper = styled.div`
   border-radius: 8px;
   max-height: 800px;
   z-index: 2;
+  line-height: 16px;
 `
 
 const Banner = styled.div<{ $backgroundColor?: string }>`
@@ -31,6 +33,7 @@ const Banner = styled.div<{ $backgroundColor?: string }>`
     props.$backgroundColor ? props.$backgroundColor : "#242428"};
   border-radius: 8px 8px 0 0;
 `
+
 const ProfilePictureBorder = styled.div`
   height: 92px;
   width: 92px;
@@ -85,7 +88,7 @@ const UserProfilePopout = ({
       <Banner $backgroundColor={stringToColor(user?.username as string)} />
       <ProfilePictureBorder>
         <ProfilePictureContainer>
-          <UserProfilePicture profileDiameter={80} />
+          <UserProfilePicture profileDiameter={80} user={user} />
         </ProfilePictureContainer>
       </ProfilePictureBorder>
       <InnerWrapper>
@@ -99,7 +102,7 @@ const UserProfilePopout = ({
           <BoldText style={{ marginBottom: "6px" }}>
             DISCORD MEMBER SINCE
           </BoldText>
-          Oct 20, 2020
+          {dateFormatter(user?.createdAt as Date, "MMMM d, yyyy")}
         </div>
 
         <VerticalSpacer height={12} />
