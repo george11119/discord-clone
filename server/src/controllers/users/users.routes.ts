@@ -3,6 +3,7 @@ import bcrypt from "bcrypt"
 import express from "express"
 import { validate } from "class-validator"
 import jwtUtils from "../../utils/jwtUtils"
+import { authenticatedValidator } from "../../middleware/authenticatedValidator"
 
 const router = express.Router()
 
@@ -31,6 +32,16 @@ router.post("/", async (req, res) => {
 
     res.status(201).json({ token, user: savedUser })
   }
+})
+
+// get info about a single user
+router.get("/:userId", authenticatedValidator, async (req, res) => {
+  const { userId } = req.params
+  const user = await User.findOne({ where: { id: userId } })
+
+  if (!user) return res.status(404).json({ message: "User not found" })
+
+  res.json(user)
 })
 
 export default router
