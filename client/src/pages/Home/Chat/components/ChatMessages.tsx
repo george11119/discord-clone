@@ -1,6 +1,5 @@
 import { Message, MessageType } from "../../../../../types.ts"
-import { useContext, useEffect, useRef } from "react"
-import useOnScreen from "../../../../hooks/useOnScreen.ts"
+import { useContext, useEffect, useRef, useState } from "react"
 import AuthContext from "../../../Auth/AuthContext.ts"
 import VerticalSpacer from "../../../../shared/components/VerticalSpacer.tsx"
 import ChatMessage from "./ChatMessage/ChatMessage.tsx"
@@ -61,8 +60,8 @@ const mapMessages = (messages: Message[]) => {
 const ChatMessages = ({ messages }: { messages: Message[] }) => {
   const { channelId } = useParams()
   const { user } = useContext(AuthContext)
+  const [previousMessagesLength, setPreviousMessagesLength] = useState(0)
   const messagesEndRef = useRef<HTMLDivElement>(null)
-  const isVisible = useOnScreen(messagesEndRef)
 
   useEffect(() => {
     socket.emit("joinChannelRoom", channelId)
@@ -76,17 +75,17 @@ const ChatMessages = ({ messages }: { messages: Message[] }) => {
     if (messages?.length && messages.length > 0) {
       const message = messages[messages.length - 1]
 
+      if (messages.length <= previousMessagesLength) return
+
       if (message.user.id === user?.id) {
         messagesEndRef.current?.scrollIntoView({ behavior: "instant" })
-      }
-
-      if (message.user.id !== user?.id && isVisible) {
       }
     }
   }
 
   useEffect(() => {
     scrollToBottom()
+    setPreviousMessagesLength(messages.length)
   }, [messages])
 
   useEffect(() => {
