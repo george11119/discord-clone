@@ -27,7 +27,9 @@ const List = styled.div``
 
 const UserList = () => {
   const { serverId } = useParams()
+
   serverSocketHandlers.useUserJoinServerListener()
+  serverSocketHandlers.useUserLeaveServerListener()
 
   const result = serverQueries.useGetUsersOfServer(serverId)
 

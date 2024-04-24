@@ -442,6 +442,79 @@ describe(`${url}`, () => {
     })
   })
 
+  describe(`${url}/leave/:serverId`, () => {
+    it("Returns 401 if user is not logged in", async () => {
+      const server = await Server.findOne({
+        where: { name: "user1's server 1" },
+      })
+
+      await api.post(`${url}/leave/${server?.id}`).expect(401)
+    })
+
+    it("Returns 400 if server does not exist", async () => {
+      const user1 = await User.findOneBy({ username: "user1" })
+      const token = jwtUtils.signToken({ userId: user1?.id as string })
+
+      const res = await api
+        .post(`${url}/leave/d063e5e8-446a-480f-bc8b-83c0ad33f1a8`)
+        .set("authorization", `Bearer ${token}`)
+        .expect(400)
+        .expect("Content-Type", /application\/json/)
+
+      const { left } = res.body
+      expect(left).toBe(false)
+    })
+
+    it("Returns 400 if user is not in the given server", async () => {
+      const user1 = await User.findOneBy({ username: "user1" })
+      const token = jwtUtils.signToken({ userId: user1?.id as string })
+
+      const server = await Server.findOne({
+        where: { name: "user2's server 1" },
+      })
+
+      const res = await api
+        .post(`${url}/leave/${server?.id}`)
+        .set("authorization", `Bearer ${token}`)
+        .expect(400)
+        .expect("Content-Type", /application\/json/)
+
+      const { left } = res.body
+      expect(left).toBe(false)
+    })
+
+    it("Returns 200 and leaves server if user is in the given server", async () => {
+      const user1 = await User.findOneBy({ username: "user1" })
+      const token = jwtUtils.signToken({ userId: user1?.id as string })
+
+      const server = await Server.findOne({
+        where: { name: "user1's server 1" },
+      })
+
+      const oldUserServer = await UserServers.findOne({
+        where: { serverId: server?.id, userId: user1?.id },
+      })
+      expect(oldUserServer).toBeTruthy()
+
+      const res = await api
+        .post(`${url}/leave/${server?.id}`)
+        .set("authorization", `Bearer ${token}`)
+        .expect(200)
+        .expect("Content-Type", /application\/json/)
+
+      const { left } = res.body
+      expect(left).toBe(true)
+
+      const newUserServer = await UserServers.findOne({
+        where: { serverId: server?.id, userId: user1?.id },
+      })
+      expect(newUserServer).toBe(null)
+
+      const deletedServer = await Server.findOne({ where: { id: server?.id } })
+      expect(deletedServer).toBe(null)
+    })
+  })
+
   describe(`${url}/:serverId/users`, () => {
     it("Returns 401 if user is not logged in", async () => {
       const server = await Server.findOne({

@@ -13,6 +13,7 @@ import useOnKeyDown from "../../../../../hooks/useOnKeyDown.ts"
 import { KeyCodes } from "../../../../../shared/constants/keycodes.ts"
 import { ModalOptions } from "../../../../../hooks/useModal.ts"
 import serverQueries from "../../../../../api/queries/serverQueries.ts"
+import LeaveServerIcon from "../../../../../shared/svg/LeaveServerIcon.tsx"
 
 const Wrapper = styled.div`
   position: absolute;
@@ -69,9 +70,16 @@ const ServerOptionsPopout = ({
   const navigate = useNavigate()
 
   const deleteServerMutation = serverQueries.useDeleteServer(serverId)
+  const leaveServerMutation = serverQueries.useLeaveServer(serverId)
 
   const handleServerDelete = () => {
     deleteServerMutation.mutate()
+    setPopoutOpen(false)
+    navigate("/channels/@me")
+  }
+
+  const handleLeaveServer = () => {
+    leaveServerMutation.mutate()
     setPopoutOpen(false)
     navigate("/channels/@me")
   }
@@ -133,6 +141,17 @@ const ServerOptionsPopout = ({
           >
             Delete Server
             <TrashIcon size={18} />
+          </Button>
+
+          <Separator type="thin" width={192} style={{ margin: "4px" }} />
+
+          <Button
+            $color="#f23f42"
+            $hoverColor="#f23f42"
+            onClick={handleLeaveServer}
+          >
+            Leave Server
+            <LeaveServerIcon size={18} />
           </Button>
         </InnerWrapper>
       </Wrapper>

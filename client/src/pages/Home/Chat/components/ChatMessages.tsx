@@ -33,6 +33,9 @@ const mapMessages = (messages: Message[]) => {
     const isSentInSameMinute =
       previousMessage &&
       differenceInMinutes(message.createdAt, previousMessage.createdAt) === 0
+    // previous message isnt welcome message
+    const previousMessageNotWelcomeMessage =
+      previousMessage?.messageType !== MessageType.WELCOME
 
     previousMessage = message
 
@@ -45,11 +48,7 @@ const mapMessages = (messages: Message[]) => {
       )
     }
 
-    if (
-      isSameUser &&
-      previousMessage?.messageType !== MessageType.WELCOME &&
-      isSentInSameMinute
-    ) {
+    if (isSameUser && previousMessageNotWelcomeMessage && isSentInSameMinute) {
       return (
         <div key={message.id}>
           <ChatMessage message={message} withProfilePicture={false} />

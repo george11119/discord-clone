@@ -168,7 +168,36 @@ router.post("/join/:inviteLinkId", async (req, res) => {
   res.status(200).json({ joined: true })
 })
 
-router.get("/:serverId/users", authenticatedValidator, async (req, res) => {
+router.post("/leave/:serverId", async (req, res) => {
+  const { serverId } = req.params
+  const user = req.user as User
+
+  const userServer = await UserServers.findOne({
+    where: {
+      serverId: serverId,
+      userId: user?.id as string,
+    },
+  })
+
+  if (!userServer) {
+    return res.status(400).json({
+      left: false,
+      message: "You are not in the given server",
+    })
+  }
+
+  await UserServers.delete({ serverId: serverId, userId: user.id })
+
+  io.to(`server-${serverId}`).emit("user:leave", user, serverId)
+
+  const userCount = await ServersController.getUserCountOfServer(serverId)
+
+  if (userCount === 0) await ServersController.deleteServer({ serverId })
+
+  res.status(200).json({ left: true })
+})
+
+router.get("/:serverId/users", async (req, res) => {
   const { serverId } = req.params
 
   const server = await ServersController.getServer(serverId)

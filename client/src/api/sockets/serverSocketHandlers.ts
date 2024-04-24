@@ -68,10 +68,32 @@ const useUserJoinServerListener = () => {
   }, [])
 }
 
+const useUserLeaveServerListener = () => {
+  const queryClient = useQueryClient()
+
+  return useEffect(() => {
+    const onUserLeaveServer = (user: User, serverId: string) => {
+      const oldUsers = queryClient.getQueryData([
+        `users`,
+        `${serverId}`,
+      ]) as User[]
+      const newUsers = oldUsers.filter((u) => u.username !== user.username)
+      queryClient.setQueryData([`users`, `${serverId}`], newUsers)
+    }
+
+    socket.on("user:leave", onUserLeaveServer)
+
+    return () => {
+      socket.off("user:leave", onUserLeaveServer)
+    }
+  })
+}
+
 const serverSocketHandlers = {
   useServerEditListener,
   useServerDeleteListener,
   useUserJoinServerListener,
+  useUserLeaveServerListener,
 }
 
 export default serverSocketHandlers

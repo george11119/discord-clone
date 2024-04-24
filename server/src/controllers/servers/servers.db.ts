@@ -2,6 +2,7 @@ import { db } from "../../config/db"
 import { User } from "../../models/user"
 import { Server } from "../../models/server"
 import { UserServers } from "../../models/userServers"
+import { server } from "../../app"
 
 const getServer = async (
   serverId: string,
@@ -90,6 +91,11 @@ const getUsersOfServer = async (serverId: string) => {
   return users
 }
 
+const getUserCountOfServer = async (serverId: string) => {
+  const count = await UserServers.count({ where: { serverId } })
+  return count
+}
+
 export default {
   getServer,
   getServers,
@@ -98,4 +104,5 @@ export default {
   updateServer,
   deleteServer,
   getUsersOfServer,
+  getUserCountOfServer,
 }

@@ -22,7 +22,7 @@ const binarySearch = (users: User[], username: string) => {
 }
 
 export const insertIntoUserArray = (users: User[], user: User) => {
-  const usersCopy = users.slice(0)
+  const usersCopy = [...users]
   const index = binarySearch(usersCopy, user.username)
   usersCopy.splice(index, 0, user)
   return usersCopy

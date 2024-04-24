@@ -52,6 +52,10 @@ const joinServer = async (token: string, inviteLinkId: string) => {
   return res.data
 }
 
+const leaveServer = async (serverId: string, token: string): Promise<void> => {
+  await apiCaller.post(`${url}/leave/${serverId}`, null, apiConfig(token))
+}
+
 const getUsers = async (token: string, serverId: string) => {
   const res = await apiCaller.get(`${url}/${serverId}/users`, apiConfig(token))
   return res.data
@@ -64,5 +68,6 @@ export default {
   destroy,
   getInviteLink,
   joinServer,
+  leaveServer,
   getUsers,
 }

@@ -71,6 +71,24 @@ const useDeleteServer = (serverId: string | undefined) => {
   })
 }
 
+const useLeaveServer = (serverId: string | undefined) => {
+  const { token } = useContext(AuthContext)
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: () => {
+      return serverService.leaveServer(serverId as string, token as string)
+    },
+    onSuccess: () => {
+      const servers = queryClient.getQueryData(["servers"]) as Server[]
+      queryClient.setQueryData(
+        ["servers"],
+        servers.filter((s) => s.id !== serverId),
+      )
+    },
+  })
+}
+
 const useGetUsersOfServer = (serverId: string | undefined) => {
   const { token } = useContext(AuthContext)
 
@@ -86,6 +104,7 @@ const serverQueries = {
   useGetServers,
   useEditServer,
   useDeleteServer,
+  useLeaveServer,
   useGetUsersOfServer,
 }
 
