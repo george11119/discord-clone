@@ -6,10 +6,12 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   OneToMany,
+  ManyToOne,
 } from "typeorm"
 import { IsEmail, Length } from "class-validator"
 import { UserServers } from "./userServers"
 import { Message } from "./message"
+import { Relationships } from "./relationships"
 
 @Entity()
 export class User extends BaseEntity {
@@ -38,4 +40,10 @@ export class User extends BaseEntity {
 
   @OneToMany(() => Message, (message) => message.user)
   messages: Message[]
+
+  @OneToMany(() => Relationships, (relationship) => relationship.sender)
+  sentRelationships: Relationships[]
+
+  @OneToMany(() => Relationships, (relationship) => relationship.receiver)
+  receivedRelationships: Relationships[]
 }

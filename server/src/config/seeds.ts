@@ -7,6 +7,7 @@ import { clearDatabase, db } from "./db"
 import { Channel } from "../models/channel"
 import { UserServers } from "../models/userServers"
 import { Message } from "../models/message"
+import { Relationships } from "../models/relationships"
 
 const seedDatabase = async () => {
   // create users
@@ -67,8 +68,8 @@ const seedDatabase = async () => {
     await Message.save({ content: `Hello ${i}`, user: user1, channel })
   }
 
-  // create 45 more users in 'Server 1'
-  for (let i = 5; i < 50; i++) {
+  // create 15 more users in 'Server 1'
+  for (let i = 5; i < 20; i++) {
     const fillerUser = await User.save({
       username: `testusername${i}`,
       passwordHash: await bcrypt.hash("password", 10), // password is "password"
@@ -76,6 +77,52 @@ const seedDatabase = async () => {
     })
     await UserServers.save({ user: fillerUser, server: server! })
   }
+}
+
+const testingStuff = async () => {
+  const user1 = await User.save({
+    username: "testusername1",
+    passwordHash: await bcrypt.hash("password", 10), // password is "password"
+    email: "test1@test.com",
+  })
+
+  const user2 = await User.save({
+    username: "testusername2",
+    passwordHash: await bcrypt.hash("password", 10), // password is "password"
+    email: "test2@test.com",
+  })
+
+  const user1ToUser2Friendship = await Relationships.save({
+    senderId: user1.id,
+    receiverId: user2.id,
+  })
+
+  const user2ToUser1Friendship = await Relationships.save({
+    senderId: user2.id,
+    receiverId: user1.id,
+  })
+
+  // wait aint no way typeorm didnt fck me over
+  // wtf
+  // holy moly it work
+  const a = await Relationships.findOne({
+    where: { id: user1ToUser2Friendship.id },
+    relations: {
+      sender: true,
+      receiver: true,
+    },
+  })
+
+  // console.log(user1ToUser2Friendship)
+  // console.log(user2ToUser1Friendship)
+
+  const u1 = await User.createQueryBuilder("user")
+    .leftJoinAndSelect("user.sentRelationships", "sentRelationships")
+    .leftJoinAndSelect("sentRelationships.receiver", "receiver")
+    .where("user.id = :userId", { userId: user1.id })
+    .getMany()
+
+  console.log(u1[0].sentRelationships)
 }
 
 const main = async () => {
@@ -88,7 +135,8 @@ const main = async () => {
   logger.info("previous data deleted")
 
   logger.info("Starting database seed")
-  await seedDatabase()
+  // await seedDatabase()
+  await testingStuff()
   logger.info("Database seeded")
 
   await db.destroy()
