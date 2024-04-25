@@ -163,21 +163,21 @@ describe(`${url}`, () => {
       const user1 = await User.findOneBy({ username: "testusername1" })
       const token = jwtUtils.signToken({ userId: user1?.id as string })
 
-      // user1 is sending
+      // user1 is sending to user2
       const user2 = await User.findOneBy({ username: "testusername2" })
       await FriendRequest.save({
         senderId: user1?.id,
         receiverId: user2?.id,
       })
 
-      // user1 is sending
+      // user1 is sending to existing user
       const existingUser = await User.findOneBy({ username: "existinguser" })
       await FriendRequest.save({
         senderId: user1?.id,
         receiverId: existingUser?.id,
       })
 
-      // user1 is receiving
+      // user1 is receiving from user3
       const user3 = await User.findOneBy({ username: "testusername3" })
       await FriendRequest.save({
         senderId: user3?.id,
@@ -196,8 +196,11 @@ describe(`${url}`, () => {
 
       expect(sent.length).toBe(2)
       expect(sent.every((fr) => fr.senderId === user1?.id))
+      expect(sent.some((fr) => fr.receiver.id === user2?.id))
+
       expect(received.length).toBe(1)
       expect(received.every((fr) => fr.receiverId === user1?.id))
+      expect(received.some((fr) => fr.sender.id === user3?.id))
     })
   })
 

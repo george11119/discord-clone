@@ -49,9 +49,11 @@ router.get("/:userId", authenticatedValidator, async (req, res) => {
 router.get("/@me/friendrequests", authenticatedValidator, async (req, res) => {
   const sentFriendRequests = await FriendRequest.find({
     where: { senderId: req.user?.id },
+    relations: { receiver: true },
   })
   const receivedFriendRequests = await FriendRequest.find({
     where: { receiverId: req.user?.id },
+    relations: { sender: true },
   })
 
   res.json({
