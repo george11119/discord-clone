@@ -7,13 +7,8 @@ import {
 } from "typeorm"
 import { User } from "./user"
 
-export enum FriendshipType {
-  PENDING = 1,
-  FRIENDS = 2,
-}
-
 @Entity()
-export class Relationships extends BaseEntity {
+export class FriendRequest extends BaseEntity {
   @PrimaryGeneratedColumn("uuid")
   id: string
 
@@ -23,12 +18,12 @@ export class Relationships extends BaseEntity {
   @Column()
   receiverId: string
 
-  @ManyToOne(() => User, (user) => user.sentRelationships, {
+  @ManyToOne(() => User, (user) => user.sentFriendRequests, {
     onDelete: "CASCADE",
   })
   sender: User
 
-  @ManyToOne(() => User, (user) => user.receivedRelationships, {
+  @ManyToOne(() => User, (user) => user.receivedFriendRequests, {
     onDelete: "CASCADE",
   })
   receiver: User

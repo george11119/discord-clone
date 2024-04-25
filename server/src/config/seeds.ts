@@ -7,7 +7,7 @@ import { clearDatabase, db } from "./db"
 import { Channel } from "../models/channel"
 import { UserServers } from "../models/userServers"
 import { Message } from "../models/message"
-import { Relationships } from "../models/relationships"
+import { FriendRequest } from "../models/friendRequest"
 
 const seedDatabase = async () => {
   // create users
@@ -92,37 +92,32 @@ const testingStuff = async () => {
     email: "test2@test.com",
   })
 
-  const user1ToUser2Friendship = await Relationships.save({
+  await FriendRequest.save({
     senderId: user1.id,
     receiverId: user2.id,
   })
+  console.log()
+  console.log("User 1 has sent user 2 a friendship request")
 
-  const user2ToUser1Friendship = await Relationships.save({
-    senderId: user2.id,
-    receiverId: user1.id,
+  console.log()
+  console.log(`User 1 id: ${user1.id}`)
+  console.log()
+  console.log(`User 2 id: ${user2.id}`)
+
+  const queryForUser1 = await User.findOne({
+    where: { id: user1.id },
+    relations: { receivedFriendRequests: true, sentFriendRequests: true },
   })
 
-  // wait aint no way typeorm didnt fck me over
-  // wtf
-  // holy moly it work
-  const a = await Relationships.findOne({
-    where: { id: user1ToUser2Friendship.id },
-    relations: {
-      sender: true,
-      receiver: true,
-    },
+  const queryForUser2 = await User.findOne({
+    where: { id: user2.id },
+    relations: { receivedFriendRequests: true, sentFriendRequests: true },
   })
 
-  // console.log(user1ToUser2Friendship)
-  // console.log(user2ToUser1Friendship)
-
-  const u1 = await User.createQueryBuilder("user")
-    .leftJoinAndSelect("user.sentRelationships", "sentRelationships")
-    .leftJoinAndSelect("sentRelationships.receiver", "receiver")
-    .where("user.id = :userId", { userId: user1.id })
-    .getMany()
-
-  console.log(u1[0].sentRelationships)
+  console.log()
+  console.log(`User 1 query:`, queryForUser1)
+  console.log()
+  console.log(`User 2 query:`, queryForUser2)
 }
 
 const main = async () => {
@@ -135,8 +130,8 @@ const main = async () => {
   logger.info("previous data deleted")
 
   logger.info("Starting database seed")
-  // await seedDatabase()
-  await testingStuff()
+  await seedDatabase()
+  // await testingStuff()
   logger.info("Database seeded")
 
   await db.destroy()

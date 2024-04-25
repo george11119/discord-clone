@@ -4,6 +4,7 @@ import express from "express"
 import { validate } from "class-validator"
 import jwtUtils from "../../utils/jwtUtils"
 import { authenticatedValidator } from "../../middleware/authenticatedValidator"
+import { FriendRequest } from "../../models/friendRequest"
 
 const router = express.Router()
 
@@ -42,6 +43,39 @@ router.get("/:userId", authenticatedValidator, async (req, res) => {
   if (!user) return res.status(404).json({ message: "User not found" })
 
   res.json(user)
+})
+
+// friend request routes
+router.post("/friendrequest", authenticatedValidator, async (req, res) => {
+  const { username } = req.body
+  const friendRequestSender = req.user as User
+  const friendRequestReceiver = await User.findOne({ where: { username } })
+
+  if (!friendRequestReceiver) {
+    return res
+      .status(400)
+      .json({ message: "No users with this username exist" })
+  }
+
+  const friendRequest = await FriendRequest.findOne({
+    where: {
+      senderId: friendRequestSender.id,
+      receiverId: friendRequestReceiver.id,
+    },
+  })
+
+  if (friendRequest) {
+    return res
+      .status(400)
+      .json({ message: "You have already sent a friend request to this user" })
+  }
+
+  await FriendRequest.save({
+    senderId: friendRequestSender.id,
+    receiverId: friendRequestReceiver.id,
+  })
+
+  res.status(204).end()
 })
 
 export default router
