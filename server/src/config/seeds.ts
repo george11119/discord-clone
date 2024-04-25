@@ -8,6 +8,7 @@ import { Channel } from "../models/channel"
 import { UserServers } from "../models/userServers"
 import { Message } from "../models/message"
 import { FriendRequest } from "../models/friendRequest"
+import { Friendship } from "../models/friendship"
 
 const seedDatabase = async () => {
   // create users
@@ -92,32 +93,22 @@ const testingStuff = async () => {
     email: "test2@test.com",
   })
 
-  await FriendRequest.save({
-    senderId: user1.id,
-    receiverId: user2.id,
-  })
-  console.log()
-  console.log("User 1 has sent user 2 a friendship request")
-
-  console.log()
-  console.log(`User 1 id: ${user1.id}`)
-  console.log()
-  console.log(`User 2 id: ${user2.id}`)
-
-  const queryForUser1 = await User.findOne({
-    where: { id: user1.id },
-    relations: { receivedFriendRequests: true, sentFriendRequests: true },
+  const friendship = Friendship.create({
+    ownerId: user1.id,
+    friendId: user2.id,
   })
 
-  const queryForUser2 = await User.findOne({
-    where: { id: user2.id },
-    relations: { receivedFriendRequests: true, sentFriendRequests: true },
-  })
+  await friendship.save()
 
+  const friendships = await Friendship.find({})
   console.log()
-  console.log(`User 1 query:`, queryForUser1)
+  console.log(friendships)
+
+  await User.delete({ id: user1.id })
+
+  const friendships2 = await Friendship.find({})
   console.log()
-  console.log(`User 2 query:`, queryForUser2)
+  console.log(friendships2)
 }
 
 const main = async () => {
@@ -130,8 +121,8 @@ const main = async () => {
   logger.info("previous data deleted")
 
   logger.info("Starting database seed")
-  await seedDatabase()
-  // await testingStuff()
+  // await seedDatabase()
+  await testingStuff()
   logger.info("Database seeded")
 
   await db.destroy()

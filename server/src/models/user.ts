@@ -12,6 +12,7 @@ import { IsEmail, Length } from "class-validator"
 import { UserServers } from "./userServers"
 import { Message } from "./message"
 import { FriendRequest } from "./friendRequest"
+import { Friendship } from "./friendship"
 
 @Entity()
 export class User extends BaseEntity {
@@ -41,9 +42,15 @@ export class User extends BaseEntity {
   @OneToMany(() => Message, (message) => message.user)
   messages: Message[]
 
-  @OneToMany(() => FriendRequest, (relationship) => relationship.sender)
+  @OneToMany(() => FriendRequest, (friendRequest) => friendRequest.sender)
   sentFriendRequests: FriendRequest[]
 
-  @OneToMany(() => FriendRequest, (relationship) => relationship.receiver)
+  @OneToMany(() => FriendRequest, (friendRequest) => friendRequest.receiver)
   receivedFriendRequests: FriendRequest[]
+
+  @OneToMany(() => Friendship, (friendship) => friendship.owner)
+  ownedFriendships: Friendship[]
+
+  @OneToMany(() => Friendship, (friendship) => friendship.friend)
+  friends: Friendship[]
 }
