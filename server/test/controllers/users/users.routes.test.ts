@@ -28,6 +28,12 @@ describe(`${url}`, () => {
     })
 
     await testHelpers.generateUser({
+      username: "testusername3",
+      password: "password",
+      email: "test3@test.com",
+    })
+
+    await testHelpers.generateUser({
       username: "existinguser",
       password: "password",
       email: "existinguser@test.com",
@@ -148,14 +154,96 @@ describe(`${url}`, () => {
     })
   })
 
-  describe(`POST ${url}/friendrequest`, () => {
+  describe(`GET ${url}/friendrequests/sent`, () => {
+    it("Returns 401 if user is not logged in", async () => {
+      await api.get(`${url}/friendrequests/sent`).expect(401)
+    })
+
+    it("Returns all the users sent friend requests if user is logged in", async () => {
+      const user1 = await User.findOneBy({ username: "testusername1" })
+      const token = jwtUtils.signToken({ userId: user1?.id as string })
+
+      // user1 is sending
+      const user2 = await User.findOneBy({ username: "testusername2" })
+      await FriendRequest.save({
+        senderId: user1?.id,
+        receiverId: user2?.id,
+      })
+
+      // user1 is sending
+      const existingUser = await User.findOneBy({ username: "existinguser" })
+      await FriendRequest.save({
+        senderId: user1?.id,
+        receiverId: existingUser?.id,
+      })
+
+      // user1 is receiving
+      const user3 = await User.findOneBy({ username: "testusername3" })
+      await FriendRequest.save({
+        senderId: user3?.id,
+        receiverId: user1?.id,
+      })
+
+      const res = await api
+        .get(`${url}/friendrequests/sent`)
+        .set("authorization", `Bearer ${token}`)
+        .expect(200)
+
+      const sentFriendRequests: FriendRequest[] = res.body
+      expect(sentFriendRequests.length).toBe(2)
+      expect(sentFriendRequests.every((fr) => fr.senderId === user1?.id))
+    })
+  })
+
+  describe(`GET ${url}/friendrequests/received`, () => {
+    it("Returns 401 if user is not logged in", async () => {
+      await api.get(`${url}/friendrequests/received`).expect(401)
+    })
+
+    it("Returns all the users received friend requests if user is logged in", async () => {
+      const user1 = await User.findOneBy({ username: "testusername1" })
+      const token = jwtUtils.signToken({ userId: user1?.id as string })
+
+      // user1 is sending
+      const user2 = await User.findOneBy({ username: "testusername2" })
+      await FriendRequest.save({
+        senderId: user1?.id,
+        receiverId: user2?.id,
+      })
+
+      // user1 is receiving
+      const existingUser = await User.findOneBy({ username: "existinguser" })
+      await FriendRequest.save({
+        senderId: existingUser?.id,
+        receiverId: user1?.id,
+      })
+
+      // user1 is receiving
+      const user3 = await User.findOneBy({ username: "testusername3" })
+      await FriendRequest.save({
+        senderId: user3?.id,
+        receiverId: user1?.id,
+      })
+
+      const res = await api
+        .get(`${url}/friendrequests/received`)
+        .set("authorization", `Bearer ${token}`)
+        .expect(200)
+
+      const receivedFriendRequests: FriendRequest[] = res.body
+      expect(receivedFriendRequests.length).toBe(2)
+      expect(receivedFriendRequests.every((fr) => fr.receiverId === user1?.id))
+    })
+  })
+
+  describe(`POST ${url}/friendrequests`, () => {
     it("Returns 401 if user is not logged in", async () => {
       const user = await User.findOne({ where: { username: "testusername2 " } })
       const payload = {
         username: user?.username,
       }
 
-      await api.post(`${url}/friendrequest`).send(payload).expect(401)
+      await api.post(`${url}/friendrequests`).send(payload).expect(401)
     })
 
     it("Returns 400 if user tries to send a friend request to a non existent user", async () => {
@@ -166,7 +254,7 @@ describe(`${url}`, () => {
       }
 
       const res = await api
-        .post(`${url}/friendrequest`)
+        .post(`${url}/friendrequests`)
         .send(payload)
         .set("authorization", `Bearer ${token}`)
         .expect(400)
@@ -190,7 +278,7 @@ describe(`${url}`, () => {
       }
 
       const res = await api
-        .post(`${url}/friendrequest`)
+        .post(`${url}/friendrequests`)
         .send(payload)
         .set("authorization", `Bearer ${token}`)
         .expect(400)
@@ -211,7 +299,7 @@ describe(`${url}`, () => {
       }
 
       await api
-        .post(`${url}/friendrequest`)
+        .post(`${url}/friendrequests`)
         .send(payload)
         .set("authorization", `Bearer ${token}`)
         .expect(204)

@@ -46,7 +46,27 @@ router.get("/:userId", authenticatedValidator, async (req, res) => {
 })
 
 // friend request routes
-router.post("/friendrequest", authenticatedValidator, async (req, res) => {
+router.get("/friendrequests/sent", authenticatedValidator, async (req, res) => {
+  const sentFriendRequests = await FriendRequest.find({
+    where: { senderId: req.user?.id },
+  })
+
+  res.json(sentFriendRequests)
+})
+
+router.get(
+  "/friendrequests/received",
+  authenticatedValidator,
+  async (req, res) => {
+    const sentFriendRequests = await FriendRequest.find({
+      where: { receiverId: req.user?.id },
+    })
+
+    res.json(sentFriendRequests)
+  },
+)
+
+router.post("/friendrequests", authenticatedValidator, async (req, res) => {
   const { username } = req.body
   const friendRequestSender = req.user as User
   const friendRequestReceiver = await User.findOne({ where: { username } })
