@@ -305,4 +305,71 @@ describe(`${url}`, () => {
         .expect(204)
     })
   })
+
+  describe(`DELETE ${url}/friendrequests`, () => {
+    it("Returns 401 if user is not logged in", async () => {
+      const user = await User.findOne({ where: { username: "testusername2 " } })
+      const payload = {
+        username: user?.username,
+      }
+
+      await api.delete(`${url}/friendrequests`).send(payload).expect(401)
+    })
+
+    it("Cancels sent friend requests", async () => {
+      const user1 = await User.findOneBy({ username: "testusername1" })
+      const token = jwtUtils.signToken({ userId: user1?.id as string })
+
+      const user2 = await User.findOneBy({ username: "testusername2" })
+
+      // user1 sent this friend request to user2, user1 is going to cancel it
+      const friendRequest = await FriendRequest.save({
+        senderId: user1?.id,
+        receiverId: user2?.id,
+      })
+
+      const payload = {
+        username: user2?.username,
+      }
+
+      await api
+        .delete(`${url}/friendrequests`)
+        .send(payload)
+        .set("authorization", `Bearer ${token}`)
+        .expect(204)
+
+      const deletedFriendRequest = await FriendRequest.findOne({
+        where: { id: friendRequest.id },
+      })
+      expect(deletedFriendRequest).toBe(null)
+    })
+
+    it("Rejects received friend requests", async () => {
+      const user1 = await User.findOneBy({ username: "testusername1" })
+      const token = jwtUtils.signToken({ userId: user1?.id as string })
+
+      const user2 = await User.findOneBy({ username: "testusername2" })
+
+      // user2 sent this friend request to user1, user1 is going to reject it
+      const friendRequest = await FriendRequest.save({
+        senderId: user2?.id,
+        receiverId: user1?.id,
+      })
+
+      const payload = {
+        username: user2?.username,
+      }
+
+      await api
+        .delete(`${url}/friendrequests`)
+        .send(payload)
+        .set("authorization", `Bearer ${token}`)
+        .expect(204)
+
+      const deletedFriendRequest = await FriendRequest.findOne({
+        where: { id: friendRequest.id },
+      })
+      expect(deletedFriendRequest).toBe(null)
+    })
+  })
 })

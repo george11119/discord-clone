@@ -98,4 +98,23 @@ router.post("/friendrequests", authenticatedValidator, async (req, res) => {
   res.status(204).end()
 })
 
+router.delete("/friendrequests", authenticatedValidator, async (req, res) => {
+  const { username } = req.body
+  const user2 = await User.findOne({ where: { username } })
+
+  await FriendRequest.createQueryBuilder("friend_request")
+    .delete()
+    .where("senderId = :user1Id AND receiverId = :user2Id", {
+      user1Id: req.user?.id,
+      user2Id: user2?.id,
+    })
+    .orWhere("receiverId = :user1Id AND senderId = :user2Id", {
+      user1Id: req.user?.id,
+      user2Id: user2?.id,
+    })
+    .execute()
+
+  res.status(204).end()
+})
+
 export default router
