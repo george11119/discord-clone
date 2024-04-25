@@ -5,6 +5,7 @@ import { validate } from "class-validator"
 import jwtUtils from "../../utils/jwtUtils"
 import { authenticatedValidator } from "../../middleware/authenticatedValidator"
 import { FriendRequest } from "../../models/friendRequest"
+import { Friendship } from "../../models/friendship"
 
 const router = express.Router()
 
@@ -96,6 +97,36 @@ router.post("/@me/friendrequests", authenticatedValidator, async (req, res) => {
     senderId: friendRequestSender.id,
     receiverId: friendRequestReceiver.id,
   })
+
+  res.status(204).end()
+})
+
+router.put("/@me/friendrequests", authenticatedValidator, async (req, res) => {
+  const { username } = req.body
+  const receiver = req.user
+  const sender = await User.findOne({ where: { username } })
+
+  const friendRequest = await FriendRequest.findOne({
+    where: { senderId: sender?.id, receiverId: receiver?.id },
+  })
+
+  if (!friendRequest) {
+    return res.status(400).json({
+      message:
+        "The user you are trying to friend must first send you a friend request",
+    })
+  }
+
+  await FriendRequest.delete({ senderId: sender?.id, receiverId: receiver?.id })
+
+  const owner = receiver
+  const friend = sender
+
+  const friendship = Friendship.create({
+    ownerId: owner?.id,
+    friendId: friend?.id,
+  })
+  await friendship.save()
 
   res.status(204).end()
 })
