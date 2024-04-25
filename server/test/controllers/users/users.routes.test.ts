@@ -276,6 +276,78 @@ describe(`${url}`, () => {
       expect(message).toMatch(/You cannot send a friend request to yourself/)
     })
 
+    it("Returns 400 if user is already friends with user they are trying to send to", async () => {
+      const user1 = await User.findOneBy({ username: "testusername1" })
+      const token = jwtUtils.signToken({ userId: user1?.id as string })
+
+      const user2 = await User.findOneBy({ username: "testusername2" })
+      const payload = {
+        username: user2?.username,
+      }
+
+      const friendship = Friendship.create({
+        ownerId: user1?.id,
+        friendId: user2?.id,
+      })
+      await friendship.save()
+
+      const res = await api
+        .post(`${url}/@me/friendrequests`)
+        .send(payload)
+        .set("authorization", `Bearer ${token}`)
+        .expect(400)
+
+      const { message } = res.body
+      expect(message).toMatch(
+        /You cannot send a friend request to a user you are friends with/,
+      )
+    })
+
+    it("Creates a friendship relationship between the 2 users if the receiver of the friend request has already sent one to the sender", async () => {
+      const user1 = await User.findOneBy({ username: "testusername1" })
+      const token = jwtUtils.signToken({ userId: user1?.id as string })
+
+      const user2 = await User.findOneBy({ username: "testusername2" })
+      await FriendRequest.save({
+        senderId: user2?.id,
+        receiverId: user1?.id,
+      })
+
+      const payload = {
+        username: user2?.username,
+      }
+
+      await api
+        .post(`${url}/@me/friendrequests`)
+        .send(payload)
+        .set("authorization", `Bearer ${token}`)
+        .expect(204)
+
+      const friendRequest = await FriendRequest.findOne({
+        where: [
+          { senderId: user1?.id, receiverId: user2?.id },
+          { senderId: user2?.id, receiverId: user1?.id },
+        ],
+      })
+      expect(friendRequest).toBe(null)
+
+      // there should be 2 friendship models created, both inverse of each other
+      const friendship1 = await Friendship.find({
+        where: {
+          ownerId: user1?.id,
+          friendId: user2?.id,
+        },
+      })
+      expect(friendship1).toBeTruthy()
+      const friendship2 = await Friendship.find({
+        where: {
+          ownerId: user2?.id,
+          friendId: user1?.id,
+        },
+      })
+      expect(friendship2).toBeTruthy()
+    })
+
     it("Returns 204 if user sends a friend request to an existing user", async () => {
       const user1 = await User.findOneBy({ username: "testusername1" })
       const token = jwtUtils.signToken({ userId: user1?.id as string })

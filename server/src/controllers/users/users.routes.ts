@@ -68,12 +68,14 @@ router.post("/@me/friendrequests", authenticatedValidator, async (req, res) => {
   const friendRequestSender = req.user as User
   const friendRequestReceiver = await User.findOne({ where: { username } })
 
+  // dont allow user to send friend request to himself
   if (friendRequestSender.id === friendRequestReceiver?.id) {
     return res
       .status(400)
       .json({ message: "You cannot send a friend request to yourself" })
   }
 
+  // dont allow user to send friend request to non existent user
   if (!friendRequestReceiver) {
     return res
       .status(400)
@@ -87,10 +89,50 @@ router.post("/@me/friendrequests", authenticatedValidator, async (req, res) => {
     },
   })
 
+  // dont allow user to send duplicate friend requests
   if (friendRequest) {
     return res
       .status(400)
       .json({ message: "You have already sent a friend request to this user" })
+  }
+
+  const friendship = await Friendship.findOne({
+    where: {
+      ownerId: friendRequestSender.id,
+      friendId: friendRequestReceiver.id,
+    },
+  })
+
+  // dont allow user to send friend requests to people they are already friends with
+  if (friendship) {
+    return res.status(400).json({
+      message:
+        "You cannot send a friend request to a user you are friends with",
+    })
+  }
+
+  const friendRequestFromReceiver = await FriendRequest.findOne({
+    where: {
+      senderId: friendRequestReceiver.id,
+      receiverId: friendRequestSender.id,
+    },
+  })
+
+  // if the user they are sending a friend request to has already sent one to the user,
+  // delete the friend request and create a friendship relationship for them
+  if (friendRequestFromReceiver) {
+    await FriendRequest.delete({
+      senderId: friendRequestReceiver?.id,
+      receiverId: friendRequestSender?.id,
+    })
+
+    const friendship = Friendship.create({
+      ownerId: friendRequestSender?.id,
+      friendId: friendRequestReceiver?.id,
+    })
+    await friendship.save()
+
+    return res.status(204).end()
   }
 
   await FriendRequest.save({
