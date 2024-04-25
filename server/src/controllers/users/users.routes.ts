@@ -46,30 +46,30 @@ router.get("/:userId", authenticatedValidator, async (req, res) => {
 })
 
 // friend request routes
-router.get("/friendrequests/sent", authenticatedValidator, async (req, res) => {
+router.get("/@me/friendrequests", authenticatedValidator, async (req, res) => {
   const sentFriendRequests = await FriendRequest.find({
     where: { senderId: req.user?.id },
   })
+  const receivedFriendRequests = await FriendRequest.find({
+    where: { receiverId: req.user?.id },
+  })
 
-  res.json(sentFriendRequests)
+  res.json({
+    sent: sentFriendRequests,
+    received: receivedFriendRequests,
+  })
 })
 
-router.get(
-  "/friendrequests/received",
-  authenticatedValidator,
-  async (req, res) => {
-    const sentFriendRequests = await FriendRequest.find({
-      where: { receiverId: req.user?.id },
-    })
-
-    res.json(sentFriendRequests)
-  },
-)
-
-router.post("/friendrequests", authenticatedValidator, async (req, res) => {
+router.post("/@me/friendrequests", authenticatedValidator, async (req, res) => {
   const { username } = req.body
   const friendRequestSender = req.user as User
   const friendRequestReceiver = await User.findOne({ where: { username } })
+
+  if (friendRequestSender.id === friendRequestReceiver?.id) {
+    return res
+      .status(400)
+      .json({ message: "You cannot send a friend request to yourself" })
+  }
 
   if (!friendRequestReceiver) {
     return res
@@ -98,23 +98,27 @@ router.post("/friendrequests", authenticatedValidator, async (req, res) => {
   res.status(204).end()
 })
 
-router.delete("/friendrequests", authenticatedValidator, async (req, res) => {
-  const { username } = req.body
-  const user2 = await User.findOne({ where: { username } })
+router.delete(
+  "/@me/friendrequests",
+  authenticatedValidator,
+  async (req, res) => {
+    const { username } = req.body
+    const user2 = await User.findOne({ where: { username } })
 
-  await FriendRequest.createQueryBuilder("friend_request")
-    .delete()
-    .where("senderId = :user1Id AND receiverId = :user2Id", {
-      user1Id: req.user?.id,
-      user2Id: user2?.id,
-    })
-    .orWhere("receiverId = :user1Id AND senderId = :user2Id", {
-      user1Id: req.user?.id,
-      user2Id: user2?.id,
-    })
-    .execute()
+    await FriendRequest.createQueryBuilder("friend_request")
+      .delete()
+      .where("senderId = :user1Id AND receiverId = :user2Id", {
+        user1Id: req.user?.id,
+        user2Id: user2?.id,
+      })
+      .orWhere("receiverId = :user1Id AND senderId = :user2Id", {
+        user1Id: req.user?.id,
+        user2Id: user2?.id,
+      })
+      .execute()
 
-  res.status(204).end()
-})
+    res.status(204).end()
+  },
+)
 
 export default router
