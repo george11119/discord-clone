@@ -208,4 +208,26 @@ router.get("/@me/friends", authenticatedValidator, async (req, res) => {
   res.json(friends)
 })
 
+router.delete(
+  "/@me/friends/:friendId",
+  authenticatedValidator,
+  async (req, res) => {
+    const { friendId } = req.params
+
+    await Friendship.createQueryBuilder("friendship")
+      .delete()
+      .where("ownerId = :user1Id AND friendId = :user2Id", {
+        user1Id: req.user?.id,
+        user2Id: friendId,
+      })
+      .orWhere("friendId = :user1Id AND ownerId = :user2Id", {
+        user1Id: req.user?.id,
+        user2Id: friendId,
+      })
+      .execute()
+
+    res.status(204).end()
+  },
+)
+
 export default router

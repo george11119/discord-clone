@@ -553,7 +553,7 @@ describe(`${url}`, () => {
     })
   })
 
-  describe.only(`GET ${url}/@me/friends`, () => {
+  describe(`GET ${url}/@me/friends`, () => {
     it("Returns 401 if user not logged in ", async () => {
       await api.get(`${url}/@me/friends`).expect(401)
     })
@@ -584,6 +584,36 @@ describe(`${url}`, () => {
       const friends: User[] = res.body
       expect(friends.some((u) => u.id === user2?.id)).toBe(true)
       expect(friends.some((u) => u.id === user3?.id)).toBe(true)
+    })
+  })
+
+  describe.only(`DELETE ${url}/@me/friends/:friendId`, () => {
+    it("Returns 401 if user not logged in", async () => {
+      const user2 = await User.findOneBy({ username: "testusername2" })
+      await api.delete(`${url}/@me/friends/${user2?.id}`).expect(401)
+    })
+
+    it("Removes a friendship relationship between 2 users", async () => {
+      const user1 = await User.findOneBy({ username: "testusername1" })
+      const token = jwtUtils.signToken({ userId: user1?.id as string })
+
+      const user2 = await User.findOneBy({ username: "testusername2" })
+      const user2Friendship = Friendship.create({
+        ownerId: user1?.id,
+        friendId: user2?.id,
+      })
+      await user2Friendship.save()
+
+      const friendshipsCount = await Friendship.count()
+      expect(friendshipsCount).toBe(2)
+
+      await api
+        .delete(`${url}/@me/friends/${user2?.id}`)
+        .set("authorization", `Bearer ${token}`)
+        .expect(204)
+
+      const friendshipsCountAfterDelete = await Friendship.count()
+      expect(friendshipsCountAfterDelete).toBe(0)
     })
   })
 })
