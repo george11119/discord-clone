@@ -6,6 +6,7 @@ import testHelpers, { dbSetupAndTeardown } from "../../helpers"
 import jwtUtils from "../../../src/utils/jwtUtils"
 import { FriendRequest } from "../../../src/models/friendRequest"
 import { Friendship } from "../../../src/models/friendship"
+import { db } from "../../../src/config/db"
 
 const api = supertest(server)
 const url = "/api/users"
@@ -549,6 +550,40 @@ describe(`${url}`, () => {
         where: { id: friendRequest.id },
       })
       expect(deletedFriendRequest).toBe(null)
+    })
+  })
+
+  describe.only(`GET ${url}/@me/friends`, () => {
+    it("Returns 401 if user not logged in ", async () => {
+      await api.get(`${url}/@me/friends`).expect(401)
+    })
+
+    it("Returns a list containing all of the current user's friends", async () => {
+      const user1 = await User.findOneBy({ username: "testusername1" })
+      const token = jwtUtils.signToken({ userId: user1?.id as string })
+
+      const user2 = await User.findOneBy({ username: "testusername2" })
+      const user2Friendship = Friendship.create({
+        ownerId: user1?.id,
+        friendId: user2?.id,
+      })
+      await user2Friendship.save()
+
+      const user3 = await User.findOneBy({ username: "testusername3" })
+      const user3Friendship = Friendship.create({
+        ownerId: user1?.id,
+        friendId: user3?.id,
+      })
+      await user3Friendship.save()
+
+      const res = await api
+        .get(`${url}/@me/friends`)
+        .set("authorization", `Bearer ${token}`)
+        .expect(200)
+
+      const friends: User[] = res.body
+      expect(friends.some((u) => u.id === user2?.id)).toBe(true)
+      expect(friends.some((u) => u.id === user3?.id)).toBe(true)
     })
   })
 })
