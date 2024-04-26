@@ -1,9 +1,9 @@
 import styled from "styled-components"
-import Header from "./components/Header/Header.tsx"
+import ServerChatHeader from "./components/Header/ServerChatHeader.tsx"
 import ChatMessageDisplay from "./components/ChatMessageDisplay.tsx"
 import MessageInput from "./components/MessageInput.tsx"
 import { Channel } from "../../../../types.ts"
-import { matchPath, useLocation, useParams } from "react-router-dom"
+import { useParams } from "react-router-dom"
 import { useQueryClient } from "@tanstack/react-query"
 import { useState } from "react"
 import UserList from "./components/UserList/UserList.tsx"
@@ -30,8 +30,6 @@ const ChatContent = styled.div`
 const ChatAreaContainer = () => {
   const queryClient = useQueryClient()
   const { serverId, channelId } = useParams()
-  const { pathname } = useLocation()
-  const isHomeLink = matchPath(`/channels/@me/*`, pathname)
 
   const [userListShown, setUserListShown] = useState(() => {
     const shown = localStorage.getItem("discord-clone-userlist-shown")
@@ -44,21 +42,6 @@ const ChatAreaContainer = () => {
   ]) as Channel[]
 
   const channel = channels?.find((c) => c.id === channelId)
-
-  // home page
-  if (isHomeLink) {
-    return (
-      <Wrapper
-        style={{
-          alignItems: "center",
-          justifyContent: "center",
-          color: "rgb(148, 155, 164)",
-        }}
-      >
-        <div>TODO add home page</div>
-      </Wrapper>
-    )
-  }
 
   // a channel does not exist in the server or has not been selected, render blank page
   if (!channelId) {
@@ -79,19 +62,17 @@ const ChatAreaContainer = () => {
   // return chat
   return (
     <Wrapper>
-      <>
-        <Header
-          chatTitle={channel ? channel.name : ""}
-          userList={{ userListShown, setUserListShown }}
-        />
-        <MainContainer>
-          <ChatContent>
-            <ChatMessageDisplay />
-            <MessageInput />
-          </ChatContent>
-          {userListShown && <UserList />}
-        </MainContainer>
-      </>
+      <ServerChatHeader
+        chatTitle={channel ? channel.name : ""}
+        userList={{ userListShown, setUserListShown }}
+      />
+      <MainContainer>
+        <ChatContent>
+          <ChatMessageDisplay />
+          <MessageInput />
+        </ChatContent>
+        {userListShown && <UserList />}
+      </MainContainer>
     </Wrapper>
   )
 }

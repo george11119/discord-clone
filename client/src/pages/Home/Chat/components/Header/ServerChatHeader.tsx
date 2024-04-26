@@ -1,23 +1,7 @@
 import styled from "styled-components"
 import Hashtag from "../../../../../shared/svg/Hashtag.tsx"
 import HeaderButtons from "./HeaderButtons.tsx"
-
-const Wrapper = styled.div`
-  box-shadow:
-    rgba(2, 2, 2, 0.2) 0px 1px 0px 0px,
-    rgba(6, 6, 7, 0.05) 0px 1.5px 0px 0px,
-    rgba(2, 2, 2, 0.05) 0px 2px 0px 0px;
-  height: 32px;
-  padding: 8px;
-  min-height: 32px;
-  display: flex;
-  align-items: center;
-  font-weight: 600;
-  font-size: 14px;
-  user-select: none;
-  justify-content: space-between;
-  z-index: 1;
-`
+import Header from "../../../../../shared/components/Container/Header.tsx"
 
 const Left = styled.div`
   padding-left: 8px;
@@ -30,7 +14,7 @@ const Right = styled.div`
   align-items: center;
 `
 
-const Header = ({
+const ServerChatHeader = ({
   chatTitle,
   userList,
 }: {
@@ -41,7 +25,7 @@ const Header = ({
   }
 }) => {
   return (
-    <Wrapper>
+    <Header>
       <Left>
         <Hashtag size={24} color="#80848e" />
         <h1>{chatTitle}</h1>
@@ -49,8 +33,8 @@ const Header = ({
       <Right>
         <HeaderButtons userList={userList} />
       </Right>
-    </Wrapper>
+    </Header>
   )
 }
 
-export default Header
+export default ServerChatHeader

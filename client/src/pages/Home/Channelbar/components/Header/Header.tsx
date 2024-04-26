@@ -1,8 +1,7 @@
 import styled from "styled-components"
 import VerticalSpacer from "../../../../../shared/components/VerticalSpacer.tsx"
-import ConversationSearchButton from "./ConversationSearchButton.tsx"
 import ChannelTitle from "./ChannelTitle.tsx"
-import { matchPath, useLocation, useParams } from "react-router-dom"
+import { useParams } from "react-router-dom"
 import { useState } from "react"
 import ServerOptionsPopout from "./ServerOptionsPopout.tsx"
 import { Server } from "../../../../../../types.ts"
@@ -13,10 +12,11 @@ import EditServerModal from "./EditServerModal.tsx"
 import ChannelModal from "../ChannelList/ChannelModal.tsx"
 import InviteToServerModal from "./InviteToServerModal.tsx"
 
-const Wrapper = styled.div<{ $isHomeLink: boolean }>`
-  box-shadow: rgba(2, 2, 2, 0.2) 0px 1px 0px 0px,
-  rgba(6, 6, 7, 0.05) 0px 1.5px 0px 0px,
-  rgba(2, 2, 2, 0.05) 0px 2px 0px 0px;
+const Wrapper = styled.div`
+  box-shadow:
+    rgba(2, 2, 2, 0.2) 0px 1px 0px 0px,
+    rgba(6, 6, 7, 0.05) 0px 1.5px 0px 0px,
+    rgba(2, 2, 2, 0.05) 0px 2px 0px 0px;
   height: 24px;
   padding: 12px 10px;
   display: flex;
@@ -28,11 +28,8 @@ const Wrapper = styled.div<{ $isHomeLink: boolean }>`
   user-select: none;
 
   &:hover {
-    background-color: ${(props) => {
-      return props.$isHomeLink ? "inherit" : " #35373c"
-    }};
+    background-color: #35373c;
   }
-}
 `
 
 const Header = () => {
@@ -40,8 +37,6 @@ const Header = () => {
   const { serverId } = useParams()
 
   const [popoutOpen, setPopoutOpen] = useState(false)
-  const { pathname } = useLocation()
-  const isHomeLink = matchPath(`/channels/@me/*`, pathname) ? true : false
   const editChannel = useModal()
   const createChannel = useModal()
   const inviteToServer = useModal()
@@ -87,18 +82,13 @@ const Header = () => {
           />
         )}
         <Wrapper
-          onClick={isHomeLink ? () => null : togglePopoutVisibility}
+          onClick={togglePopoutVisibility}
           style={popoutOpen ? { backgroundColor: "#35373c" } : {}}
-          $isHomeLink={isHomeLink}
         >
-          {isHomeLink ? (
-            <ConversationSearchButton />
-          ) : (
-            <ChannelTitle
-              title={server ? server.name : ""}
-              popoutOpen={popoutOpen}
-            />
-          )}
+          <ChannelTitle
+            title={server ? server.name : ""}
+            popoutOpen={popoutOpen}
+          />
         </Wrapper>
         <VerticalSpacer height={8} />
       </div>

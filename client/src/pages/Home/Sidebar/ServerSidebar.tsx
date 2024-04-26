@@ -21,7 +21,7 @@ const Wrapper = styled.nav`
   scrollbar-width: none;
 `
 
-const Sidebar = ({ servers }: { servers: Server[] }) => {
+const ServerSidebar = ({ servers }: { servers: Server[] }) => {
   serverSocketHandlers.useServerDeleteListener()
   serverSocketHandlers.useServerEditListener()
 
@@ -38,4 +38,4 @@ const Sidebar = ({ servers }: { servers: Server[] }) => {
   )
 }
 
-export default Sidebar
+export default ServerSidebar

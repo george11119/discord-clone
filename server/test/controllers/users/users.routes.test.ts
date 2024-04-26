@@ -587,7 +587,7 @@ describe(`${url}`, () => {
     })
   })
 
-  describe.only(`DELETE ${url}/@me/friends/:friendId`, () => {
+  describe(`DELETE ${url}/@me/friends/:friendId`, () => {
     it("Returns 401 if user not logged in", async () => {
       const user2 = await User.findOneBy({ username: "testusername2" })
       await api.delete(`${url}/@me/friends/${user2?.id}`).expect(401)

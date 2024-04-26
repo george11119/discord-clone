@@ -1,5 +1,5 @@
 import styled from "styled-components"
-import Sidebar from "./Sidebar/Sidebar.tsx"
+import ServerSidebar from "./Sidebar/ServerSidebar.tsx"
 import Channelbar from "./Channelbar/Channelbar.tsx"
 import ChatAreaContainer from "./Chat/ChatAreaContainer.tsx"
 import useSocketConnection from "../../api/sockets/useSocketConnection.ts"
@@ -10,6 +10,9 @@ import channelService from "../../api/services/channelService.ts"
 import { useContext } from "react"
 import AuthContext from "../Auth/AuthContext.ts"
 import { socket } from "../../config/socket.ts"
+import { matchPath, useLocation } from "react-router-dom"
+import DirectMessagesBar from "./DirectMessagesBar/DirectMessagesBar.tsx"
+import HomepageContainer from "./Homepage/HomepageContainer.tsx"
 
 const Wrapper = styled.div`
   display: grid;
@@ -24,6 +27,9 @@ const BlankPage = styled.div`
 `
 
 const Home = () => {
+  const { pathname } = useLocation()
+  const isHomeLink = matchPath(`/channels/@me/*`, pathname)
+
   useSocketConnection()
 
   const { token } = useContext(AuthContext)
@@ -56,9 +62,18 @@ const Home = () => {
 
   return (
     <Wrapper>
-      <Sidebar servers={servers} />
-      <Channelbar />
-      <ChatAreaContainer />
+      <ServerSidebar servers={servers} />
+      {isHomeLink ? (
+        <>
+          <DirectMessagesBar />
+          <HomepageContainer />
+        </>
+      ) : (
+        <>
+          <Channelbar />
+          <ChatAreaContainer />
+        </>
+      )}
     </Wrapper>
   )
 }

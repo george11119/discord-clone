@@ -191,7 +191,7 @@ const UserInfoPopout = ({
           <NoteContainer>note</NoteContainer>
         </div>
 
-        {currentUser?.id !== user.id && (
+        {currentUser?.id !== user.id ? (
           <Form onSubmit={onSubmit}>
             <Input
               placeholder={`Message @${user.username}`}
@@ -200,6 +200,8 @@ const UserInfoPopout = ({
               onChange={(e) => setMessage(e.target.value)}
             />
           </Form>
+        ) : (
+          <VerticalSpacer height={41} />
         )}
       </InnerWrapper>
       <VerticalSpacer height={1} />
