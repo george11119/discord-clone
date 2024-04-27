@@ -2,6 +2,7 @@ import styled from "styled-components"
 import SearchIcon from "../../../../../shared/svg/SearchIcon.tsx"
 import { useState } from "react"
 import CloseIcon from "../../../../../shared/svg/CloseIcon.tsx"
+import { FriendRequest, User } from "../../../../../../types.ts"
 
 const Wrapper = styled.div`
   width: 100%;
@@ -68,17 +69,101 @@ const PeopleListItemWrapper = styled.div`
   align-items: center;
 `
 
-const PeopleListItem = ({ user }: { user: string }) => {
+const PeopleListTitle = ({ display }: { display: string }) => {
+  let displayType = ""
+  if (display === "online") {
+    displayType = "Online"
+  } else if (display === "all") {
+    displayType = "All friends"
+  } else if (display === "pending") {
+    displayType = "Pending"
+  } else if (display === "blocked") {
+    displayType = "blocked"
+  }
+  return <Title>{displayType} — 0</Title>
+}
+
+const FriendsList = ({ friends }: { friends: User[] }) => {
+  return (
+    <PeopleList>
+      {friends.map((friend) => (
+        <PeopleListItem person={friend} />
+      ))}
+    </PeopleList>
+  )
+}
+
+const PendingRelationshipsList = ({
+  friendRequests,
+}: {
+  friendRequests: {
+    sent: FriendRequest[]
+    received: FriendRequest[]
+  }
+}) => {
+  const { sent, received } = friendRequests
+
+  const sentFriendRequests = sent.map((sentRequest) => (
+    <PeopleListItem person={sentRequest.receiver} />
+  ))
+  const receivedFriendRequests = received.map((receivedRequest) => (
+    <PeopleListItem person={receivedRequest.sender} />
+  ))
+
+  return (
+    <PeopleList>
+      {...sentFriendRequests}
+      {...receivedFriendRequests}
+    </PeopleList>
+  )
+}
+
+const PeopleListItem = ({ person }: { person: User }) => {
   return (
     <PeopleListItemWrapper>
-      <div>{user}</div>
+      <div>{person.username}</div>
     </PeopleListItemWrapper>
   )
 }
 
-const RelationshipsList = ({ display }: { display: string }) => {
+const RelationshipsList = ({
+  display,
+  friends,
+  friendRequests,
+}: {
+  display: string
+  friends: User[]
+  friendRequests: {
+    sent: FriendRequest[]
+    received: FriendRequest[]
+  }
+}) => {
   const [searchValue, setSearchValue] = useState("")
-  const users = ["testusername1", "testusername2", "testusername3"]
+
+  if (display === "blocked") {
+    return (
+      <Wrapper>
+        <SearchBarWrapper>
+          <SearchBar
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
+            placeholder={"Search"}
+          />
+          <IconContainer
+            onClick={() => searchValue !== "" && setSearchValue("")}
+          >
+            {searchValue === "" ? (
+              <SearchIcon size={20} />
+            ) : (
+              <CloseIcon size={20} fill={"#8a9199"} />
+            )}
+          </IconContainer>
+        </SearchBarWrapper>
+
+        <PeopleListTitle display={display} />
+      </Wrapper>
+    )
+  }
 
   return (
     <Wrapper>
@@ -97,12 +182,12 @@ const RelationshipsList = ({ display }: { display: string }) => {
         </IconContainer>
       </SearchBarWrapper>
 
-      <Title>Online — 3</Title>
-      <PeopleList>
-        {users.map((user) => (
-          <PeopleListItem user={user} />
-        ))}
-      </PeopleList>
+      <PeopleListTitle display={display} />
+      {display === "pending" ? (
+        <PendingRelationshipsList friendRequests={friendRequests} />
+      ) : (
+        <FriendsList friends={friends} />
+      )}
     </Wrapper>
   )
 }

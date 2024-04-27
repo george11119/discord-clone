@@ -34,6 +34,14 @@ export type Channel = {
   channelType: "text"
 }
 
+export type FriendRequest = {
+  id: string
+  senderId?: string
+  receiverId?: string
+  sender: User
+  receiver: User
+}
+
 export enum MessageType {
   NORMAL = 1,
   WELCOME = 2,

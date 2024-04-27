@@ -78,6 +78,35 @@ const seedDatabase = async () => {
     })
     await UserServers.save({ user: fillerUser, server: server! })
   }
+  const user10 = await User.findOne({ where: { username: "testusername10" } })
+  await FriendRequest.save({
+    senderId: user1.id,
+    receiverId: user10?.id,
+  })
+
+  const user11 = await User.findOne({ where: { username: "testusername11" } })
+  await FriendRequest.save({
+    senderId: user1.id,
+    receiverId: user11?.id,
+  })
+
+  const user12 = await User.findOne({ where: { username: "testusername12" } })
+  await FriendRequest.save({
+    senderId: user12?.id,
+    receiverId: user1.id,
+  })
+
+  const friendship1 = Friendship.create({
+    ownerId: user1.id,
+    friendId: user2.id,
+  })
+  await friendship1.save()
+
+  const friendship2 = Friendship.create({
+    ownerId: user1.id,
+    friendId: user3.id,
+  })
+  await friendship2.save()
 }
 
 const testingStuff = async () => {

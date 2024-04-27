@@ -46,8 +46,8 @@ const UserActivityList = () => {
       <EmptyActivityTextWrapper>
         <Header>It's quiet for now...</Header>
         <Text>
-          When a friend starts an activity - like playing a game or hanging out
-          on voice - we'll show it here! Just kidding im never implementing this
+          When a friend starts an activity — like playing a game or hanging out
+          on voice — we'll show it here! Just kidding im never implementing this
         </Text>
       </EmptyActivityTextWrapper>
     </Wrapper>

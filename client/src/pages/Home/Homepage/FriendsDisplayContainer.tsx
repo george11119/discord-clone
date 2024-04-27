@@ -3,6 +3,7 @@ import HomepageContainerHeader from "./components/Header/HomepageContainerHeader
 import { useState } from "react"
 import RelationshipsList from "./components/RelationshipsList/RelationshipsList.tsx"
 import UserActivityList from "./components/UserActvityList/UserActivityList.tsx"
+import { FriendRequest, User } from "../../../../types.ts"
 
 const Wrapper = styled.div`
   background-color: rgb(49, 51, 56);
@@ -23,14 +24,27 @@ const FriendsListContainer = styled.div`
   //flex-direction: column;
 `
 
-const FriendsDisplayContainer = () => {
+const FriendsDisplayContainer = ({
+  friends,
+  friendRequests,
+}: {
+  friends: User[]
+  friendRequests: {
+    sent: FriendRequest[]
+    received: FriendRequest[]
+  }
+}) => {
   const [display, setDisplay] = useState("online")
   return (
     <Wrapper>
       <HomepageContainerHeader display={display} setDisplay={setDisplay} />
       <MainContainer>
         <FriendsListContainer>
-          <RelationshipsList display={display} />
+          <RelationshipsList
+            display={display}
+            friends={friends}
+            friendRequests={friendRequests}
+          />
           <UserActivityList />
         </FriendsListContainer>
       </MainContainer>

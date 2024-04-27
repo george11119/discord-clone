@@ -16,7 +16,19 @@ const getOne = async (token: string, userId: string) => {
   return res.data
 }
 
+const getFriends = async (token: string) => {
+  const res = await apiCaller.get(`${url}/@me/friends`, apiConfig(token))
+  return res.data
+}
+
+const getFriendRequests = async (token: string) => {
+  const res = await apiCaller.get(`${url}/@me/friendrequests`, apiConfig(token))
+  return res.data
+}
+
 export default {
   create,
   getOne,
+  getFriends,
+  getFriendRequests,
 }
