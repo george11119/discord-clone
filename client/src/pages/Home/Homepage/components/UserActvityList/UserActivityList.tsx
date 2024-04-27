@@ -2,7 +2,8 @@ import styled from "styled-components"
 
 const Wrapper = styled.div`
   justify-self: end;
-  width: 340px;
+  min-width: 340px;
+  max-width: 340px;
   padding: 16px 8px 16px 16px;
   border-left: 1px solid rgba(78, 80, 88, 0.48);
 
