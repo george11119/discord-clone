@@ -1,5 +1,6 @@
 import styled from "styled-components"
 import HomepageContainerHeader from "./components/Header/HomepageContainerHeader.tsx"
+import { useState } from "react"
 
 const Wrapper = styled.div`
   background-color: rgb(49, 51, 56);
@@ -20,23 +21,18 @@ const ChatContent = styled.div`
   flex-direction: column;
 `
 
-const HomepageContainer = () => {
+const FriendsDisplayContainer = () => {
+  const [display, setDisplay] = useState("online")
   return (
-    <Wrapper
-      style={{
-        alignItems: "center",
-        justifyContent: "center",
-        color: "rgb(148, 155, 164)",
-      }}
-    >
-      <HomepageContainerHeader />
+    <Wrapper>
+      <HomepageContainerHeader display={display} setDisplay={setDisplay} />
       <MainContainer>
         <ChatContent>
-          <div>asdf</div>
+          <div>{display}</div>
         </ChatContent>
       </MainContainer>
     </Wrapper>
   )
 }
 
-export default HomepageContainer
+export default FriendsDisplayContainer

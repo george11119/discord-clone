@@ -12,7 +12,7 @@ import AuthContext from "../Auth/AuthContext.ts"
 import { socket } from "../../config/socket.ts"
 import { matchPath, useLocation } from "react-router-dom"
 import DirectMessagesBar from "./DirectMessagesBar/DirectMessagesBar.tsx"
-import HomepageContainer from "./Homepage/HomepageContainer.tsx"
+import FriendsDisplayContainer from "./Homepage/FriendsDisplayContainer.tsx"
 
 const Wrapper = styled.div`
   display: grid;
@@ -66,7 +66,7 @@ const Home = () => {
       {isHomeLink ? (
         <>
           <DirectMessagesBar />
-          <HomepageContainer />
+          <FriendsDisplayContainer />
         </>
       ) : (
         <>
