@@ -1,6 +1,8 @@
 import styled from "styled-components"
 import HomepageContainerHeader from "./components/Header/HomepageContainerHeader.tsx"
 import { useState } from "react"
+import FriendsList from "./components/FriendsList/FriendsList.tsx"
+import UserActivityList from "./components/UserActvityList/UserActivityList.tsx"
 
 const Wrapper = styled.div`
   background-color: rgb(49, 51, 56);
@@ -15,10 +17,11 @@ const MainContainer = styled.div`
   flex-grow: 1;
 `
 
-const ChatContent = styled.div`
-  display: flex;
+const FriendsListContainer = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 364px;
   flex-grow: 1;
-  flex-direction: column;
+  //flex-direction: column;
 `
 
 const FriendsDisplayContainer = () => {
@@ -27,9 +30,10 @@ const FriendsDisplayContainer = () => {
     <Wrapper>
       <HomepageContainerHeader display={display} setDisplay={setDisplay} />
       <MainContainer>
-        <ChatContent>
-          <div>{display}</div>
-        </ChatContent>
+        <FriendsListContainer>
+          <FriendsList display={display} />
+          <UserActivityList />
+        </FriendsListContainer>
       </MainContainer>
     </Wrapper>
   )
