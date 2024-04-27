@@ -1,6 +1,7 @@
 import styled from "styled-components"
 import { ReactNode } from "react"
 import VerticalSpacer from "../VerticalSpacer.tsx"
+import UserBar from "../../../pages/Home/Channelbar/components/UserInfo/UserBar.tsx"
 
 const Wrapper = styled.nav`
   max-height: 100vh;
@@ -28,6 +29,7 @@ const Sidebar = ({
       {header}
       <VerticalSpacer height={8} />
       <ScrollableContainer>{children}</ScrollableContainer>
+      <UserBar />
     </Wrapper>
   )
 }

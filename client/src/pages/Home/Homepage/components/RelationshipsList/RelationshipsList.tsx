@@ -1,8 +1,11 @@
 import styled from "styled-components"
 import SearchIcon from "../../../../../shared/svg/SearchIcon.tsx"
-import { useState } from "react"
+import { CSSProperties, ReactNode, useState } from "react"
 import CloseIcon from "../../../../../shared/svg/CloseIcon.tsx"
 import { FriendRequest, User } from "../../../../../../types.ts"
+import UserProfilePicture from "../../../../../shared/components/UserProfilePicture.tsx"
+import MessageIcon from "../../../../../shared/svg/MessageIcon.tsx"
+import MoreIcon from "../../../../../shared/svg/MoreIcon.tsx"
 
 const Wrapper = styled.div`
   width: 100%;
@@ -47,28 +50,6 @@ const Title = styled.div`
   color: rgb(181, 186, 193);
 `
 
-const PeopleList = styled.div`
-  overflow: hidden scroll;
-  padding-right: 0px;
-  padding-bottom: 8px;
-  margin-top: 16px;
-  position: relative;
-  box-sizing: border-box;
-  min-height: 0;
-  flex: 1 1 auto;
-  height: 100%;
-  scrollbar-color: rgb(26, 27, 30) rgb(43, 45, 49);
-`
-
-const PeopleListItemWrapper = styled.div`
-  margin-left: 30px;
-  margin-right: 20px;
-  height: 62px;
-  border-top: 0.67px solid rgba(78, 80, 88, 0.48);
-  display: flex;
-  align-items: center;
-`
-
 const PeopleListTitle = ({ display }: { display: string }) => {
   let displayType = ""
   if (display === "online") {
@@ -83,11 +64,24 @@ const PeopleListTitle = ({ display }: { display: string }) => {
   return <Title>{displayType} — 0</Title>
 }
 
+const PeopleList = styled.div`
+  overflow: hidden scroll;
+  padding-right: 0px;
+  padding-bottom: 8px;
+  margin-top: 16px;
+  position: relative;
+  box-sizing: border-box;
+  min-height: 0;
+  flex: 1 1 auto;
+  height: 100%;
+  scrollbar-color: rgb(26, 27, 30) rgb(43, 45, 49);
+`
+
 const FriendsList = ({ friends }: { friends: User[] }) => {
   return (
     <PeopleList>
       {friends.map((friend) => (
-        <PeopleListItem person={friend} />
+        <PeopleListItem user={friend} />
       ))}
     </PeopleList>
   )
@@ -104,25 +98,132 @@ const PendingRelationshipsList = ({
   const { sent, received } = friendRequests
 
   const sentFriendRequests = sent.map((sentRequest) => (
-    <PeopleListItem person={sentRequest.receiver} />
+    <PeopleListItem user={sentRequest.receiver} />
   ))
   const receivedFriendRequests = received.map((receivedRequest) => (
-    <PeopleListItem person={receivedRequest.sender} />
+    <PeopleListItem user={receivedRequest.sender} />
   ))
 
   return (
     <PeopleList>
-      {...sentFriendRequests}
       {...receivedFriendRequests}
+      {...sentFriendRequests}
     </PeopleList>
   )
 }
 
-const PeopleListItem = ({ person }: { person: User }) => {
+const PeopleListItemWrapper = styled.div`
+  height: 62px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0px 10px;
+  border-radius: 6px;
+  margin-left: 20px;
+  margin-right: 10px;
+
+  &:hover {
+    background-color: #393c41;
+  }
+`
+
+const TopBorder = styled.div`
+  margin-left: 30px;
+  margin-right: 20px;
+  border-top: 0.67px solid rgba(78, 80, 88, 0.48);
+`
+
+const UserProfilePictureContainer = styled.div`
+  margin-right: 12px;
+`
+
+const UsernameContainer = styled.div`
+  height: 40px;
+  line-height: 20px;
+`
+
+const Username = styled.div`
+  font-weight: 600;
+  font-size: 14px;
+  height: 20px;
+`
+
+const InfoText = styled.div`
+  height: 20px;
+  color: rgb(181, 186, 193);
+  font-size: 12px;
+`
+
+const PeopleListItemButtons = styled.div`
+  display: flex;
+  gap: 10px;
+`
+
+const PeopleListItemButtonWrapper = styled.div`
+  height: 36px;
+  width: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #2b2d31;
+  border-radius: 50%;
+  color: #b5bac1;
+
+  &:hover {
+    color: #eeeeee;
+  }
+`
+
+const PeopleListItemButton = ({
+  icon,
+  onClick,
+}: {
+  icon: ReactNode
+  onClick: (x: any) => any
+}) => {
+  const [clicked, setClicked] = useState(false)
+  const clickedStyle: CSSProperties = {
+    color: "white",
+    backgroundColor: "#3e4046",
+  }
   return (
-    <PeopleListItemWrapper>
-      <div>{person.username}</div>
-    </PeopleListItemWrapper>
+    <PeopleListItemButtonWrapper
+      onMouseDown={() => setClicked(true)}
+      onMouseUp={() => setClicked(false)}
+      style={clicked ? clickedStyle : {}}
+      onClick={onClick}
+    >
+      {icon}
+    </PeopleListItemButtonWrapper>
+  )
+}
+
+const PeopleListItem = ({ user }: { user: User }) => {
+  return (
+    <>
+      <TopBorder />
+      <PeopleListItemWrapper>
+        <div style={{ display: "flex" }}>
+          <UserProfilePictureContainer>
+            <UserProfilePicture profileDiameter={32} user={user} />
+          </UserProfilePictureContainer>
+          <UsernameContainer>
+            <Username>{user.username}</Username>
+            <InfoText>Online</InfoText>
+          </UsernameContainer>
+        </div>
+        <PeopleListItemButtons>
+          <PeopleListItemButton
+            icon={<MessageIcon size={20} />}
+            onClick={() => null}
+          />
+          <PeopleListItemButton
+            icon={<MoreIcon size={20} />}
+            onClick={() => null}
+          />
+        </PeopleListItemButtons>
+      </PeopleListItemWrapper>
+    </>
   )
 }
 
