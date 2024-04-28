@@ -1,19 +1,28 @@
 import styled from "styled-components"
 
-const Svg = styled.svg`
-  color: #73767d;
+const Svg = styled.svg<{ $hoverColor: string; $color: string }>`
+  color: ${(props) => props.$color};
   padding: 4px;
   cursor: pointer;
-  transition-duration: 0.3s;
 
   &:hover {
-    color: rgb(219, 222, 225);
+    color: ${(props) => props.$hoverColor};
   }
 `
 
-const CloseIcon = ({ size, fill }: { size: number; fill?: string }) => {
+const CloseIcon = ({
+  size,
+  fill,
+  hoverColor,
+}: {
+  size: number
+  fill?: string
+  hoverColor?: string
+}) => {
   return (
     <Svg
+      $color={fill ? fill : "#73767d"}
+      $hoverColor={hoverColor ? hoverColor : "rgb(219, 222, 225)"}
       aria-hidden="true"
       role="img"
       width={size}

@@ -6,7 +6,6 @@ import jwtUtils from "../../utils/jwtUtils"
 import { authenticatedValidator } from "../../middleware/authenticatedValidator"
 import { FriendRequest } from "../../models/friendRequest"
 import { Friendship } from "../../models/friendship"
-import { db } from "../../config/db"
 
 const router = express.Router()
 
@@ -203,6 +202,7 @@ router.get("/@me/friends", authenticatedValidator, async (req, res) => {
     .innerJoin(Friendship, "friendship", "friendship.friendId = friend.id")
     .innerJoin("user", "owner", "friendship.ownerId = owner.id")
     .where("friendship.ownerId = :ownerId", { ownerId: req.user?.id })
+    .orderBy("friend.username")
     .getMany()
 
   res.json(friends)

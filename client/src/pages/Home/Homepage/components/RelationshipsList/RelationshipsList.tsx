@@ -1,44 +1,11 @@
 import styled from "styled-components"
-import SearchIcon from "../../../../../shared/svg/SearchIcon.tsx"
-import { CSSProperties, ReactNode, useState } from "react"
-import CloseIcon from "../../../../../shared/svg/CloseIcon.tsx"
+import { useState } from "react"
 import { FriendRequest, User } from "../../../../../../types.ts"
-import UserProfilePicture from "../../../../../shared/components/UserProfilePicture.tsx"
-import MessageIcon from "../../../../../shared/svg/MessageIcon.tsx"
-import MoreIcon from "../../../../../shared/svg/MoreIcon.tsx"
+import PeopleListItem from "./PeopleListItem.tsx"
+import RelationshipsSearchbar from "./RelationshipsSearchbar.tsx"
 
 const Wrapper = styled.div`
   width: 100%;
-`
-
-const SearchBarWrapper = styled.div`
-  display: flex;
-  margin: 16px 20px 8px 30px;
-  padding: 1px;
-  background-color: rgb(30, 31, 34);
-  border-radius: 4px;
-`
-
-const SearchBar = styled.input`
-  height: 30px;
-  margin: 1px;
-  background-color: rgb(30, 31, 34);
-  padding: 0 8px;
-  color: rgb(219, 222, 225);
-  font-size: 15px;
-
-  &::placeholder {
-    color: #8a9199;
-  }
-`
-
-const IconContainer = styled.div`
-  color: #8a9199;
-  height: 32px;
-  width: 32px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 `
 
 const Title = styled.div`
@@ -50,7 +17,13 @@ const Title = styled.div`
   color: rgb(181, 186, 193);
 `
 
-const PeopleListTitle = ({ display }: { display: string }) => {
+const PeopleListTitle = ({
+  display,
+  peopleCount,
+}: {
+  display: string
+  peopleCount: number
+}) => {
   let displayType = ""
   if (display === "online") {
     displayType = "Online"
@@ -61,7 +34,11 @@ const PeopleListTitle = ({ display }: { display: string }) => {
   } else if (display === "blocked") {
     displayType = "blocked"
   }
-  return <Title>{displayType} — 0</Title>
+  return (
+    <Title>
+      {displayType} — {peopleCount}
+    </Title>
+  )
 }
 
 const PeopleList = styled.div`
@@ -77,152 +54,70 @@ const PeopleList = styled.div`
   scrollbar-color: rgb(26, 27, 30) rgb(43, 45, 49);
 `
 
-const FriendsList = ({ friends }: { friends: User[] }) => {
+const FriendsList = ({
+  display,
+  friends,
+  searchValue,
+}: {
+  display: string
+  friends: User[]
+  searchValue: string
+}) => {
+  const searchValueRegex = new RegExp(searchValue)
+  const friendsList = friends.filter((friend) =>
+    friend.username.match(searchValueRegex),
+  )
+
   return (
-    <PeopleList>
-      {friends.map((friend) => (
-        <PeopleListItem user={friend} />
-      ))}
-    </PeopleList>
+    <>
+      <PeopleListTitle display={display} peopleCount={friendsList.length} />
+      <PeopleList>
+        {friendsList.map((friend) => (
+          <PeopleListItem user={friend} type={"friend"} />
+        ))}
+      </PeopleList>
+    </>
   )
 }
 
 const PendingRelationshipsList = ({
+  display,
   friendRequests,
+  searchValue,
 }: {
+  display: string
   friendRequests: {
     sent: FriendRequest[]
     received: FriendRequest[]
   }
+  searchValue: string
 }) => {
+  const searchValueRegex = new RegExp(searchValue)
   const { sent, received } = friendRequests
 
-  const sentFriendRequests = sent.map((sentRequest) => (
-    <PeopleListItem user={sentRequest.receiver} />
-  ))
-  const receivedFriendRequests = received.map((receivedRequest) => (
-    <PeopleListItem user={receivedRequest.sender} />
-  ))
+  const sentList = sent.map((sentRequest) => {
+    return { type: "sent", user: sentRequest.receiver }
+  })
 
-  return (
-    <PeopleList>
-      {...receivedFriendRequests}
-      {...sentFriendRequests}
-    </PeopleList>
+  const receivedList = received.map((receivedRequest) => {
+    return { type: "received", user: receivedRequest.sender }
+  })
+
+  const requestsList = [...receivedList, ...sentList].filter((request) =>
+    request.user.username.match(searchValueRegex),
   )
-}
 
-const PeopleListItemWrapper = styled.div`
-  height: 62px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0px 10px;
-  border-radius: 6px;
-  margin-left: 20px;
-  margin-right: 10px;
-
-  &:hover {
-    background-color: #393c41;
-  }
-`
-
-const TopBorder = styled.div`
-  margin-left: 30px;
-  margin-right: 20px;
-  border-top: 0.67px solid rgba(78, 80, 88, 0.48);
-`
-
-const UserProfilePictureContainer = styled.div`
-  margin-right: 12px;
-`
-
-const UsernameContainer = styled.div`
-  height: 40px;
-  line-height: 20px;
-`
-
-const Username = styled.div`
-  font-weight: 600;
-  font-size: 14px;
-  height: 20px;
-`
-
-const InfoText = styled.div`
-  height: 20px;
-  color: rgb(181, 186, 193);
-  font-size: 12px;
-`
-
-const PeopleListItemButtons = styled.div`
-  display: flex;
-  gap: 10px;
-`
-
-const PeopleListItemButtonWrapper = styled.div`
-  height: 36px;
-  width: 36px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #2b2d31;
-  border-radius: 50%;
-  color: #b5bac1;
-
-  &:hover {
-    color: #eeeeee;
-  }
-`
-
-const PeopleListItemButton = ({
-  icon,
-  onClick,
-}: {
-  icon: ReactNode
-  onClick: (x: any) => any
-}) => {
-  const [clicked, setClicked] = useState(false)
-  const clickedStyle: CSSProperties = {
-    color: "white",
-    backgroundColor: "#3e4046",
-  }
-  return (
-    <PeopleListItemButtonWrapper
-      onMouseDown={() => setClicked(true)}
-      onMouseUp={() => setClicked(false)}
-      style={clicked ? clickedStyle : {}}
-      onClick={onClick}
-    >
-      {icon}
-    </PeopleListItemButtonWrapper>
-  )
-}
-
-const PeopleListItem = ({ user }: { user: User }) => {
   return (
     <>
-      <TopBorder />
-      <PeopleListItemWrapper>
-        <div style={{ display: "flex" }}>
-          <UserProfilePictureContainer>
-            <UserProfilePicture profileDiameter={32} user={user} />
-          </UserProfilePictureContainer>
-          <UsernameContainer>
-            <Username>{user.username}</Username>
-            <InfoText>Online</InfoText>
-          </UsernameContainer>
-        </div>
-        <PeopleListItemButtons>
-          <PeopleListItemButton
-            icon={<MessageIcon size={20} />}
-            onClick={() => null}
+      <PeopleListTitle display={display} peopleCount={requestsList.length} />
+      <PeopleList>
+        {requestsList.map((request) => (
+          <PeopleListItem
+            user={request.user}
+            type={request.type as "sent" | "received"}
           />
-          <PeopleListItemButton
-            icon={<MoreIcon size={20} />}
-            onClick={() => null}
-          />
-        </PeopleListItemButtons>
-      </PeopleListItemWrapper>
+        ))}
+      </PeopleList>
     </>
   )
 }
@@ -244,50 +139,33 @@ const RelationshipsList = ({
   if (display === "blocked") {
     return (
       <Wrapper>
-        <SearchBarWrapper>
-          <SearchBar
-            value={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
-            placeholder={"Search"}
-          />
-          <IconContainer
-            onClick={() => searchValue !== "" && setSearchValue("")}
-          >
-            {searchValue === "" ? (
-              <SearchIcon size={20} />
-            ) : (
-              <CloseIcon size={20} fill={"#8a9199"} />
-            )}
-          </IconContainer>
-        </SearchBarWrapper>
-
-        <PeopleListTitle display={display} />
+        <RelationshipsSearchbar
+          searchValue={searchValue}
+          setSearchValue={setSearchValue}
+        />
+        <PeopleListTitle display={display} peopleCount={0} />
       </Wrapper>
     )
   }
 
   return (
     <Wrapper>
-      <SearchBarWrapper>
-        <SearchBar
-          value={searchValue}
-          onChange={(e) => setSearchValue(e.target.value)}
-          placeholder={"Search"}
-        />
-        <IconContainer onClick={() => searchValue !== "" && setSearchValue("")}>
-          {searchValue === "" ? (
-            <SearchIcon size={20} />
-          ) : (
-            <CloseIcon size={20} fill={"#8a9199"} />
-          )}
-        </IconContainer>
-      </SearchBarWrapper>
-
-      <PeopleListTitle display={display} />
+      <RelationshipsSearchbar
+        searchValue={searchValue}
+        setSearchValue={setSearchValue}
+      />
       {display === "pending" ? (
-        <PendingRelationshipsList friendRequests={friendRequests} />
+        <PendingRelationshipsList
+          display={display}
+          friendRequests={friendRequests}
+          searchValue={searchValue}
+        />
       ) : (
-        <FriendsList friends={friends} />
+        <FriendsList
+          display={display}
+          friends={friends}
+          searchValue={searchValue}
+        />
       )}
     </Wrapper>
   )
