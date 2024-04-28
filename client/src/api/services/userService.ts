@@ -49,6 +49,10 @@ const acceptFriendRequest = async (token: string, username: string) => {
   await apiCaller.put(`${url}/@me/friendrequests`, payload, apiConfig(token))
 }
 
+const destroyFriendship = async (token: string, userId: string) => {
+  await apiCaller.delete(`${url}/@me/friends/${userId}`, apiConfig(token))
+}
+
 export default {
   create,
   getOne,
@@ -57,4 +61,5 @@ export default {
   sendFriendRequest,
   destroyFriendRequest,
   acceptFriendRequest,
+  destroyFriendship,
 }

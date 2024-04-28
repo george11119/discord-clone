@@ -113,6 +113,9 @@ const PeopleListItem = ({
   const acceptFriendRequestMutation = userQueries.useAcceptFriendRequest(
     user.id,
   )
+  const destroyFriendshipMutation = userQueries.useDestroyFriendship(
+    user.id
+  )
 
   const handleFriendRequestDestroy = () => {
     destroyFriendRequestMutation.mutate(user.username)
@@ -120,6 +123,10 @@ const PeopleListItem = ({
 
   const handleFriendRequestAccept = () => {
     acceptFriendRequestMutation.mutate(user.username)
+  }
+
+  const handleFriendshipDestroy = () => {
+    destroyFriendshipMutation.mutate(user.id)
   }
 
   return (
@@ -145,6 +152,17 @@ const PeopleListItem = ({
               <PeopleListItemButton
                 icon={<MoreIcon size={20} />}
                 onClick={() => null}
+              />
+              <PeopleListItemButton
+                icon={
+                  <CloseIcon
+                    size={20}
+                    fill={"currentColor"}
+                    hoverColor={"#f23f42"}
+                  />
+                }
+                onClick={handleFriendshipDestroy}
+                hoverColor={"#f23f42"}
               />
             </>
           )}

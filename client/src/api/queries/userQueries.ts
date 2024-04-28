@@ -107,12 +107,29 @@ const useAcceptFriendRequest = (userId: string) => {
   })
 }
 
+const useDestroyFriendship = (userId: string) => {
+  const { token } = useContext(AuthContext)
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (userId: string) => {
+      return userService.destroyFriendship(token as string, userId)
+    },
+    onSuccess: () => {
+      const oldFriends = queryClient.getQueryData(["friends"]) as User[]
+      const newFriends = oldFriends.filter((friend) => friend.id !== userId)
+      queryClient.setQueryData(["friends"], newFriends)
+    },
+  })
+}
+
 const userQueries = {
   useGetFriends,
   useGetFriendRequests,
   useCreateFriendRequest,
   useDestroyFriendRequest,
   useAcceptFriendRequest,
+  useDestroyFriendship,
 }
 
 export default userQueries
