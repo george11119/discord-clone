@@ -44,6 +44,11 @@ const destroyFriendRequest = async (token: string, username: string) => {
   })
 }
 
+const acceptFriendRequest = async (token: string, username: string) => {
+  const payload = { username }
+  await apiCaller.put(`${url}/@me/friendrequests`, payload, apiConfig(token))
+}
+
 export default {
   create,
   getOne,
@@ -51,4 +56,5 @@ export default {
   getFriendRequests,
   sendFriendRequest,
   destroyFriendRequest,
+  acceptFriendRequest,
 }

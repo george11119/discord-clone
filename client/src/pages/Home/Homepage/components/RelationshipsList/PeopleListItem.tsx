@@ -110,9 +110,16 @@ const PeopleListItem = ({
   const destroyFriendRequestMutation = userQueries.useDestroyFriendRequest(
     user.id,
   )
+  const acceptFriendRequestMutation = userQueries.useAcceptFriendRequest(
+    user.id,
+  )
 
   const handleFriendRequestDestroy = () => {
     destroyFriendRequestMutation.mutate(user.username)
+  }
+
+  const handleFriendRequestAccept = () => {
+    acceptFriendRequestMutation.mutate(user.username)
   }
 
   return (
@@ -160,7 +167,7 @@ const PeopleListItem = ({
             <>
               <PeopleListItemButton
                 icon={<CheckmarkIcon size={20} />}
-                onClick={() => null}
+                onClick={handleFriendRequestAccept}
                 hoverColor={"rgb(35, 165, 89)"}
               />
               <PeopleListItemButton

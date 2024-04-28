@@ -2,7 +2,8 @@ import { useContext } from "react"
 import AuthContext from "../../pages/Auth/AuthContext.ts"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import userService from "../services/userService.ts"
-import { FriendRequest, FriendRequestItem } from "../../../types.ts"
+import { FriendRequest, FriendRequestItem, User } from "../../../types.ts"
+import { insertIntoUserArray } from "../../utils/insertIntoUserArray.ts"
 
 const useGetFriends = () => {
   const { token } = useContext(AuthContext)
@@ -79,11 +80,39 @@ const useDestroyFriendRequest = (userId: string) => {
   })
 }
 
+const useAcceptFriendRequest = (userId: string) => {
+  const { token } = useContext(AuthContext)
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (username: string) => {
+      return userService.acceptFriendRequest(token as string, username)
+    },
+    onSuccess: () => {
+      const oldFriendRequests = queryClient.getQueryData([
+        "friendRequests",
+      ]) as FriendRequestItem[]
+      const newFriendRequests = oldFriendRequests.filter(
+        (friendRequest) => friendRequest.user.id !== userId,
+      )
+      queryClient.setQueryData(["friendRequests"], newFriendRequests)
+
+      const friendRequestSender = oldFriendRequests.find(
+        (fr) => fr.user.id === userId,
+      )?.user as User
+      const oldFriends = queryClient.getQueryData(["friends"]) as User[]
+      const newFriends = insertIntoUserArray(oldFriends, friendRequestSender)
+      queryClient.setQueryData(["friends"], newFriends)
+    },
+  })
+}
+
 const userQueries = {
   useGetFriends,
   useGetFriendRequests,
   useCreateFriendRequest,
   useDestroyFriendRequest,
+  useAcceptFriendRequest,
 }
 
 export default userQueries
