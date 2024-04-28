@@ -4,6 +4,7 @@ import { useState } from "react"
 import RelationshipsList from "./components/RelationshipsList/RelationshipsList.tsx"
 import UserActivityList from "./components/UserActvityList/UserActivityList.tsx"
 import { FriendRequest, User } from "../../../../types.ts"
+import AddFriendPage from "./components/AddFriendPage/AddFriendPage.tsx"
 
 const Wrapper = styled.div`
   background-color: rgb(49, 51, 56);
@@ -24,6 +25,13 @@ const FriendsListContainer = styled.div`
   //flex-direction: column;
 `
 
+export type FriendsDisplayTypes =
+  | "online"
+  | "all"
+  | "pending"
+  | "blocked"
+  | "addFriend"
+
 const FriendsDisplayContainer = ({
   friends,
   friendRequests,
@@ -34,17 +42,21 @@ const FriendsDisplayContainer = ({
     received: FriendRequest[]
   }
 }) => {
-  const [display, setDisplay] = useState("online")
+  const [display, setDisplay] = useState<FriendsDisplayTypes>("online")
   return (
     <Wrapper>
       <HomepageContainerHeader display={display} setDisplay={setDisplay} />
       <MainContainer>
         <FriendsListContainer>
-          <RelationshipsList
-            display={display}
-            friends={friends}
-            friendRequests={friendRequests}
-          />
+          {display === "addFriend" ? (
+            <AddFriendPage />
+          ) : (
+            <RelationshipsList
+              display={display}
+              friends={friends}
+              friendRequests={friendRequests}
+            />
+          )}
           <UserActivityList />
         </FriendsListContainer>
       </MainContainer>

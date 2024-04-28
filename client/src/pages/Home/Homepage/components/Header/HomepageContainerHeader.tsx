@@ -5,6 +5,7 @@ import IconButton from "../../../../../shared/components/IconButton.tsx"
 import styled from "styled-components"
 import FriendsBar from "./FriendsBar.tsx"
 import NewGroupDMButton from "../../../../../shared/svg/NewGroupDMButton.tsx"
+import { FriendsDisplayTypes } from "../../FriendsDisplayContainer.tsx"
 
 const Left = styled.div`
   display: flex;
@@ -28,8 +29,8 @@ const HomepageContainerHeader = ({
   display,
   setDisplay,
 }: {
-  display: string
-  setDisplay: (x: string) => void
+  display: FriendsDisplayTypes
+  setDisplay: (x: FriendsDisplayTypes) => void
 }) => {
   return (
     <Header>

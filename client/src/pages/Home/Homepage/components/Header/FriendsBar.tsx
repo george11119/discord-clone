@@ -1,6 +1,7 @@
 import Friends from "../../../../../shared/svg/Friends.tsx"
 import styled from "styled-components"
 import { CSSProperties } from "react"
+import { FriendsDisplayTypes } from "../../FriendsDisplayContainer.tsx"
 
 const H1 = styled.h1`
   color: rgb(242, 243, 245);
@@ -63,8 +64,8 @@ const FriendsBar = ({
   display,
   setDisplay,
 }: {
-  display: string
-  setDisplay: (x: string) => void
+  display: FriendsDisplayTypes
+  setDisplay: (x: FriendsDisplayTypes) => void
 }) => {
   const activeStyle: CSSProperties = {
     color: "white",

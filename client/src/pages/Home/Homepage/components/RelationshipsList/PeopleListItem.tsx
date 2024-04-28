@@ -8,6 +8,7 @@ import CloseIcon from "../../../../../shared/svg/CloseIcon.tsx"
 import CheckmarkIcon from "../../../../../shared/svg/CheckmarkIcon.tsx"
 
 const PeopleListItemWrapper = styled.div`
+  cursor: pointer;
   height: 62px;
   display: flex;
   align-items: center;
@@ -142,6 +143,7 @@ const PeopleListItem = ({
                 />
               }
               onClick={() => null}
+              hoverColor={"#f23f42"}
             />
           )}
 
@@ -161,6 +163,7 @@ const PeopleListItem = ({
                   />
                 }
                 onClick={() => null}
+                hoverColor={"#f23f42"}
               />
             </>
           )}

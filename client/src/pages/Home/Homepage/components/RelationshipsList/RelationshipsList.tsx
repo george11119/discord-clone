@@ -3,6 +3,7 @@ import { useState } from "react"
 import { FriendRequest, User } from "../../../../../../types.ts"
 import PeopleListItem from "./PeopleListItem.tsx"
 import RelationshipsSearchbar from "./RelationshipsSearchbar.tsx"
+import { FriendsDisplayTypes } from "../../FriendsDisplayContainer.tsx"
 
 const Wrapper = styled.div`
   width: 100%;
@@ -21,7 +22,7 @@ const PeopleListTitle = ({
   display,
   peopleCount,
 }: {
-  display: string
+  display: FriendsDisplayTypes
   peopleCount: number
 }) => {
   let displayType = ""
@@ -59,7 +60,7 @@ const FriendsList = ({
   friends,
   searchValue,
 }: {
-  display: string
+  display: FriendsDisplayTypes
   friends: User[]
   searchValue: string
 }) => {
@@ -85,7 +86,7 @@ const PendingRelationshipsList = ({
   friendRequests,
   searchValue,
 }: {
-  display: string
+  display: FriendsDisplayTypes
   friendRequests: {
     sent: FriendRequest[]
     received: FriendRequest[]
@@ -127,7 +128,7 @@ const RelationshipsList = ({
   friends,
   friendRequests,
 }: {
-  display: string
+  display: FriendsDisplayTypes
   friends: User[]
   friendRequests: {
     sent: FriendRequest[]

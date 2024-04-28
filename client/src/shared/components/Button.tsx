@@ -11,9 +11,13 @@ const Wrapper = styled.button`
   border-radius: 3px;
   font-size: 16px;
 
-  &:hover {
+  &:hover:enabled {
     background-color: rgb(71, 82, 196);
     transition-duration: 0.15s;
+  }
+
+  &:disabled {
+    opacity: 0.6;
   }
 `
 
