@@ -322,7 +322,7 @@ describe(`${url}`, () => {
         .post(`${url}/@me/friendrequests`)
         .send(payload)
         .set("authorization", `Bearer ${token}`)
-        .expect(204)
+        .expect(201)
 
       const friendRequest = await FriendRequest.findOne({
         where: [

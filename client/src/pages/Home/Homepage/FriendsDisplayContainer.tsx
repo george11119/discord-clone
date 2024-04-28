@@ -44,6 +44,8 @@ const FriendsDisplayContainer = ({
 
   userSocketHandlers.useFriendRequestReceivedListener()
   userSocketHandlers.useDestroyFriendRequestListener()
+  userSocketHandlers.useFriendRequestAcceptedListener()
+  userSocketHandlers.useDestroyFriendshipListener()
 
   return (
     <Wrapper>

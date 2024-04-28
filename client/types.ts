@@ -47,6 +47,14 @@ export type FriendRequestItem = {
   user: User
 }
 
+export type Friendship = {
+  id: string
+  ownerId?: string
+  friendId?: string
+  owner: User
+  friend: User
+}
+
 export enum MessageType {
   NORMAL = 1,
   WELCOME = 2,

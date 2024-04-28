@@ -133,7 +133,16 @@ router.post("/@me/friendrequests", authenticatedValidator, async (req, res) => {
     })
     await friendship.save()
 
-    return res.status(204).end()
+    io.to(`${friendRequestReceiver?.id}`).emit(
+      "friendRequest:accepted",
+      friendRequestSender,
+    )
+
+    return res.status(201).json({
+      ...friendship,
+      owner: friendRequestSender,
+      friend: friendRequestReceiver,
+    })
   }
 
   const createdFriendRequest = await FriendRequest.save({
@@ -177,6 +186,8 @@ router.put("/@me/friendrequests", authenticatedValidator, async (req, res) => {
     friendId: friend?.id,
   })
   await friendship.save()
+
+  io.to(`${friend?.id}`).emit("friendRequest:accepted", owner)
 
   res.status(204).end()
 })
@@ -237,6 +248,8 @@ router.delete(
         user2Id: friendId,
       })
       .execute()
+
+    io.to(`${friendId}`).emit("friendship:destroy", req.user?.id)
 
     res.status(204).end()
   },

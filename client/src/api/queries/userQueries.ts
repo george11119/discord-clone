@@ -2,8 +2,17 @@ import { useContext } from "react"
 import AuthContext from "../../pages/Auth/AuthContext.ts"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import userService from "../services/userService.ts"
-import { FriendRequest, FriendRequestItem, User } from "../../../types.ts"
+import {
+  FriendRequest,
+  FriendRequestItem,
+  Friendship,
+  User,
+} from "../../../types.ts"
 import { insertIntoUserArray } from "../../utils/insertIntoUserArray.ts"
+
+const isFriendship = (obj: any): obj is Friendship => {
+  return obj.owner !== undefined
+}
 
 const useGetFriends = () => {
   const { token } = useContext(AuthContext)
@@ -46,13 +55,32 @@ const useCreateFriendRequest = () => {
     mutationFn: (username: string) => {
       return userService.sendFriendRequest(token as string, username)
     },
-    onSuccess: (createdFriendRequest: FriendRequest) => {
+    onSuccess: (createdRelationship: FriendRequest | Friendship) => {
+      if (isFriendship(createdRelationship)) {
+        const oldFriendRequests = queryClient.getQueryData([
+          "friendRequests",
+        ]) as FriendRequestItem[]
+        const newFriendRequests = oldFriendRequests.filter(
+          (friendRequest) =>
+            friendRequest.user.id !== createdRelationship.friendId,
+        )
+        queryClient.setQueryData(["friendRequests"], newFriendRequests)
+
+        const oldFriends = queryClient.getQueryData(["friends"]) as User[]
+        const newFriends = insertIntoUserArray(
+          oldFriends,
+          createdRelationship.friend,
+        )
+        queryClient.setQueryData(["friends"], newFriends)
+        return
+      }
+
       const oldFriendRequests = queryClient.getQueryData([
         "friendRequests",
       ]) as FriendRequestItem[]
       const newFriendRequestItem: FriendRequestItem = {
         type: "sent",
-        user: createdFriendRequest.receiver,
+        user: createdRelationship.receiver,
       }
       const newFriendRequests = oldFriendRequests.concat(newFriendRequestItem)
       queryClient.setQueryData(["friendRequests"], newFriendRequests)
