@@ -7,6 +7,8 @@ import { FriendsDisplayTypes } from "../../FriendsDisplayContainer.tsx"
 
 const Wrapper = styled.div`
   width: 100%;
+  display: flex;
+  flex-direction: column;
 `
 
 const Title = styled.div`
@@ -51,7 +53,6 @@ const PeopleList = styled.div`
   box-sizing: border-box;
   min-height: 0;
   flex: 1 1 auto;
-  height: 100%;
   scrollbar-color: rgb(26, 27, 30) rgb(43, 45, 49);
 `
 
@@ -74,7 +75,7 @@ const FriendsList = ({
       <PeopleListTitle display={display} peopleCount={friendsList.length} />
       <PeopleList>
         {friendsList.map((friend) => (
-          <PeopleListItem user={friend} type={"friend"} />
+          <PeopleListItem key={friend.id} user={friend} type={"friend"} />
         ))}
       </PeopleList>
     </>
@@ -114,6 +115,7 @@ const PendingRelationshipsList = ({
       <PeopleList>
         {requestsList.map((request) => (
           <PeopleListItem
+            key={request.user.id}
             user={request.user}
             type={request.type as "sent" | "received"}
           />

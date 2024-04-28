@@ -349,7 +349,7 @@ describe(`${url}`, () => {
       expect(friendship2).toBeTruthy()
     })
 
-    it("Returns 204 if user sends a friend request to an existing user", async () => {
+    it("Returns 201 if user sends a friend request to an existing user", async () => {
       const user1 = await User.findOneBy({ username: "testusername1" })
       const token = jwtUtils.signToken({ userId: user1?.id as string })
 
@@ -358,11 +358,15 @@ describe(`${url}`, () => {
         username: user2?.username,
       }
 
-      await api
+      const res = await api
         .post(`${url}/@me/friendrequests`)
         .send(payload)
         .set("authorization", `Bearer ${token}`)
-        .expect(204)
+        .expect(201)
+
+      const { senderId, receiver } = res.body
+      expect(senderId).toBe(user1?.id)
+      expect(user2?.username).toBe(receiver.username)
     })
   })
 

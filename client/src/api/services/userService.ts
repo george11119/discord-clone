@@ -26,9 +26,20 @@ const getFriendRequests = async (token: string) => {
   return res.data
 }
 
+const sendFriendRequest = async (token: string, username: string) => {
+  const payload = { username }
+  const res = await apiCaller.post(
+    `${url}/@me/friendrequests`,
+    payload,
+    apiConfig(token),
+  )
+  return res.data
+}
+
 export default {
   create,
   getOne,
   getFriends,
   getFriendRequests,
+  sendFriendRequest,
 }

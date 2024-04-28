@@ -5,7 +5,7 @@ import ChatAreaContainer from "./Chat/ChatAreaContainer.tsx"
 import useSocketConnection from "../../api/sockets/useSocketConnection.ts"
 import serverQueries from "../../api/queries/serverQueries.ts"
 import { FriendRequest, Server, User } from "../../../types.ts"
-import { useQueries, useQuery } from "@tanstack/react-query"
+import { useQueries } from "@tanstack/react-query"
 import channelService from "../../api/services/channelService.ts"
 import { useContext } from "react"
 import AuthContext from "../Auth/AuthContext.ts"
@@ -13,7 +13,7 @@ import { socket } from "../../config/socket.ts"
 import { matchPath, useLocation } from "react-router-dom"
 import DirectMessagesBar from "./DirectMessagesBar/DirectMessagesBar.tsx"
 import FriendsDisplayContainer from "./Homepage/FriendsDisplayContainer.tsx"
-import userService from "../../api/services/userService.ts"
+import userQueries from "../../api/queries/userQueries.ts"
 
 const Wrapper = styled.div`
   display: grid;
@@ -37,6 +37,7 @@ const Home = () => {
 
   const serversQuery = serverQueries.useGetServers()
   const servers = serversQuery.data as Server[]
+
   const channelsQueries = useQueries({
     queries: servers
       ? servers.map((s) => {
@@ -52,16 +53,10 @@ const Home = () => {
       : [],
   })
 
-  const friendsQuery = useQuery({
-    queryKey: ["friends"],
-    queryFn: () => userService.getFriends(token as string),
-  })
+  const friendsQuery = userQueries.useGetFriends()
   const friends = friendsQuery.data as User[]
 
-  const friendRequestsQuery = useQuery({
-    queryKey: ["friendRequests"],
-    queryFn: () => userService.getFriendRequests(token as string),
-  })
+  const friendRequestsQuery = userQueries.useGetFriendRequests()
   const friendRequests = friendRequestsQuery.data as {
     sent: FriendRequest[]
     received: FriendRequest[]

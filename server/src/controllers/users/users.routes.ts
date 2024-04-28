@@ -135,12 +135,14 @@ router.post("/@me/friendrequests", authenticatedValidator, async (req, res) => {
     return res.status(204).end()
   }
 
-  await FriendRequest.save({
+  const createdFriendRequest = await FriendRequest.save({
     senderId: friendRequestSender.id,
     receiverId: friendRequestReceiver.id,
   })
 
-  res.status(204).end()
+  res
+    .status(201)
+    .json({ ...createdFriendRequest, receiver: friendRequestReceiver })
 })
 
 router.put("/@me/friendrequests", authenticatedValidator, async (req, res) => {

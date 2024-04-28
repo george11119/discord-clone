@@ -1,6 +1,7 @@
 import styled from "styled-components"
 import Button from "../../../../../shared/components/Button.tsx"
-import { FormEvent, useState } from "react"
+import { CSSProperties, FormEvent, useState } from "react"
+import userQueries from "../../../../../api/queries/userQueries.ts"
 
 const Wrapper = styled.div`
   width: 100%;
@@ -40,11 +41,44 @@ const AddFriendInput = styled.input`
   font-size: 16px;
 `
 
+const ErrorText = styled.div`
+  margin-top: 8px;
+  font-size: 13px;
+  user-select: none;
+  color: rgb(250, 119, 124);
+`
+
+const SuccessText = styled.div`
+  margin-top: 8px;
+  font-size: 13px;
+  user-select: none;
+  color: #2db76a;
+`
+
 const AddFriendPage = () => {
   const [username, setUsername] = useState("")
+  const [userSentTo, setUserSentTo] = useState("")
+  const [focused, setFocused] = useState(false)
+
+  const sendFriendRequestMutation = userQueries.useCreateFriendRequest()
+
+  const getBorder = (): string => {
+    if (sendFriendRequestMutation.isSuccess) {
+      return "1px solid #2db76a"
+    }
+
+    if (sendFriendRequestMutation.isError) {
+      return "1px solid rgb(242, 63, 66)"
+    }
+
+    return focused ? "1px solid rgb(79, 187, 242)" : "1px solid #313338"
+  }
 
   const onSubmit = (e: FormEvent) => {
     e.preventDefault()
+
+    sendFriendRequestMutation.mutate(username)
+    setUserSentTo(username)
     setUsername("")
   }
 
@@ -52,11 +86,13 @@ const AddFriendPage = () => {
     <Wrapper>
       <H1>Add friend</H1>
       <InfoText>You can add friends with their Discord username.</InfoText>
-      <AddFriendForm onSubmit={onSubmit}>
+      <AddFriendForm style={{ border: getBorder() }} onSubmit={onSubmit}>
         <AddFriendInput
           placeholder="You can add friends with their Discord username."
           value={username}
           onChange={(e) => setUsername(e.target.value)}
+          onFocus={() => setFocused(true)}
+          onBlur={() => setFocused(false)}
         />
         <Button
           text="Send Friend Request"
@@ -70,8 +106,21 @@ const AddFriendPage = () => {
           }}
           type="submit"
           disabled={username === ""}
+          isLoading={sendFriendRequestMutation.isPending}
         />
       </AddFriendForm>
+      {sendFriendRequestMutation.isError && (
+        <ErrorText>
+          {/*@ts-expect-error response does exist on error*/}
+          {sendFriendRequestMutation.error.response.data.message}
+        </ErrorText>
+      )}
+      {sendFriendRequestMutation.isSuccess && (
+        <SuccessText>
+          Success! Your friend request{" "}
+          <span style={{ fontWeight: 600 }}>{userSentTo}</span> was sent.
+        </SuccessText>
+      )}
     </Wrapper>
   )
 }
