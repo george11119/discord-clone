@@ -6,6 +6,7 @@ import jwtUtils from "../../utils/jwtUtils"
 import { authenticatedValidator } from "../../middleware/authenticatedValidator"
 import { FriendRequest } from "../../models/friendRequest"
 import { Friendship } from "../../models/friendship"
+import { io } from "../../app"
 
 const router = express.Router()
 
@@ -140,6 +141,11 @@ router.post("/@me/friendrequests", authenticatedValidator, async (req, res) => {
     receiverId: friendRequestReceiver.id,
   })
 
+  io.to(`${createdFriendRequest.receiverId}`).emit("friendRequest:received", {
+    ...createdFriendRequest,
+    sender: friendRequestSender,
+  })
+
   res
     .status(201)
     .json({ ...createdFriendRequest, receiver: friendRequestReceiver })
@@ -182,6 +188,8 @@ router.delete(
     const { username } = req.body
     const user2 = await User.findOne({ where: { username } })
 
+    if (!user2) return res.status(204).end()
+
     await FriendRequest.createQueryBuilder("friend_request")
       .delete()
       .where("senderId = :user1Id AND receiverId = :user2Id", {
@@ -193,6 +201,8 @@ router.delete(
         user2Id: user2?.id,
       })
       .execute()
+
+    io.to(`${user2?.id}`).emit("friendRequest:destroy", req.user?.id)
 
     res.status(204).end()
   },

@@ -8,19 +8,21 @@ import { insertIntoUserArray } from "../../utils/insertIntoUserArray.ts"
 const useServerEditListener = () => {
   const queryClient = useQueryClient()
 
-  const onServerEdit = (editedServer: Server) => {
-    const servers = queryClient.getQueryData(["servers"]) as Server[]
-    queryClient.setQueryData(
-      ["servers"],
-      servers.map((s) => (s.id === editedServer.id ? editedServer : s)),
-    )
-  }
+  return useEffect(() => {
+    const onServerEdit = (editedServer: Server) => {
+      const servers = queryClient.getQueryData(["servers"]) as Server[]
+      queryClient.setQueryData(
+        ["servers"],
+        servers.map((s) => (s.id === editedServer.id ? editedServer : s)),
+      )
+    }
 
-  socket.on("server:edit", onServerEdit)
+    socket.on("server:edit", onServerEdit)
 
-  return () => {
-    socket.off("server:edit", onServerEdit)
-  }
+    return () => {
+      socket.off("server:edit", onServerEdit)
+    }
+  }, [])
 }
 
 const useServerDeleteListener = () => {
