@@ -42,6 +42,11 @@ export type FriendRequest = {
   receiver: User
 }
 
+export type FriendRequestItem = {
+  type: "sent" | "received"
+  user: User
+}
+
 export enum MessageType {
   NORMAL = 1,
   WELCOME = 2,

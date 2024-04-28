@@ -4,7 +4,7 @@ import Channelbar from "./Channelbar/Channelbar.tsx"
 import ChatAreaContainer from "./Chat/ChatAreaContainer.tsx"
 import useSocketConnection from "../../api/sockets/useSocketConnection.ts"
 import serverQueries from "../../api/queries/serverQueries.ts"
-import { FriendRequest, Server, User } from "../../../types.ts"
+import { FriendRequestItem, Server, User } from "../../../types.ts"
 import { useQueries } from "@tanstack/react-query"
 import channelService from "../../api/services/channelService.ts"
 import { useContext } from "react"
@@ -57,10 +57,7 @@ const Home = () => {
   const friends = friendsQuery.data as User[]
 
   const friendRequestsQuery = userQueries.useGetFriendRequests()
-  const friendRequests = friendRequestsQuery.data as {
-    sent: FriendRequest[]
-    received: FriendRequest[]
-  }
+  const friendRequests = friendRequestsQuery.data as FriendRequestItem[]
 
   if (
     friendsQuery.isLoading ||

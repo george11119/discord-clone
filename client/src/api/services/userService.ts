@@ -36,10 +36,19 @@ const sendFriendRequest = async (token: string, username: string) => {
   return res.data
 }
 
+const destroyFriendRequest = async (token: string, username: string) => {
+  const payload = { username }
+  await apiCaller.delete(`${url}/@me/friendrequests`, {
+    ...apiConfig(token),
+    data: payload,
+  })
+}
+
 export default {
   create,
   getOne,
   getFriends,
   getFriendRequests,
   sendFriendRequest,
+  destroyFriendRequest,
 }

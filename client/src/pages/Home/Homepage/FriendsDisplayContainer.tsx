@@ -3,7 +3,7 @@ import HomepageContainerHeader from "./components/Header/HomepageContainerHeader
 import { useState } from "react"
 import RelationshipsList from "./components/RelationshipsList/RelationshipsList.tsx"
 import UserActivityList from "./components/UserActvityList/UserActivityList.tsx"
-import { FriendRequest, User } from "../../../../types.ts"
+import { FriendRequestItem, User } from "../../../../types.ts"
 import AddFriendPage from "./components/AddFriendPage/AddFriendPage.tsx"
 
 const Wrapper = styled.div`
@@ -37,10 +37,7 @@ const FriendsDisplayContainer = ({
   friendRequests,
 }: {
   friends: User[]
-  friendRequests: {
-    sent: FriendRequest[]
-    received: FriendRequest[]
-  }
+  friendRequests: FriendRequestItem[]
 }) => {
   const [display, setDisplay] = useState<FriendsDisplayTypes>("online")
   return (

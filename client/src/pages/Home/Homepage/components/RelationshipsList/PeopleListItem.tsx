@@ -6,6 +6,7 @@ import { CSSProperties, ReactNode, useState } from "react"
 import styled from "styled-components"
 import CloseIcon from "../../../../../shared/svg/CloseIcon.tsx"
 import CheckmarkIcon from "../../../../../shared/svg/CheckmarkIcon.tsx"
+import userQueries from "../../../../../api/queries/userQueries.ts"
 
 const PeopleListItemWrapper = styled.div`
   cursor: pointer;
@@ -106,6 +107,14 @@ const PeopleListItem = ({
   user: User
   type: "friend" | "sent" | "received"
 }) => {
+  const destroyFriendRequestMutation = userQueries.useDestroyFriendRequest(
+    user.id,
+  )
+
+  const handleFriendRequestDestroy = () => {
+    destroyFriendRequestMutation.mutate(user.username)
+  }
+
   return (
     <>
       <TopBorder />
@@ -142,7 +151,7 @@ const PeopleListItem = ({
                   hoverColor={"#f23f42"}
                 />
               }
-              onClick={() => null}
+              onClick={handleFriendRequestDestroy}
               hoverColor={"#f23f42"}
             />
           )}
@@ -162,7 +171,7 @@ const PeopleListItem = ({
                     hoverColor={"#f23f42"}
                   />
                 }
-                onClick={() => null}
+                onClick={handleFriendRequestDestroy}
                 hoverColor={"#f23f42"}
               />
             </>

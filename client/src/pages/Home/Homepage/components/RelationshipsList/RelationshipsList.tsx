@@ -1,6 +1,6 @@
 import styled from "styled-components"
 import { useState } from "react"
-import { FriendRequest, User } from "../../../../../../types.ts"
+import { FriendRequestItem, User } from "../../../../../../types.ts"
 import PeopleListItem from "./PeopleListItem.tsx"
 import RelationshipsSearchbar from "./RelationshipsSearchbar.tsx"
 import { FriendsDisplayTypes } from "../../FriendsDisplayContainer.tsx"
@@ -88,36 +88,23 @@ const PendingRelationshipsList = ({
   searchValue,
 }: {
   display: FriendsDisplayTypes
-  friendRequests: {
-    sent: FriendRequest[]
-    received: FriendRequest[]
-  }
+  friendRequests: FriendRequestItem[]
   searchValue: string
 }) => {
   const searchValueRegex = new RegExp(searchValue)
-  const { sent, received } = friendRequests
-
-  const sentList = sent.map((sentRequest) => {
-    return { type: "sent", user: sentRequest.receiver }
-  })
-
-  const receivedList = received.map((receivedRequest) => {
-    return { type: "received", user: receivedRequest.sender }
-  })
-
-  const requestsList = [...receivedList, ...sentList].filter((request) =>
-    request.user.username.match(searchValueRegex),
+  const requestsList = friendRequests.filter((friendRequest) =>
+    friendRequest.user.username.match(searchValueRegex),
   )
 
   return (
     <>
       <PeopleListTitle display={display} peopleCount={requestsList.length} />
       <PeopleList>
-        {requestsList.map((request) => (
+        {requestsList.map((friendRequest) => (
           <PeopleListItem
-            key={request.user.id}
-            user={request.user}
-            type={request.type as "sent" | "received"}
+            key={friendRequest.user.id}
+            user={friendRequest.user}
+            type={friendRequest.type}
           />
         ))}
       </PeopleList>
@@ -132,10 +119,7 @@ const RelationshipsList = ({
 }: {
   display: FriendsDisplayTypes
   friends: User[]
-  friendRequests: {
-    sent: FriendRequest[]
-    received: FriendRequest[]
-  }
+  friendRequests: FriendRequestItem[]
 }) => {
   const [searchValue, setSearchValue] = useState("")
 
