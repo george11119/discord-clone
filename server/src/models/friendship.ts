@@ -1,11 +1,12 @@
 import {
-  AfterInsert,
   BaseEntity,
   BeforeInsert,
   Column,
+  CreateDateColumn,
   Entity,
   ManyToOne,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from "typeorm"
 import { User } from "./user"
 
@@ -19,6 +20,12 @@ export class Friendship extends BaseEntity {
 
   @Column()
   friendId: string
+
+  @CreateDateColumn()
+  createdAt: Date
+
+  @UpdateDateColumn()
+  updatedAt: Date
 
   @ManyToOne(() => User, (user) => user.ownedFriendships, {
     onDelete: "CASCADE",

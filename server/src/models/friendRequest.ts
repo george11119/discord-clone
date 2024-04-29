@@ -1,9 +1,11 @@
 import {
   BaseEntity,
   Column,
+  CreateDateColumn,
   Entity,
   ManyToOne,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from "typeorm"
 import { User } from "./user"
 
@@ -17,6 +19,12 @@ export class FriendRequest extends BaseEntity {
 
   @Column()
   receiverId: string
+
+  @CreateDateColumn()
+  createdAt: Date
+
+  @UpdateDateColumn()
+  updatedAt: Date
 
   @ManyToOne(() => User, (user) => user.sentFriendRequests, {
     onDelete: "CASCADE",

@@ -1,9 +1,11 @@
 import {
   BaseEntity,
   Column,
+  CreateDateColumn,
   Entity,
   ManyToOne,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from "typeorm"
 import { User } from "./user"
 import { Server } from "./server"
@@ -18,6 +20,12 @@ export class UserServers extends BaseEntity {
 
   @Column()
   serverId: string
+
+  @CreateDateColumn()
+  createdAt: Date
+
+  @UpdateDateColumn()
+  updatedAt: Date
 
   @ManyToOne(() => User, (user) => user.userServers, {
     onDelete: "CASCADE",

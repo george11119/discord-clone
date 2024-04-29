@@ -150,8 +150,8 @@ const main = async () => {
   logger.info("previous data deleted")
 
   logger.info("Starting database seed")
-  await seedDatabase()
-  // await testingStuff()
+  // await seedDatabase()
+  await testingStuff()
   logger.info("Database seeded")
 
   await db.destroy()
