@@ -9,10 +9,10 @@ const LoginPage = () => {
   const { checkLoginState } = useContext(AuthContext)
 
   const handleLogin = async (
-    email: string,
+    username: string,
     password: string,
   ): Promise<void> => {
-    const res = await loginService.login({ email, password })
+    const res = await loginService.login({ email: username, password })
     localStorage.setItem("discord-clone-jwt-token", res.token)
     checkLoginState()
   }

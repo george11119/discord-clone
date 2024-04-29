@@ -22,9 +22,25 @@ describe(`${url}`, () => {
   }, 10000)
 
   describe(`POST ${url}/login`, () => {
-    it("Logs in successfully with correct username and password", async () => {
+    it("Logs in successfully with correct email and password", async () => {
       const loginCredentials = {
         email: "test@test.com",
+        password: "password",
+      }
+      const res = await api
+        .post(`${url}/login`)
+        .send(loginCredentials)
+        .expect(200)
+        .expect("Content-Type", /application\/json/)
+
+      const { token } = res.body
+
+      expect(token).toBeTruthy()
+    })
+
+    it("Logs in successfully with correct username and password", async () => {
+      const loginCredentials = {
+        email: "testusername",
         password: "password",
       }
       const res = await api

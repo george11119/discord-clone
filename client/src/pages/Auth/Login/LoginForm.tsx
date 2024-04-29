@@ -18,9 +18,9 @@ const Form = styled.form`
 const LoginForm = ({
   handleLogin,
 }: {
-  handleLogin: (email: string, password: string) => Promise<void>
+  handleLogin: (username: string, password: string) => Promise<void>
 }) => {
-  const [email, setEmail] = useState("")
+  const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   const [isError, setIsError] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
@@ -30,7 +30,7 @@ const LoginForm = ({
       e.preventDefault()
       setIsError(false)
       setIsLoading(true)
-      await handleLogin(email, password)
+      await handleLogin(username, password)
       setIsLoading(false)
       window.location.reload()
     } catch (e) {
@@ -44,12 +44,12 @@ const LoginForm = ({
       <LoginHeader />
       <Form onSubmit={login}>
         <FormInput
-          name="Email"
-          type="email"
-          value={email}
-          setValue={setEmail}
+          name="Email or Username"
+          type="username"
+          value={username}
+          setValue={setUsername}
           showErrorText={isError}
-          errorText="Invalid email or password"
+          errorText="Invalid username or password"
           required={true}
           data-testid="email-input"
         />
@@ -59,7 +59,7 @@ const LoginForm = ({
           value={password}
           setValue={setPassword}
           showErrorText={isError}
-          errorText="Invalid email or password"
+          errorText="Invalid username or password"
           required={true}
           data-testid="password-input"
         />

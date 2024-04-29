@@ -11,9 +11,11 @@ passport.use(
   new LocalStrategy(
     { usernameField: "email", passwordField: "password" },
     async (email, password, done) => {
-      const user = await User.findOneBy({ email })
+      const user = await User.findOne({
+        where: [{ email: email }, { username: email }],
+      })
       const passwordHash = await User.findOne({
-        where: { email: email },
+        where: [{ email: email }, { username: email }],
         select: ["passwordHash"],
       })
 
