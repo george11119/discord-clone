@@ -31,10 +31,14 @@ export class DirectMessage extends BaseEntity {
   @UpdateDateColumn()
   updatedAt: Date
 
-  @ManyToOne(() => User, (user) => user.ownedDirectMessages)
+  @ManyToOne(() => User, (user) => user.ownedDirectMessages, {
+    onDelete: "CASCADE",
+  })
   owner: User
 
-  @ManyToOne(() => User, (user) => user.receivedDirectMessages)
+  @ManyToOne(() => User, (user) => user.receivedDirectMessages, {
+    onDelete: "CASCADE",
+  })
   recepient: User
 
   @ManyToOne(() => Channel, (channel) => channel.conversations, {
@@ -42,8 +46,8 @@ export class DirectMessage extends BaseEntity {
   })
   channel: Channel
 
-  public async createInverseFriendship() {
-    await DirectMessage.save({
+  public async createInverseDirectMessage() {
+    return await DirectMessage.save({
       ownerId: this.recepientId,
       recepientId: this.ownerId,
       channelId: this.channelId,
