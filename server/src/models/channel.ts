@@ -11,12 +11,11 @@ import {
 } from "typeorm"
 import { Message } from "./message"
 import { Server } from "./server"
-import { Conversation } from "./conversation"
-import { User } from "./user"
-import { JoinTable } from "typeorm"
+import { DirectMessage } from "./directMessage"
 
 export enum ChannelType {
   TEXT = "text",
+  DIRECT_MESSAGE = "direct_message",
 }
 
 @Entity()
@@ -46,6 +45,6 @@ export class Channel extends BaseEntity {
   @ManyToOne(() => Server, (server) => server.channels, { onDelete: "CASCADE" })
   server: Server
 
-  @OneToMany(() => Conversation, (conversation) => conversation.channel)
-  conversations: Conversation[]
+  @OneToMany(() => DirectMessage, (conversation) => conversation.channel)
+  conversations: DirectMessage[]
 }

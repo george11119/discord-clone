@@ -1,5 +1,6 @@
 import {
   BaseEntity,
+  BeforeInsert,
   Column,
   CreateDateColumn,
   Entity,
@@ -11,12 +12,15 @@ import { User } from "./user"
 import { Channel } from "./channel"
 
 @Entity()
-export class Conversation extends BaseEntity {
+export class DirectMessage extends BaseEntity {
   @PrimaryGeneratedColumn("uuid")
   id: string
 
   @Column()
-  userId: string
+  ownerId: string
+
+  @Column()
+  recepientId: string
 
   @Column()
   channelId: string
@@ -27,13 +31,23 @@ export class Conversation extends BaseEntity {
   @UpdateDateColumn()
   updatedAt: Date
 
-  @ManyToOne(() => User, (user) => user.conversations, {
-    onDelete: "CASCADE",
-  })
-  user: User
+  @ManyToOne(() => User, (user) => user.ownedDirectMessages)
+  owner: User
+
+  @ManyToOne(() => User, (user) => user.receivedDirectMessages)
+  recepient: User
 
   @ManyToOne(() => Channel, (channel) => channel.conversations, {
     onDelete: "CASCADE",
   })
   channel: Channel
+
+  @BeforeInsert()
+  async createInverseFriendship() {
+    await DirectMessage.save({
+      ownerId: this.recepientId,
+      recepientId: this.ownerId,
+      channelId: this.channelId,
+    })
+  }
 }

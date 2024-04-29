@@ -9,7 +9,7 @@ import { UserServers } from "../models/userServers"
 import { Message } from "../models/message"
 import { FriendRequest } from "../models/friendRequest"
 import { Friendship } from "../models/friendship"
-import { Conversation } from "../models/conversation"
+import { DirectMessage } from "../models/directMessage"
 
 const seedDatabase = async () => {
   // create users
@@ -111,20 +111,75 @@ const seedDatabase = async () => {
 }
 
 const testingStuff = async () => {
-  const channel = Channel.create({ name: `Channel 1` })
-  await channel.save()
+  for (let i = 1; i <= 10; i++) {
+    await User.save({
+      username: `testusername${i}`,
+      passwordHash: await bcrypt.hash("password", 10), // password is "password"
+      email: `test${i}@test.com`,
+    })
+  }
 
-  const user1 = await User.save({
-    username: "testusername1",
-    passwordHash: await bcrypt.hash("password", 10), // password is "password"
-    email: "test1@test.com",
-  })
+  for (let i = 1; i <= 5; i++) {
+    await Channel.save({ name: `Channel ${i}` })
+  }
 
-  const user2 = await User.save({
-    username: "testusername2",
-    passwordHash: await bcrypt.hash("password", 10), // password is "password"
-    email: "test2@test.com",
+  const user1 = await User.findOne({ where: { username: "testusername1" } })
+  const user2 = await User.findOne({ where: { username: "testusername2" } })
+  const user3 = await User.findOne({ where: { username: "testusername3" } })
+  const user4 = await User.findOne({ where: { username: "testusername4" } })
+  const user5 = await User.findOne({ where: { username: "testusername5" } })
+  const user6 = await User.findOne({ where: { username: "testusername6" } })
+  const user7 = await User.findOne({ where: { username: "testusername7" } })
+  const user8 = await User.findOne({ where: { username: "testusername8" } })
+  const user9 = await User.findOne({ where: { username: "testusername9" } })
+  const user10 = await User.findOne({ where: { username: "testusername10" } })
+
+  const channel1 = await Channel.findOne({ where: { name: "Channel 1" } })
+  const channel2 = await Channel.findOne({ where: { name: "Channel 2" } })
+  const channel3 = await Channel.findOne({ where: { name: "Channel 3" } })
+  const channel4 = await Channel.findOne({ where: { name: "Channel 4" } })
+  const channel5 = await Channel.findOne({ where: { name: "Channel 5" } })
+
+  const directMessage1 = DirectMessage.create({
+    ownerId: user1?.id,
+    recepientId: user3?.id,
+    channelId: channel1?.id,
   })
+  await directMessage1.save()
+
+  const directMessage2 = DirectMessage.create({
+    ownerId: user6?.id,
+    recepientId: user2?.id,
+    channelId: channel4?.id,
+  })
+  await directMessage2.save()
+
+  const directMessage3 = DirectMessage.create({
+    ownerId: user4?.id,
+    recepientId: user5?.id,
+    channelId: channel3?.id,
+  })
+  await directMessage3.save()
+
+  const directMessage4 = DirectMessage.create({
+    ownerId: user1?.id,
+    recepientId: user10?.id,
+    channelId: channel5?.id,
+  })
+  await directMessage4.save()
+
+  const directMessage5 = DirectMessage.create({
+    ownerId: user8?.id,
+    recepientId: user7?.id,
+    channelId: channel3?.id,
+  })
+  await directMessage5.save()
+
+  const queryResult = await User.findOne({
+    where: { username: "testusername1" },
+    relations: { ownedDirectMessages: { recepient: true } },
+  })
+  console.log(queryResult)
 }
 
 const main = async () => {
@@ -137,8 +192,8 @@ const main = async () => {
   logger.info("previous data deleted")
 
   logger.info("Starting database seed")
-  // await seedDatabase()
-  await testingStuff()
+  await seedDatabase()
+  // await testingStuff()
   logger.info("Database seeded")
 
   await db.destroy()

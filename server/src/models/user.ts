@@ -14,7 +14,7 @@ import { UserServers } from "./userServers"
 import { Message } from "./message"
 import { FriendRequest } from "./friendRequest"
 import { Friendship } from "./friendship"
-import { Conversation } from "./conversation"
+import { DirectMessage } from "./directMessage"
 import { Channel } from "./channel"
 
 @Entity()
@@ -57,6 +57,9 @@ export class User extends BaseEntity {
   @OneToMany(() => Friendship, (friendship) => friendship.friend)
   friends: Friendship[]
 
-  @OneToMany(() => Conversation, (conversation) => conversation.user)
-  conversations: Conversation[]
+  @OneToMany(() => DirectMessage, (conversation) => conversation.owner)
+  ownedDirectMessages: DirectMessage[]
+
+  @OneToMany(() => DirectMessage, (conversation) => conversation.recepient)
+  receivedDirectMessages: DirectMessage[]
 }
