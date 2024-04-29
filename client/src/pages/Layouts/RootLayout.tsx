@@ -10,8 +10,6 @@ const BlankPage = styled.div`
 `
 
 const RootLayout = () => {
-  // const location = useLocation()
-  // console.log(location)
   const { loggedIn } = useContext(AuthContext)
 
   if (loggedIn === undefined) return <BlankPage />

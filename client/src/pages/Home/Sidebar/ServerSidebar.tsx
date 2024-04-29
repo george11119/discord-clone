@@ -5,7 +5,6 @@ import HomeIcon from "./components/HomeIcon.tsx"
 import ServerIcon from "./components/ServerIcon.tsx"
 import CreateServerButton from "./components/CreateServerButton.tsx"
 import { Server } from "../../../../types.ts"
-import serverSocketHandlers from "../../../api/sockets/serverSocketHandlers.ts"
 
 const Wrapper = styled.nav`
   background: rgb(30, 31, 34);
@@ -22,9 +21,6 @@ const Wrapper = styled.nav`
 `
 
 const ServerSidebar = ({ servers }: { servers: Server[] }) => {
-  serverSocketHandlers.useServerDeleteListener()
-  serverSocketHandlers.useServerEditListener()
-
   return (
     <Wrapper>
       <HomeIcon />

@@ -4,7 +4,6 @@ import ChannelListCategory from "./ChannelListCategory.tsx"
 import { useParams } from "react-router-dom"
 import { Channel } from "../../../../../../types.ts"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
-import channelSocketHandlers from "../../../../../api/sockets/channelSocketHandlers.ts"
 
 const Wrapper = styled.div`
   list-style: none;
@@ -23,10 +22,6 @@ const ChannelList = () => {
       return queryClient.getQueryData(["channels", `${serverId}`]) as Channel[]
     },
   })
-
-  channelSocketHandlers.useChannelCreateListener()
-  channelSocketHandlers.useChannelEditListener()
-  channelSocketHandlers.useChannelDeleteListener()
 
   if (result.isLoading) {
     return <ChannelListCategory title="" />

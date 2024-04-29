@@ -5,7 +5,6 @@ import RelationshipsList from "./components/RelationshipsList/RelationshipsList.
 import UserActivityList from "./components/UserActvityList/UserActivityList.tsx"
 import { FriendRequestItem, User } from "../../../../types.ts"
 import AddFriendPage from "./components/AddFriendPage/AddFriendPage.tsx"
-import userSocketHandlers from "../../../api/sockets/userSocketHandlers.ts"
 
 const Wrapper = styled.div`
   background-color: rgb(49, 51, 56);
@@ -41,11 +40,6 @@ const FriendsDisplayContainer = ({
   friendRequests: FriendRequestItem[]
 }) => {
   const [display, setDisplay] = useState<FriendsDisplayTypes>("online")
-
-  userSocketHandlers.useFriendRequestReceivedListener()
-  userSocketHandlers.useDestroyFriendRequestListener()
-  userSocketHandlers.useFriendRequestAcceptedListener()
-  userSocketHandlers.useDestroyFriendshipListener()
 
   return (
     <Wrapper>

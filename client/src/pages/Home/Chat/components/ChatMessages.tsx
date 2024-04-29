@@ -3,7 +3,6 @@ import { useContext, useEffect, useRef, useState } from "react"
 import AuthContext from "../../../Auth/AuthContext.ts"
 import VerticalSpacer from "../../../../shared/components/VerticalSpacer.tsx"
 import ChatMessage from "./ChatMessage/ChatMessage.tsx"
-import messageSocketHandlers from "../../../../api/sockets/messageSocketHandlers.ts"
 import { useParams } from "react-router-dom"
 import { socket } from "../../../../config/socket.ts"
 import { messagesSentOnDifferentDays } from "../../../../utils/dateTime.ts"
@@ -71,10 +70,6 @@ const ChatMessages = ({ messages }: { messages: Message[] }) => {
   useEffect(() => {
     socket.emit("joinChannelRoom", channelId)
   }, [channelId])
-
-  messageSocketHandlers.useMessageCreateListener()
-  messageSocketHandlers.useMessageEditListener()
-  messageSocketHandlers.useMessageDeleteListener()
 
   const scrollToBottom = () => {
     if (messages?.length && messages.length > 0) {
