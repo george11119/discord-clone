@@ -18,6 +18,7 @@ export const LinkWrapper = styled(NavLink)`
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
 
   &:active {
     transform: translateY(1px);
@@ -37,6 +38,15 @@ const Wrapper = styled.div`
   }
 `
 
+const BadgeWrapper = styled.div`
+  position: absolute;
+  bottom: -4px;
+  right: -4px;
+  padding: 4px;
+  background-color: #1e1f22;
+  border-radius: 12px;
+`
+
 const Icon = ({
   name,
   tooltip,
@@ -44,6 +54,7 @@ const Icon = ({
   icon,
   hoverColor = "rgb(88, 101, 242)",
   onClick,
+  badge,
 }: {
   name: string
   link: string
@@ -51,6 +62,7 @@ const Icon = ({
   icon?: ReactNode
   hoverColor?: string
   onClick?: () => void
+  badge?: ReactNode
 }) => {
   const { pathname } = useLocation()
 
@@ -84,6 +96,7 @@ const Icon = ({
           >
             {icon ? icon : name[0].toUpperCase()}
           </Wrapper>
+          <BadgeWrapper>{badge}</BadgeWrapper>
         </LinkWrapper>
       </Tooltip>
     </div>

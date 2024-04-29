@@ -1,6 +1,6 @@
 import styled from "styled-components"
 import Button from "../../../../../shared/components/Button.tsx"
-import { CSSProperties, FormEvent, useState } from "react"
+import { FormEvent, useState } from "react"
 import userQueries from "../../../../../api/queries/userQueries.ts"
 
 const Wrapper = styled.div`

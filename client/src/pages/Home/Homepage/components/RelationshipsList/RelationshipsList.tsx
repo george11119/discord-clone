@@ -20,6 +20,13 @@ const Title = styled.div`
   color: rgb(181, 186, 193);
 `
 
+const EmptyPage = styled.div`
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`
+
 const PeopleListTitle = ({
   display,
   peopleCount,
@@ -70,6 +77,10 @@ const FriendsList = ({
     friend.username.match(searchValueRegex),
   )
 
+  if (friends.length === 0) {
+    return <EmptyPage>You have no friends</EmptyPage>
+  }
+
   return (
     <>
       <PeopleListTitle display={display} peopleCount={friendsList.length} />
@@ -92,9 +103,15 @@ const PendingRelationshipsList = ({
   searchValue: string
 }) => {
   const searchValueRegex = new RegExp(searchValue)
-  const requestsList = friendRequests.filter((friendRequest) =>
-    friendRequest.user.username.match(searchValueRegex),
+  const sentRequests = friendRequests.filter((fr) => fr.type === "sent")
+  const receivedRequests = friendRequests.filter((fr) => fr.type === "received")
+  const requestsList = [...receivedRequests, ...sentRequests].filter(
+    (friendRequest) => friendRequest.user.username.match(searchValueRegex),
   )
+
+  if (friendRequests.length == 0) {
+    return <EmptyPage>You have no pending friend requests</EmptyPage>
+  }
 
   return (
     <>
@@ -130,7 +147,7 @@ const RelationshipsList = ({
           searchValue={searchValue}
           setSearchValue={setSearchValue}
         />
-        <PeopleListTitle display={display} peopleCount={0} />
+        <EmptyPage>You have no blocked users</EmptyPage>
       </Wrapper>
     )
   }

@@ -47,7 +47,7 @@
         <li>Add ways to invite people into server - DONE</li>
         <li>Popout that displays user info of the user clicked - DONE</li>
         <li>Automatically create a general channel when a server is created - DONE</li>
-        <li>Add friending users</li>
+        <li>Add friending users - DONE</li>
         <li>Create a user direct message home page</li>
         <li>Add pagination fetching for messages in channels</li>
         <li>Add loading animations</li>
