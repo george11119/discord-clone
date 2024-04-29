@@ -6,13 +6,16 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   OneToMany,
-  ManyToOne,
+  ManyToMany,
+  JoinTable,
 } from "typeorm"
 import { IsEmail, Length } from "class-validator"
 import { UserServers } from "./userServers"
 import { Message } from "./message"
 import { FriendRequest } from "./friendRequest"
 import { Friendship } from "./friendship"
+import { Conversation } from "./conversation"
+import { Channel } from "./channel"
 
 @Entity()
 export class User extends BaseEntity {
@@ -53,4 +56,7 @@ export class User extends BaseEntity {
 
   @OneToMany(() => Friendship, (friendship) => friendship.friend)
   friends: Friendship[]
+
+  @OneToMany(() => Conversation, (conversation) => conversation.user)
+  conversations: Conversation[]
 }

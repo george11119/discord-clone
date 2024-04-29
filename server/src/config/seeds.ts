@@ -9,6 +9,7 @@ import { UserServers } from "../models/userServers"
 import { Message } from "../models/message"
 import { FriendRequest } from "../models/friendRequest"
 import { Friendship } from "../models/friendship"
+import { Conversation } from "../models/conversation"
 
 const seedDatabase = async () => {
   // create users
@@ -110,6 +111,9 @@ const seedDatabase = async () => {
 }
 
 const testingStuff = async () => {
+  const channel = Channel.create({ name: `Channel 1` })
+  await channel.save()
+
   const user1 = await User.save({
     username: "testusername1",
     passwordHash: await bcrypt.hash("password", 10), // password is "password"
@@ -121,23 +125,6 @@ const testingStuff = async () => {
     passwordHash: await bcrypt.hash("password", 10), // password is "password"
     email: "test2@test.com",
   })
-
-  const friendship = Friendship.create({
-    ownerId: user1.id,
-    friendId: user2.id,
-  })
-
-  await friendship.save()
-
-  const friendships = await Friendship.find({})
-  console.log()
-  console.log(friendships)
-
-  await User.delete({ id: user1.id })
-
-  const friendships2 = await Friendship.find({})
-  console.log()
-  console.log(friendships2)
 }
 
 const main = async () => {
