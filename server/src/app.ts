@@ -14,8 +14,8 @@ import authRouter from "./controllers/auth/auth.routes"
 import messageRouter from "./controllers/messages/messages.routes"
 import usersRouter from "./controllers/users/users.routes"
 import serverRouter from "./controllers/servers/servers.routes"
-import initialDataFetchRouter from "./controllers/initialDataFetch/initialDataFetch.routes"
 import channelsRouter from "./controllers/channels/channels.routes"
+import directMessagesRouter from "./controllers/directMessages/directMessages.routes"
 
 import { requestLogger } from "./middleware/requestLogger"
 import { unknownEndpoint } from "./middleware/unknownEndpoint"
@@ -51,21 +51,18 @@ app.use(requestLogger)
 // test route
 app.get("/api", (req, res) => res.json({ status: "Running" }))
 
-// routes that dont require login
 app.use("/api/auth", authRouter)
 app.use("/api/users", usersRouter)
+app.use("/api/messages", messageRouter)
+app.use("/api/servers", serverRouter)
+app.use("/api/channels/@me", directMessagesRouter)
+app.use("/api/channels", channelsRouter)
 
 // routes to be used when testing
 if (process.env.NODE_ENV === "test") {
   logger.info("Using development routes")
   app.use("/api/testing", testingRouter)
 }
-
-// routes that require login
-app.use("/api/@me", initialDataFetchRouter)
-app.use("/api/messages", messageRouter)
-app.use("/api/servers", serverRouter)
-app.use("/api/channels", channelsRouter)
 
 app.use(unknownEndpoint)
 app.use(errorHandler)

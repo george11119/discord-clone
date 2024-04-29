@@ -146,6 +146,7 @@ const testingStuff = async () => {
     channelId: channel1?.id,
   })
   await directMessage1.save()
+  await directMessage1.createInverseFriendship()
 
   const directMessage2 = DirectMessage.create({
     ownerId: user6?.id,
@@ -153,6 +154,7 @@ const testingStuff = async () => {
     channelId: channel4?.id,
   })
   await directMessage2.save()
+  await directMessage2.createInverseFriendship()
 
   const directMessage3 = DirectMessage.create({
     ownerId: user4?.id,
@@ -160,6 +162,7 @@ const testingStuff = async () => {
     channelId: channel3?.id,
   })
   await directMessage3.save()
+  await directMessage3.createInverseFriendship()
 
   const directMessage4 = DirectMessage.create({
     ownerId: user1?.id,
@@ -167,6 +170,7 @@ const testingStuff = async () => {
     channelId: channel5?.id,
   })
   await directMessage4.save()
+  await directMessage4.createInverseFriendship()
 
   const directMessage5 = DirectMessage.create({
     ownerId: user8?.id,
@@ -174,12 +178,16 @@ const testingStuff = async () => {
     channelId: channel3?.id,
   })
   await directMessage5.save()
+  await directMessage5.createInverseFriendship()
 
   const queryResult = await User.findOne({
     where: { username: "testusername1" },
     relations: { ownedDirectMessages: { recepient: true } },
   })
   console.log(queryResult)
+
+  const count = await DirectMessage.count()
+  console.log(count)
 }
 
 const main = async () => {

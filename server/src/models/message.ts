@@ -9,11 +9,7 @@ import {
 } from "typeorm"
 import { Channel } from "./channel"
 import { User } from "./user"
-
-export enum MessageType {
-  NORMAL = 1,
-  WELCOME = 2,
-}
+import { MessageType } from "../../../types"
 
 @Entity()
 export class Message extends BaseEntity {

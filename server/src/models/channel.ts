@@ -7,16 +7,11 @@ import {
   UpdateDateColumn,
   OneToMany,
   ManyToOne,
-  ManyToMany,
 } from "typeorm"
 import { Message } from "./message"
 import { Server } from "./server"
 import { DirectMessage } from "./directMessage"
-
-export enum ChannelType {
-  TEXT = "text",
-  DIRECT_MESSAGE = "direct_message",
-}
+import { ChannelType } from "../../../types"
 
 @Entity()
 export class Channel extends BaseEntity {

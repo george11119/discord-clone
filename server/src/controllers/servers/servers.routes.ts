@@ -9,7 +9,7 @@ import { io } from "../../app"
 import ChannelsController from "../channels/channels.db"
 import MessagesController from "../messages/messages.db"
 import { User } from "../../models/user"
-import { MessageType } from "../../models/message"
+import { MessageType } from "../../../../types"
 
 const router = express.Router()
 router.use(authenticatedValidator)

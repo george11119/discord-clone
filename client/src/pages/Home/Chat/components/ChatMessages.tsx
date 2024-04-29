@@ -1,4 +1,4 @@
-import { Message, MessageType } from "../../../../../types.ts"
+import { Message } from "../../../../../types.ts"
 import { useContext, useEffect, useRef, useState } from "react"
 import AuthContext from "../../../Auth/AuthContext.ts"
 import VerticalSpacer from "../../../../shared/components/VerticalSpacer.tsx"
@@ -9,6 +9,7 @@ import { messagesSentOnDifferentDays } from "../../../../utils/dateTime.ts"
 import MessageSeparator from "./ChatMessage/MessageSeparator.tsx"
 import WelcomeMessage from "./ChatMessage/WelcomeMessage.tsx"
 import { differenceInMinutes } from "date-fns"
+import { MessageType } from "../../../../../../types.ts"
 
 const mapMessages = (messages: Message[]) => {
   let previousMessage: Message | null = null

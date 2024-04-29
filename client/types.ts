@@ -1,3 +1,5 @@
+import { ChannelType, MessageType } from "../types.ts"
+
 export type User = {
   id: string
   username: string
@@ -31,7 +33,7 @@ export type Channel = {
   createdAt: Date
   updatedAt: Date
   server?: Server
-  channelType: "text"
+  channelType: ChannelType
 }
 
 export type FriendRequest = {
@@ -53,9 +55,4 @@ export type Friendship = {
   friendId?: string
   owner: User
   friend: User
-}
-
-export enum MessageType {
-  NORMAL = 1,
-  WELCOME = 2,
 }

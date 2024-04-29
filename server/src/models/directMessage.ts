@@ -42,8 +42,7 @@ export class DirectMessage extends BaseEntity {
   })
   channel: Channel
 
-  @BeforeInsert()
-  async createInverseFriendship() {
+  public async createInverseFriendship() {
     await DirectMessage.save({
       ownerId: this.recepientId,
       recepientId: this.ownerId,

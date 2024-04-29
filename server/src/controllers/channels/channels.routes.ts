@@ -20,7 +20,7 @@ router.get("/:serverId", async (req, res) => {
     })
   }
 
-  const channels = await ChannelsController.getChannels(
+  const channels = await ChannelsController.getChannelsFromServerId(
     req.user?.id as string,
     serverId,
   )

@@ -1,8 +1,9 @@
 import { db } from "../../config/db"
-import { Channel, ChannelType } from "../../models/channel"
+import { Channel } from "../../models/channel"
 import { Server } from "../../models/server"
+import { ChannelType } from "../../../../types"
 
-const getChannels = async (userId: string, serverId: string) => {
+const getChannelsFromServerId = async (userId: string, serverId: string) => {
   if (!userId || !serverId) return null
 
   const channels = await db.query(
@@ -59,7 +60,7 @@ const deleteChannel = async (channelId: string) => {
 }
 
 export default {
-  getChannels,
+  getChannelsFromServerId,
   createChannel,
   updateChannel,
   deleteChannel,

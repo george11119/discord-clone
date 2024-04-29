@@ -1,7 +1,8 @@
-import { Message, MessageType } from "../../models/message"
+import { Message } from "../../models/message"
 import { User } from "../../models/user"
 import { Channel } from "../../models/channel"
 import { db } from "../../config/db"
+import { MessageType } from "../../../../types"
 
 const getMessages = async ({ channelId }: { channelId: string }) => {
   if (!channelId) return null
