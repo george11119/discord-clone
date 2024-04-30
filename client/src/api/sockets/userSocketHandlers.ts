@@ -1,23 +1,15 @@
-import { useQueryClient } from "@tanstack/react-query"
 import { useEffect } from "react"
-import { FriendRequest, FriendRequestItem, User } from "../../../types.ts"
+import { FriendRequest, User } from "../../../types.ts"
 import { socket } from "../../config/socket.ts"
-import { insertIntoUserArray } from "../../utils/insertIntoUserArray.ts"
+import useFriendRequestStore from "../stores/friendRequestsStore.ts"
+import useFriendsStore from "../stores/friendsStore.ts"
 
 const useFriendRequestReceivedListener = () => {
-  const queryClient = useQueryClient()
+  const friendRequestStore = useFriendRequestStore()
 
   return useEffect(() => {
     const onFriendRequestReceived = (receivedFriendRequest: FriendRequest) => {
-      const oldFriendRequests = queryClient.getQueryData([
-        "friendRequests",
-      ]) as FriendRequestItem[]
-      const newFriendRequestItem: FriendRequestItem = {
-        type: "received",
-        user: receivedFriendRequest.sender,
-      }
-      const newFriendRequests = oldFriendRequests.concat(newFriendRequestItem)
-      queryClient.setQueryData(["friendRequests"], newFriendRequests)
+      friendRequestStore.addReceivedRequest(receivedFriendRequest)
     }
 
     socket.on("friendRequest:received", onFriendRequestReceived)
@@ -29,17 +21,11 @@ const useFriendRequestReceivedListener = () => {
 }
 
 const useDestroyFriendRequestListener = () => {
-  const queryClient = useQueryClient()
+  const friendRequestStore = useFriendRequestStore()
 
   return useEffect(() => {
     const onFriendRequestDestroy = (userId: string) => {
-      const oldFriendRequests = queryClient.getQueryData([
-        "friendRequests",
-      ]) as FriendRequestItem[]
-      const newFriendRequests = oldFriendRequests.filter(
-        (friendRequest) => friendRequest.user.id !== userId,
-      )
-      queryClient.setQueryData(["friendRequests"], newFriendRequests)
+      friendRequestStore.deleteOne(userId)
     }
 
     socket.on("friendRequest:destroy", onFriendRequestDestroy)
@@ -51,21 +37,13 @@ const useDestroyFriendRequestListener = () => {
 }
 
 const useFriendRequestAcceptedListener = () => {
-  const queryClient = useQueryClient()
+  const friendsStore = useFriendsStore()
+  const friendRequestStore = useFriendRequestStore()
 
   return useEffect(() => {
     const onFriendRequestAccepted = (friend: User) => {
-      const oldFriendRequests = queryClient.getQueryData([
-        "friendRequests",
-      ]) as FriendRequestItem[]
-      const newFriendRequests = oldFriendRequests.filter(
-        (friendRequest) => friendRequest.user.id !== friend.id,
-      )
-      queryClient.setQueryData(["friendRequests"], newFriendRequests)
-
-      const oldFriends = queryClient.getQueryData(["friends"]) as User[]
-      const newFriends = insertIntoUserArray(oldFriends, friend)
-      queryClient.setQueryData(["friends"], newFriends)
+      friendRequestStore.deleteOne(friend.id)
+      friendsStore.addOne(friend)
     }
 
     socket.on("friendRequest:accepted", onFriendRequestAccepted)
@@ -77,13 +55,11 @@ const useFriendRequestAcceptedListener = () => {
 }
 
 const useDestroyFriendshipListener = () => {
-  const queryClient = useQueryClient()
+  const friendsStore = useFriendsStore()
 
   useEffect(() => {
     const onFriendshipDestroy = (userId: string) => {
-      const oldFriends = queryClient.getQueryData(["friends"]) as User[]
-      const newFriends = oldFriends.filter((friend) => friend.id !== userId)
-      queryClient.setQueryData(["friends"], newFriends)
+      friendsStore.deleteOne(userId)
     }
 
     socket.on("friendship:destroy", onFriendshipDestroy)

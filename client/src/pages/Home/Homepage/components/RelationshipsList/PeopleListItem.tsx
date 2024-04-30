@@ -118,9 +118,7 @@ const PeopleListItem = ({
   const destroyFriendRequestMutation = userQueries.useDestroyFriendRequest(
     user.id,
   )
-  const acceptFriendRequestMutation = userQueries.useAcceptFriendRequest(
-    user.id,
-  )
+  const acceptFriendRequestMutation = userQueries.useAcceptFriendRequest(user)
   const destroyFriendshipMutation = userQueries.useDestroyFriendship(user.id)
 
   const handleDirectMessageCreate = () => {

@@ -1,14 +1,10 @@
 import { useContext } from "react"
 import AuthContext from "../../pages/Auth/AuthContext.ts"
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { useMutation, useQuery } from "@tanstack/react-query"
 import userService from "../services/userService.ts"
-import {
-  FriendRequest,
-  FriendRequestItem,
-  Friendship,
-  User,
-} from "../../../types.ts"
-import { insertIntoUserArray } from "../../utils/insertIntoUserArray.ts"
+import { FriendRequest, Friendship, User } from "../../../types.ts"
+import useFriendRequestStore from "../stores/friendRequestsStore.ts"
+import useFriendsStore from "../stores/friendsStore.ts"
 
 const isFriendship = (obj: any): obj is Friendship => {
   return obj.owner !== undefined
@@ -49,7 +45,8 @@ const useGetFriendRequests = () => {
 
 const useCreateFriendRequest = () => {
   const { token } = useContext(AuthContext)
-  const queryClient = useQueryClient()
+  const friendRequestStore = useFriendRequestStore()
+  const friendsStore = useFriendsStore()
 
   return useMutation({
     mutationFn: (username: string) => {
@@ -57,96 +54,56 @@ const useCreateFriendRequest = () => {
     },
     onSuccess: (createdRelationship: FriendRequest | Friendship) => {
       if (isFriendship(createdRelationship)) {
-        const oldFriendRequests = queryClient.getQueryData([
-          "friendRequests",
-        ]) as FriendRequestItem[]
-        const newFriendRequests = oldFriendRequests.filter(
-          (friendRequest) =>
-            friendRequest.user.id !== createdRelationship.friendId,
-        )
-        queryClient.setQueryData(["friendRequests"], newFriendRequests)
-
-        const oldFriends = queryClient.getQueryData(["friends"]) as User[]
-        const newFriends = insertIntoUserArray(
-          oldFriends,
-          createdRelationship.friend,
-        )
-        queryClient.setQueryData(["friends"], newFriends)
+        friendRequestStore.deleteOne(createdRelationship.friendId as string)
+        friendsStore.addOne(createdRelationship.friend)
         return
       }
 
-      const oldFriendRequests = queryClient.getQueryData([
-        "friendRequests",
-      ]) as FriendRequestItem[]
-      const newFriendRequestItem: FriendRequestItem = {
-        type: "sent",
-        user: createdRelationship.receiver,
-      }
-      const newFriendRequests = oldFriendRequests.concat(newFriendRequestItem)
-      queryClient.setQueryData(["friendRequests"], newFriendRequests)
+      friendRequestStore.addSentRequest(createdRelationship)
     },
   })
 }
 
 const useDestroyFriendRequest = (userId: string) => {
   const { token } = useContext(AuthContext)
-  const queryClient = useQueryClient()
+  const friendRequestStore = useFriendRequestStore()
 
   return useMutation({
     mutationFn: (username: string) => {
       return userService.destroyFriendRequest(token as string, username)
     },
     onSuccess: () => {
-      const oldFriendRequests = queryClient.getQueryData([
-        "friendRequests",
-      ]) as FriendRequestItem[]
-      const newFriendRequests = oldFriendRequests.filter(
-        (friendRequest) => friendRequest.user.id !== userId,
-      )
-      queryClient.setQueryData(["friendRequests"], newFriendRequests)
+      friendRequestStore.deleteOne(userId)
     },
   })
 }
 
-const useAcceptFriendRequest = (userId: string) => {
+const useAcceptFriendRequest = (user: User) => {
   const { token } = useContext(AuthContext)
-  const queryClient = useQueryClient()
+  const friendRequestStore = useFriendRequestStore()
+  const friendsStore = useFriendsStore()
 
   return useMutation({
     mutationFn: (username: string) => {
       return userService.acceptFriendRequest(token as string, username)
     },
     onSuccess: () => {
-      const oldFriendRequests = queryClient.getQueryData([
-        "friendRequests",
-      ]) as FriendRequestItem[]
-      const newFriendRequests = oldFriendRequests.filter(
-        (friendRequest) => friendRequest.user.id !== userId,
-      )
-      queryClient.setQueryData(["friendRequests"], newFriendRequests)
-
-      const friendRequestSender = oldFriendRequests.find(
-        (fr) => fr.user.id === userId,
-      )?.user as User
-      const oldFriends = queryClient.getQueryData(["friends"]) as User[]
-      const newFriends = insertIntoUserArray(oldFriends, friendRequestSender)
-      queryClient.setQueryData(["friends"], newFriends)
+      friendRequestStore.deleteOne(user.id)
+      friendsStore.addOne(user)
     },
   })
 }
 
 const useDestroyFriendship = (userId: string) => {
   const { token } = useContext(AuthContext)
-  const queryClient = useQueryClient()
+  const friendsStore = useFriendsStore()
 
   return useMutation({
     mutationFn: (userId: string) => {
       return userService.destroyFriendship(token as string, userId)
     },
     onSuccess: () => {
-      const oldFriends = queryClient.getQueryData(["friends"]) as User[]
-      const newFriends = oldFriends.filter((friend) => friend.id !== userId)
-      queryClient.setQueryData(["friends"], newFriends)
+      friendsStore.deleteOne(userId)
     },
   })
 }
