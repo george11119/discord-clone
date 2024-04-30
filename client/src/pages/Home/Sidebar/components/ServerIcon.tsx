@@ -1,13 +1,10 @@
 import Icon from "./Icon.tsx"
-import { Channel, Server } from "../../../../../types.ts"
-import { useQueryClient } from "@tanstack/react-query"
+import { Server } from "../../../../../types.ts"
+import useChannelStore from "../../../../api/stores/channelStore.ts"
 
 const ServerIcon = ({ server }: { server: Server }) => {
-  const queryClient = useQueryClient()
-  const channels = queryClient.getQueryData([
-    "channels",
-    `${server.id}`,
-  ]) as Channel[]
+  const channelStore = useChannelStore()
+  const channels = channelStore.get(server.id)
 
   const link =
     channels.length !== 0

@@ -1,13 +1,12 @@
 import { useParams } from "react-router-dom"
 import { FormEvent, useId, useState } from "react"
-import { useQueryClient } from "@tanstack/react-query"
-import { Server } from "../../../../../../types.ts"
 import styled from "styled-components"
 import Tooltip from "../../../../../shared/components/Tooltip.tsx"
 import FormInput from "../../../../../shared/components/FormInput.tsx"
 import UploadIcon from "../../../../../shared/svg/UploadIcon.tsx"
 import Button from "../../../../../shared/components/Button.tsx"
 import serverQueries from "../../../../../api/queries/serverQueries.ts"
+import useServerStore from "../../../../../api/stores/serverStore.ts"
 
 const Form = styled.form`
   padding: 16px;
@@ -30,9 +29,9 @@ const Footer = styled.div`
 const EditServerForm = ({ handleClose }: { handleClose: () => void }) => {
   const { serverId } = useParams()
   const serverFormId = useId()
+  const serverStore = useServerStore()
 
-  const queryClient = useQueryClient()
-  const servers = queryClient.getQueryData(["servers"]) as Server[]
+  const servers = serverStore.get()
   const server = servers?.find((s) => s.id === serverId)
 
   const [serverName, setServerName] = useState(server ? server.name : "")

@@ -5,9 +5,10 @@ const useChannelStore = () => {
   const queryKey = "channels"
   const queryClient = useQueryClient()
 
-  // const get = () => {
-  //   const channels = queryClient.getQueryData()
-  // }
+  const get = (serverId: string) => {
+    const channels = queryClient.getQueryData([queryKey, serverId]) as Channel[]
+    return channels
+  }
 
   const addOne = (newChannel: Channel) => {
     const oldChannels = queryClient.getQueryData([
@@ -44,7 +45,7 @@ const useChannelStore = () => {
     return newChannels
   }
 
-  return { addOne, updateOne, deleteOne }
+  return { get, addOne, updateOne, deleteOne }
 }
 
 export default useChannelStore

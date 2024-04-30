@@ -5,6 +5,11 @@ const useServerStore = () => {
   const queryKey = "servers"
   const queryClient = useQueryClient()
 
+  const get = () => {
+    const servers = queryClient.getQueryData([queryKey]) as Server[]
+    return servers
+  }
+
   const addOne = (newServer: Server) => {
     const oldServers = queryClient.getQueryData([queryKey]) as Server[]
     const newServers = oldServers?.concat(newServer)
@@ -28,7 +33,7 @@ const useServerStore = () => {
     return newServers
   }
 
-  return { addOne, updateOne, deleteOne }
+  return { get, addOne, updateOne, deleteOne }
 }
 
 export default useServerStore

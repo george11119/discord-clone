@@ -5,12 +5,12 @@ import { useParams } from "react-router-dom"
 import { useState } from "react"
 import ServerOptionsPopout from "./ServerOptionsPopout.tsx"
 import { Server } from "../../../../../../types.ts"
-import { useQueryClient } from "@tanstack/react-query"
 import { AnimatePresence } from "framer-motion"
 import useModal from "../../../../../hooks/useModal.ts"
 import EditServerModal from "./EditServerModal.tsx"
 import ChannelModal from "../ChannelList/ChannelModal.tsx"
 import InviteToServerModal from "./InviteToServerModal.tsx"
+import useServerStore from "../../../../../api/stores/serverStore.ts"
 
 const Wrapper = styled.div`
   box-shadow:
@@ -33,8 +33,8 @@ const Wrapper = styled.div`
 `
 
 const Header = () => {
-  const queryClient = useQueryClient()
   const { serverId } = useParams()
+  const serverStore = useServerStore()
 
   const [popoutOpen, setPopoutOpen] = useState(false)
   const editChannel = useModal()
@@ -46,8 +46,7 @@ const Header = () => {
     setPopoutOpen(!popoutOpen)
   }
 
-  const servers = queryClient.getQueryData(["servers"]) as Server[]
-
+  const servers = serverStore.get()
   const server = servers
     ? (servers.find((s) => s.id === serverId) as Server)
     : null

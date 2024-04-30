@@ -1,11 +1,10 @@
 import styled from "styled-components"
 import ServerChatHeader from "./components/Header/ServerChatHeader.tsx"
-import { Channel } from "../../../../types.ts"
 import { useParams } from "react-router-dom"
-import { useQueryClient } from "@tanstack/react-query"
 import { useState } from "react"
 import UserList from "./components/UserList/UserList.tsx"
 import ChatContainer from "../../../shared/components/ChatContainer/ChatContainer.tsx"
+import useChannelStore from "../../../api/stores/channelStore.ts"
 
 const Wrapper = styled.div`
   background-color: rgb(49, 51, 56);
@@ -21,7 +20,7 @@ const MainContainer = styled.div`
 `
 
 const ChatAreaContainer = () => {
-  const queryClient = useQueryClient()
+  const channelStore = useChannelStore()
   const { serverId, channelId } = useParams()
 
   const [userListShown, setUserListShown] = useState(() => {
@@ -29,11 +28,7 @@ const ChatAreaContainer = () => {
     return shown === "hide" ? false : true
   })
 
-  const channels = queryClient.getQueryData([
-    "channels",
-    `${serverId}`,
-  ]) as Channel[]
-
+  const channels = channelStore.get(serverId as string)
   const channel = channels?.find((c) => c.id === channelId)
 
   // a channel does not exist in the server or has not been selected, render blank page

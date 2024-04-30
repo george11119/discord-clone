@@ -2,9 +2,8 @@ import Friends from "../../../../../shared/svg/Friends.tsx"
 import styled from "styled-components"
 import { CSSProperties } from "react"
 import { FriendsDisplayTypes } from "../../FriendsDisplayContainer.tsx"
-import { useQueryClient } from "@tanstack/react-query"
-import { FriendRequestItem } from "../../../../../../types.ts"
 import NumberBadge from "../../../../../shared/components/NumberBadge.tsx"
+import useFriendRequestStore from "../../../../../api/stores/friendRequestsStore.ts"
 
 const H1 = styled.h1`
   color: rgb(242, 243, 245);
@@ -70,18 +69,15 @@ const FriendsBar = ({
   display: FriendsDisplayTypes
   setDisplay: (x: FriendsDisplayTypes) => void
 }) => {
-  const queryClient = useQueryClient()
   const activeStyle: CSSProperties = {
     color: "white",
     backgroundColor: "#43444b",
   }
 
-  const friendRequests = queryClient.getQueryData([
-    "friendRequests",
-  ]) as FriendRequestItem[]
-  const receivedFriendRequestsCount = friendRequests.filter(
-    (fr) => fr.type === "received",
-  ).length
+  const friendRequestStore = useFriendRequestStore()
+  const receivedFriendRequestsCount = friendRequestStore
+    .getAll()
+    .filter((fr) => fr.type === "received").length
 
   return (
     <Wrapper>

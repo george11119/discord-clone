@@ -1,4 +1,4 @@
-import { DirectMessage, User } from "../../../../../../types.ts"
+import { User } from "../../../../../../types.ts"
 import UserProfilePicture from "../../../../../shared/components/UserProfilePicture.tsx"
 import MessageIcon from "../../../../../shared/svg/MessageIcon.tsx"
 import MoreIcon from "../../../../../shared/svg/MoreIcon.tsx"
@@ -8,8 +8,8 @@ import CloseIcon from "../../../../../shared/svg/CloseIcon.tsx"
 import CheckmarkIcon from "../../../../../shared/svg/CheckmarkIcon.tsx"
 import userQueries from "../../../../../api/queries/userQueries.ts"
 import directMessagesQueries from "../../../../../api/queries/directMessagesQueries.ts"
-import { useQueryClient } from "@tanstack/react-query"
 import { useNavigate } from "react-router-dom"
+import useDirectMessagesStore from "../../../../../api/stores/directMessageStore.ts"
 
 const PeopleListItemWrapper = styled.div`
   cursor: pointer;
@@ -110,8 +110,8 @@ const PeopleListItem = ({
   user: User
   type: "friend" | "sent" | "received"
 }) => {
-  const queryClient = useQueryClient()
   const navigate = useNavigate()
+  const directMessagesStore = useDirectMessagesStore()
 
   const createDirectMessageMutation =
     directMessagesQueries.useCreateDirectMessages()
@@ -122,9 +122,7 @@ const PeopleListItem = ({
   const destroyFriendshipMutation = userQueries.useDestroyFriendship(user.id)
 
   const handleDirectMessageCreate = () => {
-    const directMessages = queryClient.getQueryData([
-      "direct-messages",
-    ]) as DirectMessage[]
+    const directMessages = directMessagesStore.get()
     const directMessage = directMessages.find(
       (dm) => dm.recepient?.id === user.id,
     )

@@ -1,11 +1,10 @@
 import styled from "styled-components"
-import { useQueryClient } from "@tanstack/react-query"
 import { useParams } from "react-router-dom"
-import { DirectMessage } from "../../../../types.ts"
 import DirectMessageChatHeader from "./components/Header/DirectMessageChatHeader.tsx"
 import ChatContainer from "../../../shared/components/ChatContainer/ChatContainer.tsx"
 import ProfilePanel from "./components/ProfilePanel/ProfilePanel.tsx"
 import { useState } from "react"
+import useDirectMessagesStore from "../../../api/stores/directMessageStore.ts"
 
 const Wrapper = styled.div`
   background-color: rgb(49, 51, 56);
@@ -21,17 +20,14 @@ const MainContainer = styled.div`
 `
 
 const DirectMessageChatArea = () => {
-  const queryClient = useQueryClient()
   const { channelId } = useParams()
   const [profilePanelShown, setProfilePanelShown] = useState(() => {
     const shown = localStorage.getItem("discord-clone-profile-panel-shown")
     return shown === "hide" ? false : true
   })
+  const directMessageStore = useDirectMessagesStore()
 
-  const directMessages = queryClient.getQueryData([
-    "direct-messages",
-  ]) as DirectMessage[]
-
+  const directMessages = directMessageStore.get()
   const directMessage = directMessages.find(
     (dm) => dm.channel?.id === channelId,
   )

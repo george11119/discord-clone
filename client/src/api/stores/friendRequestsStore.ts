@@ -5,6 +5,13 @@ const useFriendRequestStore = () => {
   const queryKey = "friendRequests"
   const queryClient = useQueryClient()
 
+  const getAll = () => {
+    const friendRequests = queryClient.getQueryData([
+      queryKey,
+    ]) as FriendRequestItem[]
+    return friendRequests
+  }
+
   const addSentRequest = (createdRelationship: FriendRequest) => {
     const oldFriendRequests = queryClient.getQueryData([
       queryKey,
@@ -42,7 +49,7 @@ const useFriendRequestStore = () => {
     return newFriendRequests
   }
 
-  return { addSentRequest, addReceivedRequest, deleteOne }
+  return { getAll, addSentRequest, addReceivedRequest, deleteOne }
 }
 
 export default useFriendRequestStore

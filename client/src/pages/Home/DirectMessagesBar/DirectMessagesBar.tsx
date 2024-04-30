@@ -1,14 +1,14 @@
 import DirectMessagesList from "./components/DirectMessagesList/DirectMessagesList.tsx"
 import Sidebar from "../../../shared/components/Sidebar/Sidebar.tsx"
 import Header from "./components/Header/Header.tsx"
-import { DirectMessage, FriendRequestItem } from "../../../../types.ts"
+import { DirectMessage } from "../../../../types.ts"
 import styled from "styled-components"
 import Friends from "../../../shared/svg/Friends.tsx"
 import NumberBadge from "../../../shared/components/NumberBadge.tsx"
 import Nitro from "../../../shared/svg/Nitro.tsx"
 import Shop from "../../../shared/svg/Shop.tsx"
 import DirectMessageBarButton from "./components/DirectMessagesButton/DirectMessagesBarButton.tsx"
-import { useQueryClient } from "@tanstack/react-query"
+import useFriendRequestStore from "../../../api/stores/friendRequestsStore.ts"
 
 const Wrapper = styled.div`
   list-style: none;
@@ -18,13 +18,10 @@ const Wrapper = styled.div`
 `
 
 const DirectMessagesBarButtons = () => {
-  const queryClient = useQueryClient()
-  const friendRequests = queryClient.getQueryData([
-    "friendRequests",
-  ]) as FriendRequestItem[]
-  const receivedFriendRequestsCount = friendRequests.filter(
-    (fr) => fr.type === "received",
-  ).length
+  const friendRequestStore = useFriendRequestStore()
+  const receivedFriendRequestsCount = friendRequestStore
+    .getAll()
+    .filter((fr) => fr.type === "received").length
 
   return (
     <>

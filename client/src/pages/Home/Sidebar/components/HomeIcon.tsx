@@ -1,17 +1,13 @@
 import Icon from "./Icon.tsx"
 import Logo from "../../../../shared/svg/Logo.tsx"
 import NumberBadge from "../../../../shared/components/NumberBadge.tsx"
-import { useQueryClient } from "@tanstack/react-query"
-import { FriendRequestItem } from "../../../../../types.ts"
+import useFriendRequestStore from "../../../../api/stores/friendRequestsStore.ts"
 
 const HomeIcon = () => {
-  const queryClient = useQueryClient()
-  const friendRequests = queryClient.getQueryData([
-    "friendRequests",
-  ]) as FriendRequestItem[]
-  const receivedFriendRequestsCount = friendRequests.filter(
-    (fr) => fr.type === "received",
-  ).length
+  const friendRequestStore = useFriendRequestStore()
+  const receivedFriendRequestsCount = friendRequestStore
+    .getAll()
+    .filter((fr) => fr.type === "received").length
 
   const notificationsCount = receivedFriendRequestsCount
 
