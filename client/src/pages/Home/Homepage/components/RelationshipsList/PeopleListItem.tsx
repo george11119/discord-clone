@@ -1,4 +1,4 @@
-import { User } from "../../../../../../types.ts"
+import { DirectMessage, User } from "../../../../../../types.ts"
 import UserProfilePicture from "../../../../../shared/components/UserProfilePicture.tsx"
 import MessageIcon from "../../../../../shared/svg/MessageIcon.tsx"
 import MoreIcon from "../../../../../shared/svg/MoreIcon.tsx"
@@ -8,6 +8,8 @@ import CloseIcon from "../../../../../shared/svg/CloseIcon.tsx"
 import CheckmarkIcon from "../../../../../shared/svg/CheckmarkIcon.tsx"
 import userQueries from "../../../../../api/queries/userQueries.ts"
 import directMessagesQueries from "../../../../../api/queries/directMessagesQueries.ts"
+import { useQueryClient } from "@tanstack/react-query"
+import { useNavigate } from "react-router-dom"
 
 const PeopleListItemWrapper = styled.div`
   cursor: pointer;
@@ -79,7 +81,7 @@ const PeopleListItemButton = ({
   hoverColor,
 }: {
   icon: ReactNode
-  onClick: () => void
+  onClick: (x?: any) => void
   hoverColor?: string
 }) => {
   const [clicked, setClicked] = useState(false)
@@ -108,6 +110,9 @@ const PeopleListItem = ({
   user: User
   type: "friend" | "sent" | "received"
 }) => {
+  const queryClient = useQueryClient()
+  const navigate = useNavigate()
+
   const createDirectMessageMutation =
     directMessagesQueries.useCreateDirectMessages()
   const destroyFriendRequestMutation = userQueries.useDestroyFriendRequest(
@@ -119,6 +124,18 @@ const PeopleListItem = ({
   const destroyFriendshipMutation = userQueries.useDestroyFriendship(user.id)
 
   const handleDirectMessageCreate = () => {
+    const directMessages = queryClient.getQueryData([
+      "direct-messages",
+    ]) as DirectMessage[]
+    const directMessage = directMessages.find(
+      (dm) => dm.recepient?.id === user.id,
+    )
+
+    if (directMessage) {
+      navigate(`/channels/@me/${directMessage.channel?.id}`)
+      return
+    }
+
     createDirectMessageMutation.mutate(user)
   }
 
@@ -137,7 +154,12 @@ const PeopleListItem = ({
   return (
     <>
       <TopBorder />
-      <PeopleListItemWrapper>
+      <PeopleListItemWrapper
+        onClick={(e: any) => {
+          if (e.defaultPrevented || type !== "friend") return
+          handleDirectMessageCreate()
+        }}
+      >
         <div style={{ display: "flex" }}>
           <UserProfilePictureContainer>
             <UserProfilePicture profileDiameter={32} user={user} />
@@ -152,11 +174,16 @@ const PeopleListItem = ({
             <>
               <PeopleListItemButton
                 icon={<MessageIcon size={20} />}
-                onClick={handleDirectMessageCreate}
+                onClick={(e: MouseEvent) => {
+                  e.preventDefault()
+                  handleDirectMessageCreate()
+                }}
               />
               <PeopleListItemButton
                 icon={<MoreIcon size={20} />}
-                onClick={() => null}
+                onClick={(e: MouseEvent) => {
+                  e.preventDefault()
+                }}
               />
               <PeopleListItemButton
                 icon={
@@ -166,7 +193,10 @@ const PeopleListItem = ({
                     hoverColor={"#f23f42"}
                   />
                 }
-                onClick={handleFriendshipDestroy}
+                onClick={(e: MouseEvent) => {
+                  e.preventDefault()
+                  handleFriendshipDestroy()
+                }}
                 hoverColor={"#f23f42"}
               />
             </>

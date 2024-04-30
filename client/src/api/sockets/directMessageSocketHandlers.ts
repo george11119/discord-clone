@@ -1,18 +1,14 @@
-import { useQueryClient } from "@tanstack/react-query"
 import { useEffect } from "react"
 import { socket } from "../../config/socket.ts"
 import { DirectMessage } from "../../../types.ts"
+import useDirectMessagesStore from "../stores/directMessageStore.ts"
 
 const useDirectMessageCreateListener = () => {
-  const queryClient = useQueryClient()
+  const directMessagesStore = useDirectMessagesStore()
 
   return useEffect(() => {
     const onDirectMessageCreate = (newDirectMessageRelation: DirectMessage) => {
-      const oldDirectMessages = queryClient.getQueryData([
-        "direct-messages",
-      ]) as DirectMessage[]
-      const newDirectMessages = [newDirectMessageRelation, ...oldDirectMessages]
-      queryClient.setQueryData(["direct-messages"], newDirectMessages)
+      directMessagesStore.addOne(newDirectMessageRelation)
     }
 
     socket.on("directMessage:create", onDirectMessageCreate)
