@@ -59,7 +59,7 @@ describe(`${url}`, () => {
       user: user2,
     })
 
-    const channel2 = await testHelpers.generateChannel({
+    await testHelpers.generateChannel({
       name: "testusername2's Channel",
       server: user2Server,
     })
@@ -205,7 +205,7 @@ describe(`${url}`, () => {
         .expect(401)
     })
 
-    it("Returns 401 if no channel exists", async () => {
+    it("Returns 404 if no channel exists", async () => {
       const user1 = await User.findOneBy({ username: "testusername1" })
       const token = jwtUtils.signToken({ userId: user1?.id as string })
       const payload = { content: "newly sent message" }
@@ -214,45 +214,147 @@ describe(`${url}`, () => {
         .post(`${url}/d063e5e8-446a-480f-bc8b-83c0ad33f1a8`)
         .send(payload)
         .set("authorization", `Bearer ${token}`)
-        .expect(401)
+        .expect(404)
     })
 
-    it("Returns 201 and creates message if channel exists and user is in server that channel is in", async () => {
-      const user1 = await User.findOneBy({ username: "testusername1" })
-      const token = jwtUtils.signToken({ userId: user1?.id as string })
-      const channel = await Channel.findOne({
-        where: {
-          name: "testusername1's Channel",
-        },
-        relations: { messages: true },
+    describe("If channel belongs to a server", () => {
+      it("Returns 401 if user is not in the server of the given channel", async () => {
+        const user3 = await User.findOneBy({ username: "testusername3" })
+        const token = jwtUtils.signToken({ userId: user3?.id as string })
+        const channel = await Channel.findOne({
+          where: {
+            name: "testusername1's Channel",
+          },
+          relations: { messages: true },
+        })
+        const payload = { content: "newly sent message" }
+
+        const initialMessageCount = channel?.messages.length as number
+        expect(initialMessageCount).toBe(5)
+
+        await api
+          .post(`${url}/${channel?.id}`)
+          .send(payload)
+          .set("authorization", `Bearer ${token}`)
+          .expect(401)
+
+        const updatedChannel = await Channel.findOne({
+          where: {
+            name: "testusername1's Channel",
+          },
+          relations: { messages: true },
+        })
+
+        expect(updatedChannel?.messages.length).toBe(initialMessageCount)
       })
-      const payload = { content: "newly sent message" }
 
-      const initialMessageCount = channel?.messages.length as number
-      expect(initialMessageCount).toBe(5)
+      it("Returns 201 and creates message if channel exists and user is in server that channel is in", async () => {
+        const user1 = await User.findOneBy({ username: "testusername1" })
+        const token = jwtUtils.signToken({ userId: user1?.id as string })
+        const channel = await Channel.findOne({
+          where: {
+            name: "testusername1's Channel",
+          },
+          relations: { messages: true },
+        })
+        const payload = { content: "newly sent message" }
 
-      const res = await api
-        .post(`${url}/${channel?.id}`)
-        .send(payload)
-        .set("authorization", `Bearer ${token}`)
-        .expect(201)
-        .expect("Content-Type", /application\/json/)
+        const initialMessageCount = channel?.messages.length as number
+        expect(initialMessageCount).toBe(5)
 
-      const message = res.body
-      expect(message.content).toBe("newly sent message")
+        const res = await api
+          .post(`${url}/${channel?.id}`)
+          .send(payload)
+          .set("authorization", `Bearer ${token}`)
+          .expect(201)
+          .expect("Content-Type", /application\/json/)
 
-      const updatedChannel = await Channel.findOne({
-        where: {
-          name: "testusername1's Channel",
-        },
-        relations: { messages: true },
+        const message = res.body
+        expect(message.content).toBe("newly sent message")
+
+        const updatedChannel = await Channel.findOne({
+          where: {
+            name: "testusername1's Channel",
+          },
+          relations: { messages: true },
+        })
+        expect(updatedChannel?.messages.length).toBe(initialMessageCount + 1)
+
+        const newMessage = updatedChannel?.messages.find(
+          (message) => message.content === "newly sent message",
+        )
+        expect(newMessage).toBeTruthy()
       })
-      expect(updatedChannel?.messages.length).toBe(initialMessageCount + 1)
+    })
 
-      const newMessage = updatedChannel?.messages.find(
-        (message) => message.content === "newly sent message",
-      )
-      expect(newMessage).toBeTruthy()
+    describe("If channel is a direct message channel", () => {
+      it("Returns 401 if user does not have a direct message relation in the given channel", async () => {
+        const user2 = await User.findOneBy({ username: "testusername2" })
+        const token = jwtUtils.signToken({ userId: user2?.id as string })
+        const channel = await Channel.findOne({
+          where: {
+            name: "user1 user3",
+          },
+          relations: { messages: true },
+        })
+        const payload = { content: "newly sent message" }
+
+        const initialMessageCount = channel?.messages.length as number
+        expect(initialMessageCount).toBe(3)
+
+        await api
+          .post(`${url}/${channel?.id}`)
+          .send(payload)
+          .set("authorization", `Bearer ${token}`)
+          .expect(401)
+
+        const updatedChannel = await Channel.findOne({
+          where: {
+            name: "user1 user3",
+          },
+          relations: { messages: true },
+        })
+
+        expect(updatedChannel?.messages.length).toBe(initialMessageCount)
+      })
+
+      it("Returns 201 if user has a direct message relation in the given channel", async () => {
+        const user1 = await User.findOneBy({ username: "testusername1" })
+        const token = jwtUtils.signToken({ userId: user1?.id as string })
+        const channel = await Channel.findOne({
+          where: {
+            name: "user1 user3",
+          },
+          relations: { messages: true },
+        })
+        const payload = { content: "newly sent message" }
+
+        const initialMessageCount = channel?.messages.length as number
+        expect(initialMessageCount).toBe(3)
+
+        const res = await api
+          .post(`${url}/${channel?.id}`)
+          .send(payload)
+          .set("authorization", `Bearer ${token}`)
+          .expect(201)
+          .expect("Content-Type", /application\/json/)
+
+        const message = res.body
+        expect(message.content).toBe("newly sent message")
+
+        const updatedChannel = await Channel.findOne({
+          where: {
+            name: "user1 user3",
+          },
+          relations: { messages: true },
+        })
+        expect(updatedChannel?.messages.length).toBe(initialMessageCount + 1)
+
+        const newMessage = updatedChannel?.messages.find(
+          (message) => message.content === "newly sent message",
+        )
+        expect(newMessage).toBeTruthy()
+      })
     })
   })
 
@@ -276,6 +378,7 @@ describe(`${url}`, () => {
         },
         relations: { messages: true },
       })
+      const initialMessageCount = channel?.messages.length
       const message = channel?.messages[0]
       const payload = { content: "updated message" }
 
@@ -283,6 +386,15 @@ describe(`${url}`, () => {
         .patch(`${url}/${channel?.id}/${message?.id}`)
         .send(payload)
         .expect(401)
+
+      const updatedChannel = await Channel.findOne({
+        where: {
+          name: "testusername1's Channel",
+        },
+        relations: { messages: true },
+      })
+      const finalMessageCount = updatedChannel?.messages.length
+      expect(finalMessageCount).toBe(initialMessageCount)
     })
 
     it("Doesnt allow a user who isnt in the channel to update a message", async () => {
@@ -295,6 +407,7 @@ describe(`${url}`, () => {
         },
         relations: { messages: true },
       })
+      const initialMessageCount = channel?.messages.length
       const message = channel?.messages[0]
       const payload = { content: "updated message" }
 
@@ -303,9 +416,18 @@ describe(`${url}`, () => {
         .send(payload)
         .set("authorization", `Bearer ${token}`)
         .expect(401)
+
+      const updatedChannel = await Channel.findOne({
+        where: {
+          name: "testusername1's Channel",
+        },
+        relations: { messages: true },
+      })
+      const finalMessageCount = updatedChannel?.messages.length
+      expect(finalMessageCount).toBe(initialMessageCount)
     })
 
-    it("Returns 401 if no channel or message is found", async () => {
+    it("Returns 404 if no channel or message is found", async () => {
       const user1 = await User.findOneBy({ username: "testusername1" })
       const token = jwtUtils.signToken({ userId: user1?.id as string })
       const payload = { content: "updated message" }
@@ -316,41 +438,141 @@ describe(`${url}`, () => {
         )
         .send(payload)
         .set("authorization", `Bearer ${token}`)
-        .expect(401)
+        .expect(404)
     })
 
-    it("Returns 200 and updates message if user is in channel and message exists", async () => {
-      const user1 = await User.findOneBy({ username: "testusername1" })
-      const token = jwtUtils.signToken({ userId: user1?.id as string })
-      const payload = { content: "updated message" }
+    describe("If channel is a server channel", () => {
+      it("Returns 401 if user is not in the server the channel is in", async () => {
+        const user3 = await User.findOneBy({ username: "testusername3" })
+        const token = jwtUtils.signToken({ userId: user3?.id as string })
+        const payload = { content: "updated message" }
 
-      const channel = await Channel.findOne({
-        where: {
-          name: "testusername1's Channel",
-        },
-        relations: { messages: true },
+        const channel = await Channel.findOne({
+          where: {
+            name: "testusername1's Channel",
+          },
+          relations: { messages: true },
+        })
+
+        await api
+          .patch(`${url}/${channel?.id}/${channel?.messages[0].id}`)
+          .send(payload)
+          .set("authorization", `Bearer ${token}`)
+          .expect(401)
+
+        const updatedChannel = await Channel.findOne({
+          where: {
+            name: "testusername1's Channel",
+          },
+          relations: { messages: true },
+        })
+
+        const updatedMessage = updatedChannel?.messages.find(
+          (message) => message.content === "updated message",
+        )
+        expect(updatedMessage).toBeFalsy()
       })
 
-      const res = await api
-        .patch(`${url}/${channel?.id}/${channel?.messages[0].id}`)
-        .send(payload)
-        .set("authorization", `Bearer ${token}`)
-        .expect(200)
+      it("Returns 200 and updates message if user is in channel and message exists", async () => {
+        const user1 = await User.findOneBy({ username: "testusername1" })
+        const token = jwtUtils.signToken({ userId: user1?.id as string })
+        const payload = { content: "updated message" }
 
-      const message = res.body
-      expect(message.content).toBe("updated message")
+        const channel = await Channel.findOne({
+          where: {
+            name: "testusername1's Channel",
+          },
+          relations: { messages: true },
+        })
 
-      const updatedChannel = await Channel.findOne({
-        where: {
-          name: "testusername1's Channel",
-        },
-        relations: { messages: true },
+        const res = await api
+          .patch(`${url}/${channel?.id}/${channel?.messages[0].id}`)
+          .send(payload)
+          .set("authorization", `Bearer ${token}`)
+          .expect(200)
+
+        const message = res.body
+        expect(message.content).toBe("updated message")
+
+        const updatedChannel = await Channel.findOne({
+          where: {
+            name: "testusername1's Channel",
+          },
+          relations: { messages: true },
+        })
+
+        const updatedMessage = updatedChannel?.messages.find(
+          (message) => message.content === "updated message",
+        )
+        expect(updatedMessage).toBeTruthy()
+      })
+    })
+
+    describe("If channel is a direct message channel", () => {
+      it("Returns 401 if user does not have a direct message relationship with given channel", async () => {
+        const user2 = await User.findOneBy({ username: "testusername2" })
+        const token = jwtUtils.signToken({ userId: user2?.id as string })
+        const payload = { content: "updated message" }
+
+        const channel = await Channel.findOne({
+          where: {
+            name: "user1 user3",
+          },
+          relations: { messages: true },
+        })
+
+        await api
+          .patch(`${url}/${channel?.id}/${channel?.messages[0].id}`)
+          .send(payload)
+          .set("authorization", `Bearer ${token}`)
+          .expect(401)
+
+        const updatedChannel = await Channel.findOne({
+          where: {
+            name: "user1 user3",
+          },
+          relations: { messages: true },
+        })
+
+        const updatedMessage = updatedChannel?.messages.find(
+          (message) => message.content === "updated message",
+        )
+        expect(updatedMessage).toBeFalsy()
       })
 
-      const updatedMessage = updatedChannel?.messages.find(
-        (message) => message.content === "updated message",
-      )
-      expect(updatedMessage).toBeTruthy()
+      it("Returns 200 and updates message if user is in channel and message exists", async () => {
+        const user1 = await User.findOneBy({ username: "testusername1" })
+        const token = jwtUtils.signToken({ userId: user1?.id as string })
+        const payload = { content: "updated message" }
+
+        const channel = await Channel.findOne({
+          where: {
+            name: "user1 user3",
+          },
+          relations: { messages: true },
+        })
+
+        const res = await api
+          .patch(`${url}/${channel?.id}/${channel?.messages[0].id}`)
+          .send(payload)
+          .set("authorization", `Bearer ${token}`)
+          .expect(200)
+
+        const message = res.body
+        expect(message.content).toBe("updated message")
+
+        const updatedChannel = await Channel.findOne({
+          where: {
+            name: "user1 user3",
+          },
+          relations: { messages: true },
+        })
+
+        const updatedMessage = updatedChannel?.messages.find(
+          (message) => message.content === "updated message",
+        )
+        expect(updatedMessage).toBeTruthy()
+      })
     })
   })
 

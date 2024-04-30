@@ -7,6 +7,7 @@ import { User } from "../../models/user"
 import { io } from "../../app"
 import { ChannelType } from "../../../../types"
 import { DirectMessage } from "../../models/directMessage"
+import { Message } from "../../models/message"
 
 const router = express.Router()
 router.use(authenticatedValidator)
@@ -75,28 +76,65 @@ router.post("/:channelId", async (req, res) => {
     relations: { server: true },
   })
 
-  const userIsInServer = await isUserInServer({
-    serverId: channel?.server.id as string,
-    userId: user.id,
-  })
-
-  if (!channel || !userIsInServer) {
-    return res.status(401).json({
-      message: "You are not allowed to create messages on this channel",
-    })
+  if (!channel) {
+    return res.status(404).json({ message: "Channel not found" })
   }
 
-  const message = await messagesController.createMessage({
-    content,
-    user,
-    channel,
-  })
+  if (channel.channelType === ChannelType.TEXT) {
+    const userIsInServer = await isUserInServer({
+      serverId: channel.server.id as string,
+      userId: user.id,
+    })
 
-  io.to(`channel-${message.channel.id}`)
-    .except(`${user.id}`)
-    .emit("message:create", message)
+    if (!userIsInServer) {
+      return res.status(401).json({
+        message: "You are not allowed to create messages on this channel",
+      })
+    }
 
-  res.status(201).json(message)
+    const message = await messagesController.createMessage({
+      content,
+      user,
+      channel,
+    })
+
+    io.to(`channel-${message.channel.id}`)
+      .except(`${user.id}`)
+      .emit("message:create", message)
+
+    res.status(201).json(message)
+  }
+
+  if (channel.channelType === ChannelType.DIRECT_MESSAGE) {
+    const ownerId = req.user?.id as string
+
+    // check if user has a direct message in that channel
+    const directMessageRelation = await DirectMessage.findOne({
+      where: {
+        ownerId,
+        channelId,
+      },
+    })
+
+    if (!directMessageRelation) {
+      return res.status(401).json({
+        message: "You are not allowed to create messages on this channel",
+      })
+    }
+
+    const message = await messagesController.createMessage({
+      content,
+      user,
+      channel,
+    })
+
+    // TODO reenable this when u figure out how to
+    // io.to(`channel-${message.channel.id}`)
+    //   .except(`${user.id}`)
+    //   .emit("message:create", message)
+
+    res.status(201).json(message)
+  }
 })
 
 router.patch("/:channelId/:messageId", async (req, res) => {
@@ -109,27 +147,64 @@ router.patch("/:channelId/:messageId", async (req, res) => {
     relations: { server: true },
   })
 
-  const userIsInServer = await isUserInServer({
-    serverId: channel?.server.id as string,
-    userId: user.id,
-  })
+  const message = await Message.findOne({ where: { id: messageId } })
 
-  if (!channel || !userIsInServer) {
-    return res.status(401).json({
-      message: "You are not allowed to create messages on this channel",
-    })
+  if (!channel || !message) {
+    return res.status(404).json({ message: "Channel or message not found" })
   }
 
-  const message = await messagesController.updateMessage({
-    content,
-    messageId,
-  })
+  if (channel.channelType === ChannelType.TEXT) {
+    const userIsInServer = await isUserInServer({
+      serverId: channel?.server.id as string,
+      userId: user.id,
+    })
 
-  io.to(`channel-${message?.channel.id}`)
-    .except(`${user.id}`)
-    .emit("message:edit", message)
+    if (!userIsInServer) {
+      return res.status(401).json({
+        message: "You are not allowed to update messages on this channel",
+      })
+    }
 
-  res.status(200).json(message)
+    const message = await messagesController.updateMessage({
+      content,
+      messageId,
+    })
+
+    io.to(`channel-${message?.channel.id}`)
+      .except(`${user.id}`)
+      .emit("message:edit", message)
+
+    res.status(200).json(message)
+  }
+
+  if (channel.channelType === ChannelType.DIRECT_MESSAGE) {
+    const ownerId = req.user?.id as string
+
+    // check if user has a direct message in that channel
+    const directMessageRelation = await DirectMessage.findOne({
+      where: {
+        ownerId,
+        channelId,
+      },
+    })
+
+    if (!directMessageRelation) {
+      return res.status(401).json({
+        message: "You are not allowed to update messages on this channel",
+      })
+    }
+
+    const message = await messagesController.updateMessage({
+      content,
+      messageId,
+    })
+
+    io.to(`channel-${message?.channel.id}`)
+      .except(`${user.id}`)
+      .emit("message:edit", message)
+
+    res.status(200).json(message)
+  }
 })
 
 router.delete("/:channelId/:messageId", async (req, res) => {
