@@ -1,8 +1,9 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { useMutation, useQuery } from "@tanstack/react-query"
 import messageService from "../services/messageService.ts"
 import { Message } from "../../../types.ts"
 import { useContext } from "react"
 import AuthContext from "../../pages/Auth/AuthContext.ts"
+import useMessageStore from "../stores/messageStore.ts"
 
 const useGetMessages = (channelId: string | undefined) => {
   const { token } = useContext(AuthContext)
@@ -16,7 +17,7 @@ const useGetMessages = (channelId: string | undefined) => {
 
 const useCreateMessage = (channelId: string | undefined) => {
   const { token } = useContext(AuthContext)
-  const queryClient = useQueryClient()
+  const messageStore = useMessageStore()
 
   return useMutation({
     mutationFn: (newMessage: { content: string }) => {
@@ -28,22 +29,14 @@ const useCreateMessage = (channelId: string | undefined) => {
       return res
     },
     onSuccess: (newMessage: Message) => {
-      const messages = queryClient.getQueryData([
-        "messages",
-        `${newMessage.channel?.id}`,
-      ]) as Message[]
-
-      queryClient.setQueryData(
-        ["messages", `${newMessage.channel?.id}`],
-        messages?.concat(newMessage),
-      )
+      messageStore.addOne(newMessage)
     },
   })
 }
 
 const useEditMessage = (channelId: string | undefined, message: Message) => {
   const { token } = useContext(AuthContext)
-  const queryClient = useQueryClient()
+  const messageStore = useMessageStore()
 
   return useMutation({
     mutationFn: (editedMessage: { content: string }) => {
@@ -55,15 +48,7 @@ const useEditMessage = (channelId: string | undefined, message: Message) => {
       )
     },
     onSuccess: (editedMessage: Message) => {
-      const messages = queryClient.getQueryData([
-        "messages",
-        `${editedMessage.channel?.id}`,
-      ]) as Message[]
-
-      queryClient.setQueryData(
-        ["messages", `${editedMessage.channel?.id}`],
-        messages.map((m) => (m.id === editedMessage.id ? editedMessage : m)),
-      )
+      messageStore.updateOne(editedMessage)
     },
   })
 }
@@ -73,7 +58,7 @@ const useDeleteMessage = (
   messageId: string | undefined,
 ) => {
   const { token } = useContext(AuthContext)
-  const queryClient = useQueryClient()
+  const messageStore = useMessageStore()
 
   return useMutation({
     mutationFn: () => {
@@ -84,15 +69,7 @@ const useDeleteMessage = (
       )
     },
     onSuccess: () => {
-      const messages = queryClient.getQueryData([
-        "messages",
-        `${channelId}`,
-      ]) as Message[]
-
-      queryClient.setQueryData(
-        ["messages", `${channelId}`],
-        messages.filter((m) => m.id !== messageId),
-      )
+      messageStore.deleteOne(channelId as string, messageId as string)
     },
   })
 }
