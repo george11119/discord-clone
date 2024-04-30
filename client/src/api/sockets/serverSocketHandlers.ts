@@ -1,10 +1,9 @@
 import { useEffect } from "react"
 import { Server, User } from "../../../types.ts"
 import { socket } from "../../config/socket.ts"
-import { useQueryClient } from "@tanstack/react-query"
 import { useLocation, useNavigate } from "react-router-dom"
-import { insertIntoUserArray } from "../../utils/insertIntoUserArray.ts"
 import useServerStore from "../stores/serverStore.ts"
+import useServerMemberStore from "../stores/serverMemberStore.ts"
 
 const useServerEditListener = () => {
   const serverStore = useServerStore()
@@ -45,16 +44,11 @@ const useServerDeleteListener = () => {
 }
 
 const useUserJoinServerListener = () => {
-  const queryClient = useQueryClient()
+  const serverMemberStore = useServerMemberStore()
 
   return useEffect(() => {
     const onUserJoinServer = (user: User, serverId: string) => {
-      const oldUsers = queryClient.getQueryData([
-        `users`,
-        `${serverId}`,
-      ]) as User[]
-      const newUsers = insertIntoUserArray(oldUsers, user)
-      queryClient.setQueryData([`users`, `${serverId}`], newUsers)
+      serverMemberStore.addOne(serverId, user)
     }
 
     socket.on("user:join", onUserJoinServer)
@@ -66,16 +60,11 @@ const useUserJoinServerListener = () => {
 }
 
 const useUserLeaveServerListener = () => {
-  const queryClient = useQueryClient()
+  const serverMemberStore = useServerMemberStore()
 
   return useEffect(() => {
     const onUserLeaveServer = (user: User, serverId: string) => {
-      const oldUsers = queryClient.getQueryData([
-        `users`,
-        `${serverId}`,
-      ]) as User[]
-      const newUsers = oldUsers.filter((u) => u.username !== user.username)
-      queryClient.setQueryData([`users`, `${serverId}`], newUsers)
+      serverMemberStore.deleteOne(serverId, user)
     }
 
     socket.on("user:leave", onUserLeaveServer)
