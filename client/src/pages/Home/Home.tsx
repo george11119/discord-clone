@@ -17,6 +17,7 @@ import channelSocketHandlers from "../../api/sockets/channelSocketHandlers.ts"
 import userSocketHandlers from "../../api/sockets/userSocketHandlers.ts"
 import serverSocketHandlers from "../../api/sockets/serverSocketHandlers.ts"
 import messageSocketHandlers from "../../api/sockets/messageSocketHandlers.ts"
+import DirectMessageChatArea from "./DirectMessageChat/DirectMessageChatArea.tsx"
 
 const Wrapper = styled.div`
   display: grid;
@@ -37,6 +38,9 @@ const Home = ({
 }) => {
   const { pathname } = useLocation()
   const isHomeLink = matchPath(`/channels/@me/*`, pathname)
+  const isDirectMessageLink = pathname.match(
+    /\/channels\/@me\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/,
+  )
 
   useSocketConnection()
 
@@ -70,10 +74,14 @@ const Home = ({
       {isHomeLink ? (
         <>
           <DirectMessagesBar directMessages={directMessages} />
-          <FriendsDisplayContainer
-            friends={friends}
-            friendRequests={friendRequests}
-          />
+          {isDirectMessageLink ? (
+            <DirectMessageChatArea />
+          ) : (
+            <FriendsDisplayContainer
+              friends={friends}
+              friendRequests={friendRequests}
+            />
+          )}
         </>
       ) : (
         <>

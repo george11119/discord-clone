@@ -1,4 +1,4 @@
-import Header from "../../../../../shared/components/Container/Header.tsx"
+import Header from "../../../../../shared/components/Header/Header.tsx"
 import InboxIcon from "../../../../../shared/svg/InboxIcon.tsx"
 import HelpIcon from "../../../../../shared/svg/HelpIcon.tsx"
 import IconButton from "../../../../../shared/components/IconButton.tsx"

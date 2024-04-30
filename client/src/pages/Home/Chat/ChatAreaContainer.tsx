@@ -1,12 +1,11 @@
 import styled from "styled-components"
 import ServerChatHeader from "./components/Header/ServerChatHeader.tsx"
-import ChatMessageDisplay from "./components/ChatMessageDisplay.tsx"
-import MessageInput from "./components/MessageInput.tsx"
 import { Channel } from "../../../../types.ts"
 import { useParams } from "react-router-dom"
 import { useQueryClient } from "@tanstack/react-query"
 import { useState } from "react"
 import UserList from "./components/UserList/UserList.tsx"
+import ChatContainer from "../../../shared/components/ChatContainer/ChatContainer.tsx"
 
 const Wrapper = styled.div`
   background-color: rgb(49, 51, 56);
@@ -19,12 +18,6 @@ const MainContainer = styled.div`
   display: flex;
   overflow: hidden;
   flex-grow: 1;
-`
-
-const ChatContent = styled.div`
-  display: flex;
-  flex-grow: 1;
-  flex-direction: column;
 `
 
 const ChatAreaContainer = () => {
@@ -67,10 +60,7 @@ const ChatAreaContainer = () => {
         userList={{ userListShown, setUserListShown }}
       />
       <MainContainer>
-        <ChatContent>
-          <ChatMessageDisplay />
-          <MessageInput />
-        </ChatContent>
+        <ChatContainer />
         {userListShown && <UserList />}
       </MainContainer>
     </Wrapper>

@@ -1,6 +1,6 @@
 import { Message } from "../../../../../../types.ts"
 import styled from "styled-components"
-import UserJoinIcon from "../../../../../shared/svg/UserJoinIcon.tsx"
+import UserJoinIcon from "../../../../svg/UserJoinIcon.tsx"
 import { messageDateFormatter } from "../../../../../utils/dateTime.ts"
 import UsernameContainer from "./UsernameContainer.tsx"
 import { useState } from "react"

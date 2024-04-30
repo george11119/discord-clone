@@ -1,10 +1,10 @@
-import DiscordIcon from "../../../../Auth/assets/DiscordIcon.tsx"
+import DiscordIcon from "../../../../../pages/Auth/assets/DiscordIcon.tsx"
 import { User } from "../../../../../../types.ts"
 import styled from "styled-components"
 import { stringToColor } from "../../../../../utils/stringToColor.ts"
-import PopoutContainer from "../../../../../shared/components/PopoutContainer.tsx"
+import PopoutContainer from "../../../PopoutContainer.tsx"
 import { useState } from "react"
-import UserInfoPopout from "../../../../../shared/components/user/UserInfoPopout.tsx"
+import UserInfoPopout from "../../../user/UserInfoPopout.tsx"
 
 const Img = styled.div<{ $backgroundColor: string }>`
   min-height: 40px;

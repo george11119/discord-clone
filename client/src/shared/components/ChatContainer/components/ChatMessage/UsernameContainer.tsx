@@ -1,6 +1,6 @@
 import { useState } from "react"
-import PopoutContainer from "../../../../../shared/components/PopoutContainer.tsx"
-import UserInfoPopout from "../../../../../shared/components/user/UserInfoPopout.tsx"
+import PopoutContainer from "../../../PopoutContainer.tsx"
+import UserInfoPopout from "../../../user/UserInfoPopout.tsx"
 import { User } from "../../../../../../types.ts"
 import styled from "styled-components"
 

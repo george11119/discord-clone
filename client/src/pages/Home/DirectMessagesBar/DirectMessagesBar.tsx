@@ -51,6 +51,13 @@ const DirectMessageTitle = styled.h2`
   text-transform: uppercase;
   display: flex;
   align-items: center;
+  user-select: none;
+`
+
+const Title = styled.div`
+  &:hover {
+    color: #fff6f9;
+  }
 `
 
 const DirectMessagesBar = ({
@@ -62,7 +69,9 @@ const DirectMessagesBar = ({
     <Sidebar header={<Header />}>
       <Wrapper>
         <DirectMessagesBarButtons />
-        <DirectMessageTitle>Direct Messages</DirectMessageTitle>
+        <DirectMessageTitle>
+          <Title>Direct Messages</Title>
+        </DirectMessageTitle>
         <DirectMessagesList directMessages={directMessages} />
       </Wrapper>
     </Sidebar>

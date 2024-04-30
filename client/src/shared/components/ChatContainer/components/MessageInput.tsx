@@ -1,6 +1,6 @@
 import styled from "styled-components"
 import { FormEvent, useState } from "react"
-import UploadFileButton from "../../../../shared/svg/UploadFileButton.tsx"
+import UploadFileButton from "../../../svg/UploadFileButton.tsx"
 import { useParams } from "react-router-dom"
 import messageQueries from "../../../../api/queries/messageQueries.ts"
 

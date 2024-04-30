@@ -4,7 +4,7 @@ import { FormEvent, useEffect, useLayoutEffect, useRef, useState } from "react"
 import { useParams } from "react-router-dom"
 import useAutosizeTextArea from "../../../../../hooks/useAutosizeTextArea.ts"
 import useOnKeyDown from "../../../../../hooks/useOnKeyDown.ts"
-import { KeyCodes } from "../../../../../shared/constants/keycodes.ts"
+import { KeyCodes } from "../../../../constants/keycodes.ts"
 import messageQueries from "../../../../../api/queries/messageQueries.ts"
 
 const EditMessageFormWrapper = styled.form``

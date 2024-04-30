@@ -26,7 +26,7 @@ const ChatMessageDisplay = () => {
 
   const result = messageQueries.useGetMessages(channelId)
 
-  if (result.isLoading) {
+  if (result.isLoading || result.isError) {
     return <ChatWrapper>{loadingSkeleton}</ChatWrapper>
   }
 

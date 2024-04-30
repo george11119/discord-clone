@@ -1,7 +1,7 @@
 import styled from "styled-components"
 import Hashtag from "../../../../../shared/svg/Hashtag.tsx"
 import HeaderButtons from "./HeaderButtons.tsx"
-import Header from "../../../../../shared/components/Container/Header.tsx"
+import Header from "../../../../../shared/components/Header/Header.tsx"
 
 const Left = styled.div`
   padding-left: 8px;

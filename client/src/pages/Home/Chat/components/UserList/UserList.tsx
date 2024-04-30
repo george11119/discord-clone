@@ -3,7 +3,6 @@ import { useParams } from "react-router-dom"
 import { User } from "../../../../../../types.ts"
 import UserListItem from "./UserListItem.tsx"
 import serverQueries from "../../../../../api/queries/serverQueries.ts"
-import serverSocketHandlers from "../../../../../api/sockets/serverSocketHandlers.ts"
 
 const Wrapper = styled.div`
   width: 240px;

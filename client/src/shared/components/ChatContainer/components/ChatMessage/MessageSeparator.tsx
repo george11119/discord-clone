@@ -1,5 +1,5 @@
 import styled from "styled-components"
-import Separator from "../../../Sidebar/components/Separator.tsx"
+import Separator from "../../../../../pages/Home/Sidebar/components/Separator.tsx"
 import { dateFormatter } from "../../../../../utils/dateTime.ts"
 
 const DateContainer = styled.div`

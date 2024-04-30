@@ -19,7 +19,7 @@ const UserBarButtons = () => {
       </Tooltip>
       <Tooltip tooltip="User Settings" placement="top" fontSize={13}>
         <UserBarButton>
-          <SettingsButton size={20} />
+          <SettingsButton size={20} color={"rgb(181, 186, 193)"} />
         </UserBarButton>
       </Tooltip>
     </>

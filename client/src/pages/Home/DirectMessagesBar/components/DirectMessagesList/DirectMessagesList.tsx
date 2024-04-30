@@ -84,7 +84,7 @@ const DirectMessagesList = ({
   return (
     <Wrapper>
       {directMessages.map((dm) => {
-        return <DirectMessagesListItem directMessage={dm} />
+        return <DirectMessagesListItem key={dm.id} directMessage={dm} />
       })}
       <VerticalSpacer height={96} />
     </Wrapper>

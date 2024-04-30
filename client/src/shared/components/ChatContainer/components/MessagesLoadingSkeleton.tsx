@@ -1,5 +1,5 @@
 import styled from "styled-components"
-import VerticalSpacer from "../../../../shared/components/VerticalSpacer.tsx"
+import VerticalSpacer from "../../VerticalSpacer.tsx"
 import { genRandomInt } from "../../../../utils/genRandomInt.ts"
 import { genRandomDecimal } from "../../../../utils/genRandomDecimal.ts"
 

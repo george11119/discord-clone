@@ -1,7 +1,7 @@
 import styled from "styled-components"
 import { useParams } from "react-router-dom"
-import TrashIcon from "../../../../../shared/svg/TrashIcon.tsx"
-import EditIcon from "../../../../../shared/svg/EditIcon.tsx"
+import TrashIcon from "../../../../svg/TrashIcon.tsx"
+import EditIcon from "../../../../svg/EditIcon.tsx"
 import messageQueries from "../../../../../api/queries/messageQueries.ts"
 
 const PopoutWrapper = styled.div`
