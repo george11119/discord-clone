@@ -89,6 +89,23 @@ describe(`${url}`, () => {
         channel: directMessageChannel,
       })
     }
+
+    const user4 = await testHelpers.generateUser({
+      username: "testusername4",
+      password: "password",
+      email: "test4@test.com",
+    })
+
+    const directMessageChannel2 = await Channel.save({
+      name: "user1 user4",
+      channelType: ChannelType.DIRECT_MESSAGE,
+    })
+
+    await DirectMessage.save({
+      ownerId: user1?.id,
+      recepientId: user4?.id,
+      channelId: directMessageChannel2.id,
+    })
   })
 
   describe(`GET ${url}/:channelId`, () => {
@@ -355,6 +372,39 @@ describe(`${url}`, () => {
         )
         expect(newMessage).toBeTruthy()
       })
+
+      it("Returns 201 and also creates a inverse direct message relationship if one doesnt already exist", async () => {
+        const user1 = await User.findOneBy({ username: "testusername1" })
+        const token = jwtUtils.signToken({ userId: user1?.id as string })
+        const channel = await Channel.findOne({
+          where: {
+            name: "user1 user4",
+          },
+          relations: { messages: true },
+        })
+        const payload = { content: "newly sent message" }
+
+        const user4 = await User.findOneBy({ username: "testusername4" })
+        const nonExistentDirectMessageRelation = await DirectMessage.findOne({
+          where: { ownerId: user4?.id, recepientId: user1?.id },
+        })
+        expect(nonExistentDirectMessageRelation).toBeFalsy()
+
+        const res = await api
+          .post(`${url}/${channel?.id}`)
+          .send(payload)
+          .set("authorization", `Bearer ${token}`)
+          .expect(201)
+          .expect("Content-Type", /application\/json/)
+
+        const message = res.body
+        expect(message.content).toBe("newly sent message")
+
+        const existingDirectMessageRelation = await DirectMessage.findOne({
+          where: { ownerId: user4?.id, recepientId: user1?.id },
+        })
+        expect(existingDirectMessageRelation).toBeTruthy()
+      })
     })
   })
 
@@ -576,7 +626,7 @@ describe(`${url}`, () => {
     })
   })
 
-  describe.only(`DELETE ${url}/:channelId/:messageId`, () => {
+  describe(`DELETE ${url}/:channelId/:messageId`, () => {
     it("Returns 400 if invalid channelId or serverId is given", async () => {
       const user1 = await User.findOneBy({ username: "testusername1" })
       const token = jwtUtils.signToken({ userId: user1?.id as string })

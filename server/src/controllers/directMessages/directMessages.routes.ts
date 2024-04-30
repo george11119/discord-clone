@@ -39,13 +39,18 @@ router.post("/", async (req, res) => {
   // created room and create a inverse relationship
   const inverseDirectMessageRelation = await DirectMessage.findOne({
     where: { ownerId: recepient.id, recepientId: req.user?.id },
+    relations: { channel: true },
   })
 
   if (inverseDirectMessageRelation) {
     const ownedDirectMessageRelation = await createInverseDirectMessage(
       inverseDirectMessageRelation,
     )
-    return res.status(200).json(ownedDirectMessageRelation)
+    const channel = inverseDirectMessageRelation.channel
+
+    return res
+      .status(200)
+      .json({ ...ownedDirectMessageRelation, recepient, channel })
   }
 
   // no channel exists, create a new channel and a direct message
@@ -60,7 +65,7 @@ router.post("/", async (req, res) => {
     channelId: channel.id,
   })
 
-  res.status(200).json(newDirectMessageRelation)
+  res.status(200).json({ ...newDirectMessageRelation, channel, recepient })
 })
 
 export default router

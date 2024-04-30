@@ -18,6 +18,7 @@ import userSocketHandlers from "../../api/sockets/userSocketHandlers.ts"
 import serverSocketHandlers from "../../api/sockets/serverSocketHandlers.ts"
 import messageSocketHandlers from "../../api/sockets/messageSocketHandlers.ts"
 import DirectMessageChatArea from "./DirectMessageChat/DirectMessageChatArea.tsx"
+import directMessageSocketHandlers from "../../api/sockets/directMessageSocketHandlers.ts"
 
 const Wrapper = styled.div`
   display: grid;
@@ -48,6 +49,8 @@ const Home = ({
   for (const server of servers) {
     socket.emit("joinServerRoom", server.id)
   }
+
+  directMessageSocketHandlers.useDirectMessageCreateListener()
 
   serverSocketHandlers.useServerDeleteListener()
   serverSocketHandlers.useServerEditListener()

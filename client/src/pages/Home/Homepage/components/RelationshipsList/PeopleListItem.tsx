@@ -7,6 +7,7 @@ import styled from "styled-components"
 import CloseIcon from "../../../../../shared/svg/CloseIcon.tsx"
 import CheckmarkIcon from "../../../../../shared/svg/CheckmarkIcon.tsx"
 import userQueries from "../../../../../api/queries/userQueries.ts"
+import directMessagesQueries from "../../../../../api/queries/directMessagesQueries.ts"
 
 const PeopleListItemWrapper = styled.div`
   cursor: pointer;
@@ -107,15 +108,19 @@ const PeopleListItem = ({
   user: User
   type: "friend" | "sent" | "received"
 }) => {
+  const createDirectMessageMutation =
+    directMessagesQueries.useCreateDirectMessages()
   const destroyFriendRequestMutation = userQueries.useDestroyFriendRequest(
     user.id,
   )
   const acceptFriendRequestMutation = userQueries.useAcceptFriendRequest(
     user.id,
   )
-  const destroyFriendshipMutation = userQueries.useDestroyFriendship(
-    user.id
-  )
+  const destroyFriendshipMutation = userQueries.useDestroyFriendship(user.id)
+
+  const handleDirectMessageCreate = () => {
+    createDirectMessageMutation.mutate(user)
+  }
 
   const handleFriendRequestDestroy = () => {
     destroyFriendRequestMutation.mutate(user.username)
@@ -147,7 +152,7 @@ const PeopleListItem = ({
             <>
               <PeopleListItemButton
                 icon={<MessageIcon size={20} />}
-                onClick={() => null}
+                onClick={handleDirectMessageCreate}
               />
               <PeopleListItemButton
                 icon={<MoreIcon size={20} />}
