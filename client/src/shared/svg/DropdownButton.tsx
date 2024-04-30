@@ -29,7 +29,6 @@ const DropdownButton = ({
         <path
           fill="currentColor"
           d="M5.3 9.3a1 1 0 0 1 1.4 0l5.3 5.29 5.3-5.3a1 1 0 1 1 1.4 1.42l-6 6a1 1 0 0 1-1.4 0l-6-6a1 1 0 0 1 0-1.42Z"
-          className=""
         ></path>
       </Svg>
     )
@@ -47,7 +46,6 @@ const DropdownButton = ({
       <path
         fill="currentColor"
         d="M5.3 9.3a1 1 0 0 1 1.4 0l5.3 5.29 5.3-5.3a1 1 0 1 1 1.4 1.42l-6 6a1 1 0 0 1-1.4 0l-6-6a1 1 0 0 1 0-1.42Z"
-        className=""
       ></path>
     </Svg>
   ) : (

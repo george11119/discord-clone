@@ -12,7 +12,6 @@ const Nitro = () => {
       <path
         fill="currentColor"
         d="M15 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"
-        className=""
       ></path>
       <path
         fill="currentColor"
@@ -23,7 +22,6 @@ const Nitro = () => {
       <path
         fill="currentColor"
         d="M2.5 10a1 1 0 0 0 0-2H2a1 1 0 0 0 0 2h.5Z"
-        className=""
       ></path>
     </svg>
   )

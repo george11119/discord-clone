@@ -4,6 +4,7 @@ import ChannelListCategory from "./ChannelListCategory.tsx"
 import { useParams } from "react-router-dom"
 import { Channel } from "../../../../../../types.ts"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
+import { ChannelType } from "../../../../../../../types.ts"
 
 const Wrapper = styled.div`
   list-style: none;
@@ -33,7 +34,7 @@ const ChannelList = () => {
     <Wrapper>
       <ChannelListCategory title={"Text Channels"}>
         {channels
-          ?.filter((channel) => channel.channelType === "text")
+          ?.filter((channel) => channel.channelType === ChannelType.TEXT)
           .map((channel) => {
             return <ChannelListItem key={channel.id} channel={channel} />
           })}

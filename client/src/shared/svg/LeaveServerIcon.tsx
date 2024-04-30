@@ -12,7 +12,6 @@ const LeaveServerIcon = ({ size }: { size: number }) => {
       <path
         fill="currentColor"
         d="M9 12a1 1 0 0 1 1 1v2a1 1 0 1 1-2 0v-2a1 1 0 0 1 1-1Z"
-        className=""
       ></path>
       <path
         fill="currentColor"
@@ -23,7 +22,6 @@ const LeaveServerIcon = ({ size }: { size: number }) => {
       <path
         fill="currentColor"
         d="M15.3 16.7a1 1 0 0 1 1.4-1.4l4.3 4.29V16a1 1 0 1 1 2 0v6a1 1 0 0 1-1 1h-6a1 1 0 1 1 0-2h3.59l-4.3-4.3Z"
-        className=""
       ></path>
     </svg>
   )

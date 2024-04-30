@@ -8,7 +8,7 @@ const UploadFileButton = ({ size }: { size: number }) => {
       height={size}
       viewBox="0 0 24 24"
     >
-      <circle cx="12" cy="12" r="10" fill="transparent" className=""></circle>
+      <circle cx="12" cy="12" r="10" fill="transparent"></circle>
       <path
         fill="currentColor"
         fillRule="evenodd"

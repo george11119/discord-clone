@@ -9,7 +9,7 @@ import { io } from "../../app"
 import ChannelsController from "../channels/channels.db"
 import MessagesController from "../messages/messages.db"
 import { User } from "../../models/user"
-import { MessageType } from "../../../../types"
+import { ChannelType, MessageType } from "../../../../types"
 
 const router = express.Router()
 router.use(authenticatedValidator)
@@ -149,7 +149,9 @@ router.post("/join/:inviteLinkId", async (req, res) => {
 
   io.to(`server-${serverId}`).emit("user:join", user, serverId)
 
-  const channels = server.channels.filter((c) => c.channelType === "text")
+  const channels = server.channels.filter(
+    (c) => c.channelType === ChannelType.TEXT,
+  )
 
   if (channels.length !== 0) {
     const channel = channels[0]

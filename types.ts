@@ -4,6 +4,6 @@ export enum MessageType {
 }
 
 export enum ChannelType {
-  TEXT = "text",
-  DIRECT_MESSAGE = "direct_message",
+  TEXT = 1,
+  DIRECT_MESSAGE = 2,
 }
