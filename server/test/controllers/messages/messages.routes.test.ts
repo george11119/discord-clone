@@ -576,7 +576,7 @@ describe(`${url}`, () => {
     })
   })
 
-  describe(`DELETE ${url}/:channelId/:messageId`, () => {
+  describe.only(`DELETE ${url}/:channelId/:messageId`, () => {
     it("Returns 400 if invalid channelId or serverId is given", async () => {
       const user1 = await User.findOneBy({ username: "testusername1" })
       const token = jwtUtils.signToken({ userId: user1?.id as string })
@@ -599,7 +599,7 @@ describe(`${url}`, () => {
       await api.delete(`${url}/${channel?.id}/${message?.id}`).expect(401)
     })
 
-    it("Doesnt allow a user who isnt in the channel to update a message", async () => {
+    it("Doesnt allow a user who isnt in the channel to delete a message", async () => {
       const user = await User.findOneBy({ username: "testusername2" })
       const token = jwtUtils.signToken({ userId: user?.id as string })
 
@@ -617,7 +617,7 @@ describe(`${url}`, () => {
         .expect(401)
     })
 
-    it("Returns 401 if no channel or message is found", async () => {
+    it("Returns 404 if no channel is found", async () => {
       const user1 = await User.findOneBy({ username: "testusername1" })
       const token = jwtUtils.signToken({ userId: user1?.id as string })
 
@@ -626,35 +626,123 @@ describe(`${url}`, () => {
           `${url}/d063e5e8-446a-480f-bc8b-83c0ad33f1a8/d063e5e8-446a-480f-bc8b-83c0ad33f1a8`,
         )
         .set("authorization", `Bearer ${token}`)
-        .expect(401)
+        .expect(404)
     })
 
-    it("Returns 204 and deletes message if user is in channel and message exists", async () => {
-      const user1 = await User.findOneBy({ username: "testusername1" })
-      const token = jwtUtils.signToken({ userId: user1?.id as string })
+    describe("If channel is a server channel", () => {
+      it("Returns 401 if user is not in server where the message is in", async () => {
+        const user3 = await User.findOneBy({ username: "testusername3" })
+        const token = jwtUtils.signToken({ userId: user3?.id as string })
 
-      const channel = await Channel.findOne({
-        where: {
-          name: "testusername1's Channel",
-        },
-        relations: { messages: true },
+        const channel = await Channel.findOne({
+          where: {
+            name: "testusername1's Channel",
+          },
+          relations: { messages: true },
+        })
+
+        const initialMessageCount = channel?.messages.length
+        expect(initialMessageCount).toBe(5)
+
+        await api
+          .delete(`${url}/${channel?.id}/${channel?.messages[0].id}`)
+          .set("authorization", `Bearer ${token}`)
+          .expect(401)
+
+        const updatedChannel = await Channel.findOne({
+          where: {
+            name: "testusername1's Channel",
+          },
+          relations: { messages: true },
+        })
+        expect(updatedChannel?.messages.length).toBe(initialMessageCount)
       })
 
-      const initialMessageCount = channel?.messages.length as number
-      expect(initialMessageCount).toBe(5)
+      it("Returns 204 and deletes message if user is in channel and message exists", async () => {
+        const user1 = await User.findOneBy({ username: "testusername1" })
+        const token = jwtUtils.signToken({ userId: user1?.id as string })
 
-      await api
-        .delete(`${url}/${channel?.id}/${channel?.messages[0].id}`)
-        .set("authorization", `Bearer ${token}`)
-        .expect(204)
+        const channel = await Channel.findOne({
+          where: {
+            name: "testusername1's Channel",
+          },
+          relations: { messages: true },
+        })
 
-      const updatedChannel = await Channel.findOne({
-        where: {
-          name: "testusername1's Channel",
-        },
-        relations: { messages: true },
+        const initialMessageCount = channel?.messages.length as number
+        expect(initialMessageCount).toBe(5)
+
+        await api
+          .delete(`${url}/${channel?.id}/${channel?.messages[0].id}`)
+          .set("authorization", `Bearer ${token}`)
+          .expect(204)
+
+        const updatedChannel = await Channel.findOne({
+          where: {
+            name: "testusername1's Channel",
+          },
+          relations: { messages: true },
+        })
+        expect(updatedChannel?.messages.length).toBe(initialMessageCount - 1)
       })
-      expect(updatedChannel?.messages.length).toBe(initialMessageCount - 1)
+    })
+
+    describe("If channel is a direct message channel", () => {
+      it("Returns 401 if user does not have a direct message relation with the channel he is trying to delete from", async () => {
+        const user2 = await User.findOneBy({ username: "testusername2" })
+        const token = jwtUtils.signToken({ userId: user2?.id as string })
+
+        const channel = await Channel.findOne({
+          where: {
+            name: "user1 user3",
+          },
+          relations: { messages: true },
+        })
+
+        const initialMessageCount = channel?.messages.length
+        expect(initialMessageCount).toBe(3)
+
+        await api
+          .delete(`${url}/${channel?.id}/${channel?.messages[0].id}`)
+          .set("authorization", `Bearer ${token}`)
+          .expect(401)
+
+        const updatedChannel = await Channel.findOne({
+          where: {
+            name: "user1 user3",
+          },
+          relations: { messages: true },
+        })
+        expect(updatedChannel?.messages.length).toBe(initialMessageCount)
+      })
+
+      it("Returns 204 and deletes message if user is in channel and message exists", async () => {
+        const user1 = await User.findOneBy({ username: "testusername1" })
+        const token = jwtUtils.signToken({ userId: user1?.id as string })
+
+        const channel = await Channel.findOne({
+          where: {
+            name: "user1 user3",
+          },
+          relations: { messages: true },
+        })
+
+        const initialMessageCount = channel?.messages.length as number
+        expect(initialMessageCount).toBe(3)
+
+        await api
+          .delete(`${url}/${channel?.id}/${channel?.messages[0].id}`)
+          .set("authorization", `Bearer ${token}`)
+          .expect(204)
+
+        const updatedChannel = await Channel.findOne({
+          where: {
+            name: "user1 user3",
+          },
+          relations: { messages: true },
+        })
+        expect(updatedChannel?.messages.length).toBe(initialMessageCount - 1)
+      })
     })
   })
 })

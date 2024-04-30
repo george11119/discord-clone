@@ -199,9 +199,10 @@ router.patch("/:channelId/:messageId", async (req, res) => {
       messageId,
     })
 
-    io.to(`channel-${message?.channel.id}`)
-      .except(`${user.id}`)
-      .emit("message:edit", message)
+    // TODO reenable this when u figure out how to
+    // io.to(`channel-${message?.channel.id}`)
+    //   .except(`${user.id}`)
+    //   .emit("message:edit", message)
 
     res.status(200).json(message)
   }
@@ -216,24 +217,57 @@ router.delete("/:channelId/:messageId", async (req, res) => {
     relations: { server: true },
   })
 
-  const userIsInServer = await isUserInServer({
-    serverId: channel?.server.id as string,
-    userId: user.id,
-  })
-
-  if (!channel || !userIsInServer) {
-    return res.status(401).json({
-      message: "You are not allowed to create messages on this channel",
-    })
+  if (!channel) {
+    return res.status(404).json({ message: "Channel not found" })
   }
 
-  await messagesController.deleteMessage({ messageId })
+  if (channel.channelType === ChannelType.TEXT) {
+    const userIsInServer = await isUserInServer({
+      serverId: channel?.server.id as string,
+      userId: user.id,
+    })
 
-  io.to(`channel-${channelId}`)
-    .except(`${user.id}`)
-    .emit("message:delete", messageId, channelId)
+    if (!userIsInServer) {
+      return res.status(401).json({
+        message: "You are not allowed to delete messages on this channel",
+      })
+    }
 
-  res.status(204).end()
+    await messagesController.deleteMessage({ messageId })
+
+    io.to(`channel-${channelId}`)
+      .except(`${user.id}`)
+      .emit("message:delete", messageId, channelId)
+
+    res.status(204).end()
+  }
+
+  if (channel.channelType === ChannelType.DIRECT_MESSAGE) {
+    const ownerId = req.user?.id as string
+
+    // check if user has a direct message in that channel
+    const directMessageRelation = await DirectMessage.findOne({
+      where: {
+        ownerId,
+        channelId,
+      },
+    })
+
+    if (!directMessageRelation) {
+      return res.status(401).json({
+        message: "You are not allowed to delete messages on this channel",
+      })
+    }
+
+    await messagesController.deleteMessage({ messageId })
+
+    // TODO reenable this when u figure out how to
+    // io.to(`channel-${channelId}`)
+    //   .except(`${user.id}`)
+    //   .emit("message:delete", messageId, channelId)
+   
+    res.status(204).end()
+  }
 })
 
 export default router
