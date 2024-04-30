@@ -6,8 +6,6 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   OneToMany,
-  ManyToMany,
-  JoinTable,
 } from "typeorm"
 import { IsEmail, Length } from "class-validator"
 import { UserServers } from "./userServers"
@@ -15,7 +13,6 @@ import { Message } from "./message"
 import { FriendRequest } from "./friendRequest"
 import { Friendship } from "./friendship"
 import { DirectMessage } from "./directMessage"
-import { Channel } from "./channel"
 
 @Entity()
 export class User extends BaseEntity {

@@ -5,6 +5,8 @@ import { isUserInServer } from "../helpers"
 import { Channel } from "../../models/channel"
 import { User } from "../../models/user"
 import { io } from "../../app"
+import { ChannelType } from "../../../../types"
+import { DirectMessage } from "../../models/directMessage"
 
 const router = express.Router()
 router.use(authenticatedValidator)
@@ -21,22 +23,45 @@ router.get("/:channelId", async (req, res) => {
     return res.status(404).json({ message: "Channel not found" })
   }
 
-  const userId = req.user?.id as string
-  const serverId = channel?.server.id as string
+  if (channel.channelType === ChannelType.TEXT) {
+    const userId = req.user?.id as string
+    const serverId = channel?.server.id as string
 
-  const userIsInServer = await isUserInServer({
-    userId,
-    serverId,
-  })
-
-  if (!userIsInServer) {
-    res.status(401).json({
-      message: "You are not allowed to access the messages on this channel",
+    const userIsInServer = await isUserInServer({
+      userId,
+      serverId,
     })
+
+    if (!userIsInServer) {
+      res.status(401).json({
+        message: "You are not allowed to access the messages on this channel",
+      })
+    }
+
+    const messages = await messagesController.getMessages({ channelId })
+    res.json(messages)
   }
 
-  const messages = await messagesController.getMessages({ channelId })
-  res.json(messages)
+  if (channel.channelType === ChannelType.DIRECT_MESSAGE) {
+    const ownerId = req.user?.id as string
+
+    // check if user has a direct message in that channel
+    const directMessageRelation = await DirectMessage.findOne({
+      where: {
+        ownerId,
+        channelId,
+      },
+    })
+
+    if (!directMessageRelation) {
+      res.status(401).json({
+        message: "You are not allowed to access the messages on this channel",
+      })
+    }
+
+    const messages = await messagesController.getMessages({ channelId })
+    res.status(200).json(messages)
+  }
 })
 
 // create a message

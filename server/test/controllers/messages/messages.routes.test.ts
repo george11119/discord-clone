@@ -7,6 +7,9 @@ import { Server } from "../../../src/models/server"
 import { Channel } from "../../../src/models/channel"
 import { Message } from "../../../src/models/message"
 import jwtUtils from "../../../src/utils/jwtUtils"
+import { ChannelType } from "../../../../types"
+import { DirectMessage } from "../../../src/models/directMessage"
+import { createInverseDirectMessage } from "../../../src/controllers/helpers"
 
 const api = supertest(server)
 const url = "/api/messages"
@@ -15,10 +18,11 @@ dbSetupAndTeardown()
 
 describe(`${url}`, () => {
   beforeEach(async () => {
-    await Server.delete({})
-    await User.delete({})
+    await DirectMessage.delete({})
     await Channel.delete({})
     await Message.delete({})
+    await Server.delete({})
+    await User.delete({})
 
     const user1 = await testHelpers.generateUser({
       username: "testusername1",
@@ -59,6 +63,32 @@ describe(`${url}`, () => {
       name: "testusername2's Channel",
       server: user2Server,
     })
+
+    const user3 = await testHelpers.generateUser({
+      username: "testusername3",
+      password: "password",
+      email: "test3@test.com",
+    })
+
+    const directMessageChannel = await Channel.save({
+      name: "user1 user3",
+      channelType: ChannelType.DIRECT_MESSAGE,
+    })
+
+    const directMessageRelation1 = await DirectMessage.save({
+      ownerId: user1?.id,
+      recepientId: user3?.id,
+      channelId: directMessageChannel.id,
+    })
+    await createInverseDirectMessage(directMessageRelation1)
+
+    for (let i = 1; i <= 3; i++) {
+      await testHelpers.generateMessage({
+        content: `Hello ${i}`,
+        user: user1,
+        channel: directMessageChannel,
+      })
+    }
   })
 
   describe(`GET ${url}/:channelId`, () => {
@@ -69,41 +99,82 @@ describe(`${url}`, () => {
       await api.get(`${url}/${channel?.id}`).expect(401)
     })
 
-    it("Does not return a list of messages for a given channel if user is not in the server that the channel is in", async () => {
-      const user = await User.findOneBy({ username: "testusername1" })
-      const token = jwtUtils.signToken({ userId: user?.id as string })
+    describe("If channel belongs to a server", () => {
+      it("Does not return a list of messages for a given channel if user is not in the server that the channel is in", async () => {
+        const user = await User.findOneBy({ username: "testusername1" })
+        const token = jwtUtils.signToken({ userId: user?.id as string })
 
-      const channel = await Channel.findOneBy({
-        name: "testusername2's Channel",
+        const channel = await Channel.findOneBy({
+          name: "testusername2's Channel",
+        })
+
+        await api
+          .get(`${url}/${channel?.id}`)
+          .set("authorization", `Bearer ${token}`)
+          .expect(401)
       })
 
-      await api
-        .get(`${url}/${channel?.id}`)
-        .set("authorization", `Bearer ${token}`)
-        .expect(401)
+      it("Returns a list of messages in the given server if user is in the server that the channel is in", async () => {
+        const user = await User.findOneBy({ username: "testusername1" })
+        const token = jwtUtils.signToken({ userId: user?.id as string })
+
+        const channel = await Channel.findOneBy({
+          name: "testusername1's Channel",
+        })
+
+        const res = await api
+          .get(`${url}/${channel?.id}`)
+          .set("authorization", `Bearer ${token}`)
+          .expect(200)
+
+        const messages = res.body
+        expect(messages.length).toBe(5)
+
+        const [message] = messages
+        expect(message.content).toBeTruthy()
+
+        const messageOwner = message.user
+        expect(messageOwner.username).toBe(user?.username)
+      })
     })
 
-    it("Returns a list of messages in the given server if user is in the server that the channel is in", async () => {
-      const user = await User.findOneBy({ username: "testusername1" })
-      const token = jwtUtils.signToken({ userId: user?.id as string })
+    describe("If channel is a direct messages channel", () => {
+      it("Does not return a list of messages for a given channel if user does not have a direct message relation that the channel is in", async () => {
+        const user = await User.findOneBy({ username: "testusername2" })
+        const token = jwtUtils.signToken({ userId: user?.id as string })
 
-      const channel = await Channel.findOneBy({
-        name: "testusername1's Channel",
+        const channel = await Channel.findOneBy({
+          name: "user1 user3",
+        })
+
+        await api
+          .get(`${url}/${channel?.id}`)
+          .set("authorization", `Bearer ${token}`)
+          .expect(401)
       })
 
-      const res = await api
-        .get(`${url}/${channel?.id}`)
-        .set("authorization", `Bearer ${token}`)
-        .expect(200)
+      it("Returns a list of messages in the given server if user has a direct message relation containing then given channel", async () => {
+        const user = await User.findOneBy({ username: "testusername1" })
+        const token = jwtUtils.signToken({ userId: user?.id as string })
 
-      const messages = res.body
-      expect(messages.length).toBe(5)
+        const channel = await Channel.findOneBy({
+          name: "user1 user3",
+        })
 
-      const [message] = messages
-      expect(message.content).toBeTruthy()
+        const res = await api
+          .get(`${url}/${channel?.id}`)
+          .set("authorization", `Bearer ${token}`)
+          .expect(200)
 
-      const messageOwner = message.user
-      expect(messageOwner.username).toBe(user?.username)
+        const messages = res.body
+        expect(messages.length).toBe(3)
+
+        const [message] = messages
+        expect(message.content).toBeTruthy()
+
+        const messageOwner = message.user
+        expect(messageOwner.username).toBe(user?.username)
+      })
     })
   })
 
