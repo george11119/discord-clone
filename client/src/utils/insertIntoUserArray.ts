@@ -21,7 +21,8 @@ const binarySearch = (users: User[], username: string) => {
   return start
 }
 
-export const insertIntoUserArray = (users: User[], user: User) => {
+export const insertIntoUserArray = (users: User[] | undefined, user: User) => {
+  if (!users) return
   const usersCopy = [...users]
   const index = binarySearch(usersCopy, user.username)
   usersCopy.splice(index, 0, user)

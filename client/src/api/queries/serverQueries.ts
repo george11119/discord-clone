@@ -1,8 +1,9 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { useMutation, useQuery } from "@tanstack/react-query"
 import serverService from "../services/serverService.ts"
 import { Server } from "../../../types.ts"
 import { useContext } from "react"
 import AuthContext from "../../pages/Auth/AuthContext.ts"
+import useServerStore from "../stores/serverStore.ts"
 
 const useGetServers = () => {
   const { token } = useContext(AuthContext)
@@ -18,22 +19,21 @@ const useGetServers = () => {
 
 const useCreateServer = () => {
   const { token } = useContext(AuthContext)
-  const queryClient = useQueryClient()
+  const serverStore = useServerStore()
 
   return useMutation({
     mutationFn: (newServer: { name: string }) => {
       return serverService.create(newServer, token as string)
     },
-    onSuccess: (newServer) => {
-      const servers = queryClient.getQueryData(["servers"]) as Server[]
-      queryClient.setQueryData(["servers"], servers?.concat(newServer))
+    onSuccess: (newServer: Server) => {
+      serverStore.addOne(newServer)
     },
   })
 }
 
 const useEditServer = (serverId: string | undefined) => {
   const { token } = useContext(AuthContext)
-  const queryClient = useQueryClient()
+  const serverStore = useServerStore()
 
   return useMutation({
     mutationFn: (updatedServer: { name: string }) => {
@@ -43,48 +43,36 @@ const useEditServer = (serverId: string | undefined) => {
         token as string,
       )
     },
-    onSuccess: (editedServer) => {
-      const servers = queryClient.getQueryData(["servers"]) as Server[]
-      queryClient.setQueryData(
-        ["servers"],
-        servers.map((s) => (s.id === serverId ? editedServer : s)),
-      )
+    onSuccess: (editedServer: Server) => {
+      serverStore.updateOne(editedServer)
     },
   })
 }
 
 const useDeleteServer = (serverId: string | undefined) => {
   const { token } = useContext(AuthContext)
-  const queryClient = useQueryClient()
+  const serverStore = useServerStore()
 
   return useMutation({
     mutationFn: () => {
       return serverService.destroy(serverId as string, token as string)
     },
     onSuccess: () => {
-      const servers = queryClient.getQueryData(["servers"]) as Server[]
-      queryClient.setQueryData(
-        ["servers"],
-        servers.filter((s) => s.id !== serverId),
-      )
+      serverStore.deleteOne(serverId as string)
     },
   })
 }
 
 const useLeaveServer = (serverId: string | undefined) => {
   const { token } = useContext(AuthContext)
-  const queryClient = useQueryClient()
+  const serverStore = useServerStore()
 
   return useMutation({
     mutationFn: () => {
       return serverService.leaveServer(serverId as string, token as string)
     },
     onSuccess: () => {
-      const servers = queryClient.getQueryData(["servers"]) as Server[]
-      queryClient.setQueryData(
-        ["servers"],
-        servers.filter((s) => s.id !== serverId),
-      )
+      serverStore.deleteOne(serverId as string)
     },
   })
 }

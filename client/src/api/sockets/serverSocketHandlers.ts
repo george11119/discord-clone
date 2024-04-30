@@ -4,17 +4,14 @@ import { socket } from "../../config/socket.ts"
 import { useQueryClient } from "@tanstack/react-query"
 import { useLocation, useNavigate } from "react-router-dom"
 import { insertIntoUserArray } from "../../utils/insertIntoUserArray.ts"
+import useServerStore from "../stores/serverStore.ts"
 
 const useServerEditListener = () => {
-  const queryClient = useQueryClient()
+  const serverStore = useServerStore()
 
   return useEffect(() => {
     const onServerEdit = (editedServer: Server) => {
-      const servers = queryClient.getQueryData(["servers"]) as Server[]
-      queryClient.setQueryData(
-        ["servers"],
-        servers.map((s) => (s.id === editedServer.id ? editedServer : s)),
-      )
+      serverStore.updateOne(editedServer)
     }
 
     socket.on("server:edit", onServerEdit)
@@ -26,17 +23,15 @@ const useServerEditListener = () => {
 }
 
 const useServerDeleteListener = () => {
-  const queryClient = useQueryClient()
   const navigate = useNavigate()
   const { pathname } = useLocation()
+  const serverStore = useServerStore()
 
   return useEffect(() => {
     const onServerDelete = (serverId: string) => {
-      const oldServers = queryClient.getQueryData(["servers"]) as Server[]
-      const newServers = oldServers.filter((s) => s.id !== serverId)
+      serverStore.deleteOne(serverId)
 
-      queryClient.setQueryData(["servers"], newServers)
-      if (pathname.match(new RegExp(`.*/${serverId}`))) {
+      if (pathname.includes(`/channels/${serverId}`)) {
         navigate("/channels/@me")
       }
     }
