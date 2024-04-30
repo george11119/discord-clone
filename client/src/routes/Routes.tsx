@@ -25,6 +25,7 @@ const Routes = () => {
       element: <RootLayout />,
       children: [
         { path: "@me", element: <RootPage /> },
+        { path: "@me/:channelId", element: <RootPage /> },
         { path: ":serverId", element: <RootPage /> },
         { path: ":serverId/:channelId", element: <RootPage /> },
       ],

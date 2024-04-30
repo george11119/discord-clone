@@ -44,6 +44,15 @@ const DirectMessagesBarButtons = () => {
   )
 }
 
+const DirectMessageTitle = styled.h2`
+  padding: 18px 0 4px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+`
+
 const DirectMessagesBar = ({
   directMessages,
 }: {
@@ -53,6 +62,7 @@ const DirectMessagesBar = ({
     <Sidebar header={<Header />}>
       <Wrapper>
         <DirectMessagesBarButtons />
+        <DirectMessageTitle>Direct Messages</DirectMessageTitle>
         <DirectMessagesList directMessages={directMessages} />
       </Wrapper>
     </Sidebar>
