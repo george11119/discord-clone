@@ -4,6 +4,7 @@ import { User } from "../../models/user"
 import { DirectMessage } from "../../models/directMessage"
 import { Channel } from "../../models/channel"
 import { ChannelType } from "../../../../types"
+import { createInverseDirectMessage } from "../helpers"
 
 const router = express.Router()
 router.use(authenticatedValidator)
@@ -41,8 +42,9 @@ router.post("/", async (req, res) => {
   })
 
   if (inverseDirectMessageRelation) {
-    const ownedDirectMessageRelation =
-      await inverseDirectMessageRelation.createInverseDirectMessage()
+    const ownedDirectMessageRelation = await createInverseDirectMessage(
+      inverseDirectMessageRelation,
+    )
     return res.status(200).json(ownedDirectMessageRelation)
   }
 

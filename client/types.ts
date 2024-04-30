@@ -56,3 +56,13 @@ export type Friendship = {
   owner: User
   friend: User
 }
+
+export type DirectMessage = {
+  id: string
+  ownerId?: string
+  recepientId?: string
+  channelId?: string
+  owner?: User
+  recepient?: User
+  channel?: Channel
+}

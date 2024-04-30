@@ -2,11 +2,17 @@ import Home from "./Home.tsx"
 import { useContext } from "react"
 import AuthContext from "../Auth/AuthContext.ts"
 import serverQueries from "../../api/queries/serverQueries.ts"
-import { FriendRequestItem, Server, User } from "../../../types.ts"
+import {
+  DirectMessage,
+  FriendRequestItem,
+  Server,
+  User,
+} from "../../../types.ts"
 import { useQueries } from "@tanstack/react-query"
 import channelService from "../../api/services/channelService.ts"
 import userQueries from "../../api/queries/userQueries.ts"
 import styled from "styled-components"
+import directMessagesQueries from "../../api/queries/directMessagesQueries.ts"
 
 const BlankPage = styled.div`
   width: 100vw;
@@ -44,17 +50,26 @@ const RootPage = () => {
   const friendRequestsQuery = userQueries.useGetFriendRequests()
   const friendRequests = friendRequestsQuery.data as FriendRequestItem[]
 
+  const directMessagesQuery = directMessagesQueries.useGetDirectMessages()
+  const directMessages = directMessagesQuery.data as DirectMessage[]
+
   if (
     friendsQuery.isLoading ||
     serversQuery.isLoading ||
     friendRequestsQuery.isLoading ||
+    directMessagesQuery.isLoading ||
     channelsQueries.some((q) => q.isLoading)
   ) {
     return <BlankPage>Loading...</BlankPage>
   }
 
   return (
-    <Home servers={servers} friends={friends} friendRequests={friendRequests} />
+    <Home
+      directMessages={directMessages}
+      servers={servers}
+      friends={friends}
+      friendRequests={friendRequests}
+    />
   )
 }
 

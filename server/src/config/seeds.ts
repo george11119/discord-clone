@@ -10,6 +10,8 @@ import { Message } from "../models/message"
 import { FriendRequest } from "../models/friendRequest"
 import { Friendship } from "../models/friendship"
 import { DirectMessage } from "../models/directMessage"
+import { ChannelType } from "../../../types"
+import { createInverseDirectMessage } from "../controllers/helpers"
 
 const seedDatabase = async () => {
   // create users
@@ -108,6 +110,18 @@ const seedDatabase = async () => {
     friendId: user3.id,
   })
   await friendship2.save()
+
+  const directMessageChannel = await Channel.save({
+    name: "user1 user2",
+    channelType: ChannelType.DIRECT_MESSAGE,
+  })
+
+  const directMessageRelation1 = await DirectMessage.save({
+    ownerId: user1?.id,
+    recepientId: user2?.id,
+    channelId: directMessageChannel.id,
+  })
+  await createInverseDirectMessage(directMessageRelation1)
 }
 
 const testingStuff = async () => {
@@ -146,15 +160,14 @@ const testingStuff = async () => {
     channelId: channel1?.id,
   })
   await directMessage1.save()
-  await directMessage1.createInverseDirectMessage()
+  await createInverseDirectMessage(directMessage1)
 
-  const directMessage2 = DirectMessage.create({
+  const directMessage2 = await DirectMessage.save({
     ownerId: user6?.id,
     recepientId: user2?.id,
     channelId: channel4?.id,
   })
-  await directMessage2.save()
-  await directMessage2.createInverseDirectMessage()
+  await createInverseDirectMessage(directMessage2)
 
   const directMessage3 = DirectMessage.create({
     ownerId: user4?.id,
@@ -162,7 +175,7 @@ const testingStuff = async () => {
     channelId: channel3?.id,
   })
   await directMessage3.save()
-  await directMessage3.createInverseDirectMessage()
+  await createInverseDirectMessage(directMessage3)
 
   const directMessage4 = DirectMessage.create({
     ownerId: user1?.id,
@@ -170,7 +183,7 @@ const testingStuff = async () => {
     channelId: channel5?.id,
   })
   await directMessage4.save()
-  await directMessage4.createInverseDirectMessage()
+  await createInverseDirectMessage(directMessage4)
 
   const directMessage5 = DirectMessage.create({
     ownerId: user8?.id,
@@ -178,7 +191,7 @@ const testingStuff = async () => {
     channelId: channel3?.id,
   })
   await directMessage5.save()
-  await directMessage5.createInverseDirectMessage()
+  await createInverseDirectMessage(directMessage5)
 
   const queryResult = await User.findOne({
     where: { username: "testusername1" },

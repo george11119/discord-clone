@@ -7,6 +7,7 @@ import { Channel } from "../../../src/models/channel"
 import jwtUtils from "../../../src/utils/jwtUtils"
 import { DirectMessage } from "../../../src/models/directMessage"
 import { ChannelType } from "../../../../types"
+import { createInverseDirectMessage } from "../../../src/controllers/helpers"
 
 const api = supertest(server)
 const url = "/api/channels/@me"
@@ -48,30 +49,21 @@ describe(`${url}`, () => {
       recepientId: user4?.id,
       channelId: channel1.id,
     })
-    const x = await DirectMessage.findOne({
-      where: { id: directMessageRelation1.id },
-    })
-    x?.createInverseDirectMessage()
+    await createInverseDirectMessage(directMessageRelation1)
 
     const directMessageRelation2 = await DirectMessage.save({
       ownerId: user3?.id,
       recepientId: user5?.id,
       channelId: channel2.id,
     })
-    const xx = await DirectMessage.findOne({
-      where: { id: directMessageRelation2.id },
-    })
-    xx?.createInverseDirectMessage()
+    await createInverseDirectMessage(directMessageRelation2)
 
     const directMessageRelation3 = await DirectMessage.save({
       ownerId: user4?.id,
       recepientId: user5?.id,
       channelId: channel3.id,
     })
-    const xxx = await DirectMessage.findOne({
-      where: { id: directMessageRelation3.id },
-    })
-    xxx?.createInverseDirectMessage()
+    await createInverseDirectMessage(directMessageRelation3)
   })
 
   describe(`GET ${url}`, () => {
@@ -124,6 +116,26 @@ describe(`${url}`, () => {
         .send(payload)
         .set("authorization", `Bearer ${token}`)
         .expect(400)
+    })
+
+    it("Returns 400 if user tries to create a direct message with a non existent user", async () => {
+      const user1 = await User.findOne({ where: { username: "testusername1" } })
+      const token = jwtUtils.signToken({ userId: user1?.id as string })
+
+      const user2 = await User.findOne({ where: { username: "testusername2" } })
+      await User.delete({ id: user2?.id })
+      const payload = { recepient: user2 }
+
+      const initialDirectMessages = await DirectMessage.count()
+
+      await api
+        .post(`${url}`)
+        .send(payload)
+        .set("authorization", `Bearer ${token}`)
+        .expect(400)
+
+      const finalDirectMessages = await DirectMessage.count()
+      expect(initialDirectMessages).toBe(finalDirectMessages)
     })
 
     it("Creates a new channel for sending direct messages and a one sided relationship if one doesnt exist", async () => {

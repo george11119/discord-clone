@@ -1,4 +1,5 @@
 import { UserServers } from "../models/userServers"
+import { DirectMessage } from "../models/directMessage"
 
 export const isUserInServer = async ({
   userId,
@@ -13,4 +14,14 @@ export const isUserInServer = async ({
   })
 
   return userServer ? true : false
+}
+
+export const createInverseDirectMessage = async (
+  directMessage: DirectMessage,
+) => {
+  return await DirectMessage.save({
+    ownerId: directMessage.recepientId,
+    recepientId: directMessage.ownerId,
+    channelId: directMessage.channelId,
+  })
 }

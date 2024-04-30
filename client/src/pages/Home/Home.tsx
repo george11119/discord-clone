@@ -3,7 +3,12 @@ import ServerSidebar from "./Sidebar/ServerSidebar.tsx"
 import Channelbar from "./Channelbar/Channelbar.tsx"
 import ChatAreaContainer from "./Chat/ChatAreaContainer.tsx"
 import useSocketConnection from "../../api/sockets/useSocketConnection.ts"
-import { FriendRequestItem, Server, User } from "../../../types.ts"
+import {
+  DirectMessage,
+  FriendRequestItem,
+  Server,
+  User,
+} from "../../../types.ts"
 import { socket } from "../../config/socket.ts"
 import { matchPath, useLocation } from "react-router-dom"
 import DirectMessagesBar from "./DirectMessagesBar/DirectMessagesBar.tsx"
@@ -23,10 +28,12 @@ const Home = ({
   servers,
   friends,
   friendRequests,
+  directMessages,
 }: {
   servers: Server[]
   friends: User[]
   friendRequests: FriendRequestItem[]
+  directMessages: DirectMessage[]
 }) => {
   const { pathname } = useLocation()
   const isHomeLink = matchPath(`/channels/@me/*`, pathname)
@@ -62,7 +69,7 @@ const Home = ({
       <ServerSidebar servers={servers} />
       {isHomeLink ? (
         <>
-          <DirectMessagesBar />
+          <DirectMessagesBar directMessages={directMessages} />
           <FriendsDisplayContainer
             friends={friends}
             friendRequests={friendRequests}

@@ -45,12 +45,4 @@ export class DirectMessage extends BaseEntity {
     onDelete: "CASCADE",
   })
   channel: Channel
-
-  public async createInverseDirectMessage() {
-    return await DirectMessage.save({
-      ownerId: this.recepientId,
-      recepientId: this.ownerId,
-      channelId: this.channelId,
-    })
-  }
 }
