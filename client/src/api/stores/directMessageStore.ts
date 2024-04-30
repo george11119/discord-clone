@@ -1,9 +1,8 @@
 import { useQueryClient } from "@tanstack/react-query"
 import { DirectMessage } from "../../../types.ts"
 
-const queryKey = "direct-messages"
-
 const useDirectMessagesStore = () => {
+  const queryKey = "direct-messages"
   const queryClient = useQueryClient()
 
   const get = () => {

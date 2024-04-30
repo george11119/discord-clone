@@ -1,9 +1,10 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { useMutation, useQuery } from "@tanstack/react-query"
 import channelService from "../services/channelService.ts"
 import { useContext } from "react"
 import AuthContext from "../../pages/Auth/AuthContext.ts"
 import { Channel } from "../../../types.ts"
 import { useLocation, useNavigate } from "react-router-dom"
+import useChannelStore from "../stores/channelStore.ts"
 
 const useGetChannels = (serverId: string | undefined) => {
   const { token } = useContext(AuthContext)
@@ -32,7 +33,7 @@ const useGetChannels = (serverId: string | undefined) => {
 
 const useCreateChannel = (serverId: string | undefined) => {
   const { token } = useContext(AuthContext)
-  const queryClient = useQueryClient()
+  const channelStore = useChannelStore()
   const navigate = useNavigate()
 
   return useMutation({
@@ -43,14 +44,8 @@ const useCreateChannel = (serverId: string | undefined) => {
         newChannel,
       )
     },
-    onSuccess: (newChannel) => {
-      const oldChannels = queryClient.getQueryData([
-        "channels",
-        `${serverId}`,
-      ]) as Channel[]
-      const newChannels = oldChannels.concat(newChannel)
-      queryClient.setQueryData(["channels", `${serverId}`], newChannels)
-
+    onSuccess: (newChannel: Channel) => {
+      channelStore.addOne(newChannel)
       navigate(`/channels/${newChannel.serverId}/${newChannel.id}`)
     },
   })
@@ -61,7 +56,7 @@ const useEditChannel = (
   channelId: string | undefined,
 ) => {
   const { token } = useContext(AuthContext)
-  const queryClient = useQueryClient()
+  const channelStore = useChannelStore()
 
   return useMutation({
     mutationFn: (channelToEdit: { name: string }) => {
@@ -73,14 +68,7 @@ const useEditChannel = (
       )
     },
     onSuccess: (editedChannel: Channel) => {
-      const oldChannels = queryClient.getQueryData([
-        "channels",
-        `${serverId}`,
-      ]) as Channel[]
-      const newChannels = oldChannels.map((c) =>
-        c.id === editedChannel.id ? editedChannel : c,
-      )
-      queryClient.setQueryData(["channels", `${serverId}`], newChannels)
+      channelStore.updateOne(editedChannel)
     },
   })
 }
@@ -90,7 +78,7 @@ const useDeleteChannel = (
   channelId: string | undefined,
 ) => {
   const { token } = useContext(AuthContext)
-  const queryClient = useQueryClient()
+  const channelStore = useChannelStore()
   const navigate = useNavigate()
   const { pathname } = useLocation()
 
@@ -103,12 +91,10 @@ const useDeleteChannel = (
       )
     },
     onSuccess: () => {
-      const oldChannels = queryClient.getQueryData([
-        "channels",
-        `${serverId}`,
-      ]) as Channel[]
-      const newChannels = oldChannels.filter((c) => c.id !== channelId)
-      queryClient.setQueryData(["channels", `${serverId}`], newChannels)
+      const newChannels = channelStore.deleteOne(
+        channelId as string,
+        serverId as string,
+      )
 
       // redirect back to server home page if no channels left after delete
       if (newChannels.length === 0) {

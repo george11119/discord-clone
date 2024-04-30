@@ -46,7 +46,9 @@ const seedDatabase = async () => {
     const server = await Server.findOne({
       where: { name: "Server 1" },
     })
-    const channel = Channel.create({ name: `Channel ${i}` })
+    const channel = Channel.create({
+      name: `Channel ${i}`,
+    })
 
     if (server) channel.server = server
 

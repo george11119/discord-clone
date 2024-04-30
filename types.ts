@@ -1,9 +1,9 @@
 export enum MessageType {
-  NORMAL = 1,
-  WELCOME = 2,
+  NORMAL = "n",
+  WELCOME = "w",
 }
 
 export enum ChannelType {
-  TEXT = 1,
-  DIRECT_MESSAGE = 2,
+  TEXT = "t",
+  DIRECT_MESSAGE = "d",
 }

@@ -1,23 +1,15 @@
 import { useEffect } from "react"
 import { Channel } from "../../../types.ts"
 import { socket } from "../../config/socket.ts"
-import { useQueryClient } from "@tanstack/react-query"
 import { useLocation, useNavigate } from "react-router-dom"
+import useChannelStore from "../stores/channelStore.ts"
 
 const useChannelCreateListener = () => {
-  const queryClient = useQueryClient()
+  const channelStore = useChannelStore()
 
   return useEffect(() => {
     const onChannelCreate = (newChannel: Channel) => {
-      const oldChannels = queryClient.getQueryData([
-        "channels",
-        `${newChannel.serverId}`,
-      ]) as Channel[]
-      const newChannels = oldChannels.concat(newChannel)
-      queryClient.setQueryData(
-        ["channels", `${newChannel.serverId}`],
-        newChannels,
-      )
+      channelStore.addOne(newChannel)
     }
 
     socket.on("channel:create", onChannelCreate)
@@ -29,21 +21,11 @@ const useChannelCreateListener = () => {
 }
 
 const useChannelEditListener = () => {
-  const queryClient = useQueryClient()
+  const channelStore = useChannelStore()
 
   return useEffect(() => {
     const onChannelEdit = (editedChannel: Channel) => {
-      const oldChannels = queryClient.getQueryData([
-        "channels",
-        `${editedChannel.serverId}`,
-      ]) as Channel[]
-      const newChannels = oldChannels.map((c) =>
-        c.id === editedChannel.id ? editedChannel : c,
-      )
-      queryClient.setQueryData(
-        ["channels", `${editedChannel.serverId}`],
-        newChannels,
-      )
+      channelStore.updateOne(editedChannel)
     }
 
     socket.on("channel:edit", onChannelEdit)
@@ -55,18 +37,13 @@ const useChannelEditListener = () => {
 }
 
 const useChannelDeleteListener = () => {
-  const queryClient = useQueryClient()
+  const channelStore = useChannelStore()
   const navigate = useNavigate()
   const { pathname } = useLocation()
 
   return useEffect(() => {
     const onChannelDelete = (channelId: string, serverId: string) => {
-      const oldChannels = queryClient.getQueryData([
-        "channels",
-        serverId,
-      ]) as Channel[]
-      const newChannels = oldChannels.filter((c) => c.id !== channelId)
-      queryClient.setQueryData(["channels", serverId], newChannels)
+      const newChannels = channelStore.deleteOne(channelId, serverId)
 
       // redirect back to server home page if no channels left after delete
       if (newChannels.length === 0) {

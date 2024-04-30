@@ -34,7 +34,7 @@ const ChannelList = () => {
     <Wrapper>
       <ChannelListCategory title={"Text Channels"}>
         {channels
-          ?.filter((channel) => channel.channelType === ChannelType.TEXT)
+          .filter((channel) => channel.channelType === ChannelType.TEXT)
           .map((channel) => {
             return <ChannelListItem key={channel.id} channel={channel} />
           })}

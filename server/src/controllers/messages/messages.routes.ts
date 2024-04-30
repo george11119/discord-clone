@@ -1,27 +1,27 @@
 import express from "express"
 import messagesController from "./messages.db"
-import {authenticatedValidator} from "../../middleware/authenticatedValidator"
-import {createInverseDirectMessage, isUserInServer} from "../helpers"
-import {Channel} from "../../models/channel"
-import {User} from "../../models/user"
-import {io} from "../../app"
-import {ChannelType} from "../../../../types"
-import {DirectMessage} from "../../models/directMessage"
-import {Message} from "../../models/message"
+import { authenticatedValidator } from "../../middleware/authenticatedValidator"
+import { createInverseDirectMessage, isUserInServer } from "../helpers"
+import { Channel } from "../../models/channel"
+import { User } from "../../models/user"
+import { io } from "../../app"
+import { ChannelType } from "../../../../types"
+import { DirectMessage } from "../../models/directMessage"
+import { Message } from "../../models/message"
 
 const router = express.Router()
 router.use(authenticatedValidator)
 
 // get all messages
 router.get("/:channelId", async (req, res) => {
-  const {channelId} = req.params
+  const { channelId } = req.params
   const channel = await Channel.findOne({
-    where: {id: channelId},
-    relations: {server: true},
+    where: { id: channelId },
+    relations: { server: true },
   })
 
   if (!channel) {
-    return res.status(404).json({message: "Channel not found"})
+    return res.status(404).json({ message: "Channel not found" })
   }
 
   if (channel.channelType === ChannelType.TEXT) {
@@ -39,7 +39,7 @@ router.get("/:channelId", async (req, res) => {
       })
     }
 
-    const messages = await messagesController.getMessages({channelId})
+    const messages = await messagesController.getMessages({ channelId })
     res.json(messages)
   }
 
@@ -60,24 +60,24 @@ router.get("/:channelId", async (req, res) => {
       })
     }
 
-    const messages = await messagesController.getMessages({channelId})
+    const messages = await messagesController.getMessages({ channelId })
     res.status(200).json(messages)
   }
 })
 
 // create a message
 router.post("/:channelId", async (req, res) => {
-  const {channelId} = req.params
-  const {content} = req.body
+  const { channelId } = req.params
+  const { content } = req.body
   const user = req.user as User
 
   const channel = await Channel.findOne({
-    where: {id: channelId},
-    relations: {server: true},
+    where: { id: channelId },
+    relations: { server: true },
   })
 
   if (!channel) {
-    return res.status(404).json({message: "Channel not found"})
+    return res.status(404).json({ message: "Channel not found" })
   }
 
   if (channel.channelType === ChannelType.TEXT) {
@@ -140,10 +140,9 @@ router.post("/:channelId", async (req, res) => {
         directMessageRelation,
       )
 
-      console.log(directMessageRelation.recepientId)
       io.to(`${directMessageRelation.recepientId}`).emit(
         "directMessage:create",
-        {...newInverseDirectMessageRelation, recepient: req.user, channel},
+        { ...newInverseDirectMessageRelation, recepient: req.user, channel },
       )
     }
 
@@ -156,19 +155,19 @@ router.post("/:channelId", async (req, res) => {
 })
 
 router.patch("/:channelId/:messageId", async (req, res) => {
-  const {channelId, messageId} = req.params
-  const {content} = req.body
+  const { channelId, messageId } = req.params
+  const { content } = req.body
   const user = req.user as User
 
   const channel = await Channel.findOne({
-    where: {id: channelId},
-    relations: {server: true},
+    where: { id: channelId },
+    relations: { server: true },
   })
 
-  const message = await Message.findOne({where: {id: messageId}})
+  const message = await Message.findOne({ where: { id: messageId } })
 
   if (!channel || !message) {
-    return res.status(404).json({message: "Channel or message not found"})
+    return res.status(404).json({ message: "Channel or message not found" })
   }
 
   if (channel.channelType === ChannelType.TEXT) {
@@ -226,16 +225,16 @@ router.patch("/:channelId/:messageId", async (req, res) => {
 })
 
 router.delete("/:channelId/:messageId", async (req, res) => {
-  const {channelId, messageId} = req.params
+  const { channelId, messageId } = req.params
   const user = req.user as User
 
   const channel = await Channel.findOne({
-    where: {id: channelId},
-    relations: {server: true},
+    where: { id: channelId },
+    relations: { server: true },
   })
 
   if (!channel) {
-    return res.status(404).json({message: "Channel not found"})
+    return res.status(404).json({ message: "Channel not found" })
   }
 
   if (channel.channelType === ChannelType.TEXT) {
@@ -250,7 +249,7 @@ router.delete("/:channelId/:messageId", async (req, res) => {
       })
     }
 
-    await messagesController.deleteMessage({messageId})
+    await messagesController.deleteMessage({ messageId })
 
     io.to(`channel-${channelId}`)
       .except(`${user.id}`)
@@ -276,7 +275,7 @@ router.delete("/:channelId/:messageId", async (req, res) => {
       })
     }
 
-    await messagesController.deleteMessage({messageId})
+    await messagesController.deleteMessage({ messageId })
 
     io.to(`channel-${channelId}`)
       .except(`${user.id}`)
