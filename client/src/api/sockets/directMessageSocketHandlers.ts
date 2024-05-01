@@ -25,6 +25,11 @@ const useDirectMessageReceivedListener = () => {
   return useEffect(() => {
     const onDirectMessageReceived = (channelId: string) => {
       directMessagesStore.incrementChannelMessageCount(channelId)
+
+      const channelIdFromUrl = window.location.pathname.split("/")[3]
+      if (channelIdFromUrl === channelId) {
+        directMessagesStore.syncMessagesSeenCount(channelId)
+      }
     }
 
     socket.on("directMessage:received", onDirectMessageReceived)

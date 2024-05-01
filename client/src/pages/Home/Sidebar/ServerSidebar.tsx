@@ -5,6 +5,8 @@ import HomeIcon from "./components/HomeIcon.tsx"
 import ServerIcon from "./components/ServerIcon.tsx"
 import CreateServerButton from "./components/CreateServerButton.tsx"
 import { Server } from "../../../../types.ts"
+import useDirectMessagesStore from "../../../api/stores/directMessageStore.ts"
+import DirectMessageIcon from "./components/DirectMessageIcon.tsx"
 
 const Wrapper = styled.nav`
   background: rgb(30, 31, 34);
@@ -21,9 +23,17 @@ const Wrapper = styled.nav`
 `
 
 const ServerSidebar = ({ servers }: { servers: Server[] }) => {
+  const directMessagesStore = useDirectMessagesStore()
+  const unseenDirectMessages = directMessagesStore
+    .get()
+    .filter((dm) => dm.seenMessagesCount !== dm.channel?.messageCount)
+
   return (
     <Wrapper>
       <HomeIcon />
+      {unseenDirectMessages.map((dm) => {
+        return <DirectMessageIcon directMessage={dm} />
+      })}
       <Separator type={"thick"} />
       {servers?.map((server) => {
         return <ServerIcon key={server.id} server={server} />

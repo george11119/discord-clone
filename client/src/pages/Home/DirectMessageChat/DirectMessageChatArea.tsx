@@ -7,7 +7,6 @@ import { useEffect, useState } from "react"
 import useDirectMessagesStore from "../../../api/stores/directMessageStore.ts"
 import { storeLastHomepageUrl } from "../../../utils/storeLastHomepageUrl.ts"
 import directMessagesQueries from "../../../api/queries/directMessagesQueries.ts"
-import { DirectMessage } from "../../../../types.ts"
 
 const Wrapper = styled.div`
   background-color: rgb(49, 51, 56);
@@ -38,7 +37,7 @@ const DirectMessageChatArea = () => {
 
   const updateSeenMessagesCountMutation =
     directMessagesQueries.useUpdateSeenMessagesCount(
-      directMessage as DirectMessage,
+      directMessage?.channel?.id as string,
     )
 
   useEffect(() => {

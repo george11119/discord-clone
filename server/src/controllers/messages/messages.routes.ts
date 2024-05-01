@@ -147,6 +147,11 @@ router.post("/:channelId", async (req, res) => {
       )
     }
 
+    await DirectMessage.save({
+      id: directMessageRelation.id,
+      seenMessagesCount: directMessageRelation.seenMessagesCount + 1,
+    })
+
     await Channel.save({
       id: channelId,
       messageCount: channel.messageCount + 1,

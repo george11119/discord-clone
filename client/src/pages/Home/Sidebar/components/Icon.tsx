@@ -12,7 +12,6 @@ export const LinkWrapper = styled(NavLink)`
   cursor: pointer;
   font-weight: 500;
   font-size: 18px;
-  background: rgb(49, 51, 56);
   height: 48px;
   width: 48px;
   display: flex;
@@ -55,6 +54,7 @@ const Icon = ({
   hoverColor = "rgb(88, 101, 242)",
   onClick,
   badge,
+  color,
 }: {
   name: string
   link: string
@@ -63,6 +63,7 @@ const Icon = ({
   hoverColor?: string
   onClick?: () => void
   badge?: ReactNode
+  color?: string
 }) => {
   const { pathname } = useLocation()
 
@@ -79,7 +80,13 @@ const Icon = ({
       <Tooltip tooltip={tooltip ? tooltip : name} placement="right">
         <LinkWrapper
           to={`${link}`}
-          style={isActive ? activeStyle : {}}
+          style={
+            isActive
+              ? activeStyle
+              : {
+                  backgroundColor: color ? color : "" + "rgb(49, 51, 56)",
+                }
+          }
           onClick={onClick}
         >
           <Wrapper
