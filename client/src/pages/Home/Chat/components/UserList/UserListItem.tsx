@@ -6,7 +6,7 @@ import PopoutContainer from "../../../../../shared/components/PopoutContainer.ts
 import { CSSProperties, useState } from "react"
 import UserInfoPopout from "../../../../../shared/components/user/UserInfoPopout.tsx"
 import useContextMenu from "../../../../../hooks/useContextMenu.ts"
-import ContextMenu from "../../../../../shared/components/ContextMenu.tsx"
+import UserContextMenu from "../../../../../shared/components/ContextMenu/User/UserContextMenu.tsx"
 
 const Wrapper = styled.div`
   display: flex;
@@ -67,7 +67,11 @@ const UserListItem = ({ user }: { user: User }) => {
         </Wrapper>
       </PopoutContainer>
       {contextMenuState.show && (
-        <ContextMenu contextMenuState={contextMenuState} close={close} />
+        <UserContextMenu
+          contextMenuState={contextMenuState}
+          close={close}
+          user={user}
+        />
       )}
     </>
   )

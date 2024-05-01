@@ -6,6 +6,11 @@ const useFriendsStore = () => {
   const queryKey = "friends"
   const queryClient = useQueryClient()
 
+  const get = () => {
+    const friends = queryClient.getQueryData([queryKey]) as User[]
+    return friends
+  }
+
   const addOne = (newFriend: User) => {
     const oldFriends = queryClient.getQueryData([queryKey]) as User[]
     const newFriends = insertIntoUserArray(oldFriends, newFriend)
@@ -20,7 +25,7 @@ const useFriendsStore = () => {
     return newFriends
   }
 
-  return { addOne, deleteOne }
+  return { get, addOne, deleteOne }
 }
 
 export default useFriendsStore

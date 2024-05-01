@@ -76,12 +76,7 @@ const Home = ({
   messageSocketHandlers.useMessageDeleteListener()
 
   return (
-    <Wrapper
-      onContextMenu={(e) => {
-        const text = window.getSelection()?.toString()
-        if (!text) e.preventDefault()
-      }}
-    >
+    <Wrapper>
       <ServerSidebar servers={servers} />
       {isHomeLink ? (
         <>

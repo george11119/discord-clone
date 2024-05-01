@@ -19,7 +19,7 @@ const Wrapper = styled.div`
 `
 
 const Header = ({ children }: { children: ReactNode }) => {
-  return <Wrapper>{children}</Wrapper>
+  return <Wrapper onContextMenu={(e) => e.preventDefault()}>{children}</Wrapper>
 }
 
 export default Header

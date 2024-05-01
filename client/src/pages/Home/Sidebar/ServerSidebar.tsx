@@ -38,7 +38,7 @@ const ServerSidebar = ({ servers }: { servers: Server[] }) => {
     .filter((dm) => dm.seenMessagesCount !== dm.channel?.messageCount)
 
   return (
-    <Wrapper>
+    <Wrapper onContextMenu={(e) => e.preventDefault()}>
       <AnimatePresence initial={false}>
         <HomeIcon key="homeIcon" />
         {unseenDirectMessages.map((dm) => {

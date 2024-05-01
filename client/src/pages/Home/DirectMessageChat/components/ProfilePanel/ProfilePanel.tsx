@@ -64,7 +64,7 @@ const NoteContainer = styled.div`
 
 const ProfilePanel = ({ user }: { user: User | undefined }) => {
   return (
-    <Wrapper>
+    <Wrapper onContextMenu={(e) => e.preventDefault()}>
       <Banner $backgroundColor={stringToColor(user?.username as string)} />
       <ProfilePictureBorder>
         <ProfilePictureContainer>
