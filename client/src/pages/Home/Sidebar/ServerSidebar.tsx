@@ -7,6 +7,7 @@ import CreateServerButton from "./components/CreateServerButton.tsx"
 import { Server } from "../../../../types.ts"
 import useDirectMessagesStore from "../../../api/stores/directMessageStore.ts"
 import DirectMessageIcon from "./components/DirectMessageIcon.tsx"
+import { motion, AnimatePresence } from "framer-motion"
 
 const Wrapper = styled.nav`
   background: rgb(30, 31, 34);
@@ -22,6 +23,14 @@ const Wrapper = styled.nav`
   scrollbar-width: none;
 `
 
+const InnerWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+`
+
 const ServerSidebar = ({ servers }: { servers: Server[] }) => {
   const directMessagesStore = useDirectMessagesStore()
   const unseenDirectMessages = directMessagesStore
@@ -30,16 +39,29 @@ const ServerSidebar = ({ servers }: { servers: Server[] }) => {
 
   return (
     <Wrapper>
-      <HomeIcon />
-      {unseenDirectMessages.map((dm) => {
-        return <DirectMessageIcon directMessage={dm} />
-      })}
-      <Separator type={"thick"} />
-      {servers?.map((server) => {
-        return <ServerIcon key={server.id} server={server} />
-      })}
-      <CreateServerButton />
-      <VerticalSpacer height={12} />
+      <AnimatePresence initial={false}>
+        <HomeIcon key="homeIcon" />
+        {unseenDirectMessages.map((dm) => {
+          return (
+            <motion.div
+              key={dm.id}
+              initial={{ opacity: 0, scale: 0.3 }}
+              animate={{ opacity: 1, scale: 1, transition: { duration: 0.15 } }}
+              exit={{ opacity: 0, scale: 0.5, transition: { duration: 0.15 } }}
+            >
+              <DirectMessageIcon directMessage={dm} />
+            </motion.div>
+          )
+        })}
+        <InnerWrapper key="innerWrapper" as={motion.div} layout>
+          <Separator type={"thick"} />
+          {servers?.map((server) => {
+            return <ServerIcon key={server.id} server={server} />
+          })}
+          <CreateServerButton />
+          <VerticalSpacer height={12} />
+        </InnerWrapper>
+      </AnimatePresence>
     </Wrapper>
   )
 }

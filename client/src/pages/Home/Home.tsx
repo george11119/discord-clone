@@ -19,6 +19,7 @@ import serverSocketHandlers from "../../api/sockets/serverSocketHandlers.ts"
 import messageSocketHandlers from "../../api/sockets/messageSocketHandlers.ts"
 import DirectMessageChatArea from "./DirectMessageChat/DirectMessageChatArea.tsx"
 import directMessageSocketHandlers from "../../api/sockets/directMessageSocketHandlers.ts"
+import { AnimatePresence } from "framer-motion"
 
 const Wrapper = styled.div`
   display: grid;

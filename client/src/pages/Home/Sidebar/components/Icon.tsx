@@ -55,6 +55,7 @@ const Icon = ({
   onClick,
   badge,
   color,
+  canBeActive,
 }: {
   name: string
   link: string
@@ -64,6 +65,7 @@ const Icon = ({
   onClick?: () => void
   badge?: ReactNode
   color?: string
+  canBeActive?: "no"
 }) => {
   const { pathname } = useLocation()
 
@@ -81,7 +83,7 @@ const Icon = ({
         <LinkWrapper
           to={`${link}`}
           style={
-            isActive
+            isActive && canBeActive !== "no"
               ? activeStyle
               : {
                   backgroundColor: color ? color : "" + "rgb(49, 51, 56)",
@@ -92,7 +94,7 @@ const Icon = ({
           <Wrapper
             as={motion.div}
             whileHover={
-              isActive
+              isActive && canBeActive !== "no"
                 ? {}
                 : {
                     backgroundColor: hoverColor,

@@ -14,13 +14,13 @@ const DirectMessageIcon = ({
 
   return (
     <Icon
-      key={directMessage.id}
       name={`${directMessage.recepient?.username}`}
       link={`/channels/@me/${directMessage.channel?.id}`}
       badge={<NumberBadge count={notificationCount} />}
       color={stringToColor(directMessage.recepient?.username as string)}
       hoverColor={stringToColor(directMessage.recepient?.username as string)}
       icon={<DiscordIcon size={28} />}
+      canBeActive={"no"}
     />
   )
 }
