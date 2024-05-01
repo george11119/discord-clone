@@ -5,6 +5,7 @@ import ChatContainer from "../../../shared/components/ChatContainer/ChatContaine
 import ProfilePanel from "./components/ProfilePanel/ProfilePanel.tsx"
 import { useState } from "react"
 import useDirectMessagesStore from "../../../api/stores/directMessageStore.ts"
+import { storeLastHomepageUrl } from "../../../utils/storeLastHomepageUrl.ts"
 
 const Wrapper = styled.div`
   background-color: rgb(49, 51, 56);
@@ -31,6 +32,7 @@ const DirectMessageChatArea = () => {
   const directMessage = directMessages.find(
     (dm) => dm.channel?.id === channelId,
   )
+  storeLastHomepageUrl(`${channelId}`)
 
   return (
     <Wrapper>
