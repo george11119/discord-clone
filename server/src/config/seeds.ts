@@ -71,7 +71,7 @@ const seedDatabase = async () => {
 
   // 10 messages in server 1
   for (let i = 1; i <= 10; i++) {
-    await Message.save({ content: `Hello ${i}`, user: user1, channel })
+    await Message.create({ content: `Hello ${i}`, user: user1, channel }).save()
   }
 
   // create 15 more users in 'Server 1'

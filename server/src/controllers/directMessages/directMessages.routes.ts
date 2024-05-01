@@ -14,6 +14,7 @@ router.get("/", async (req, res) => {
   const directMessageRelations = await DirectMessage.find({
     where: { ownerId: req.user?.id },
     relations: { channel: true, recepient: true },
+    order: { channel: { updatedAt: "DESC" } },
   })
 
   return res.status(200).json(directMessageRelations)
@@ -66,6 +67,23 @@ router.post("/", async (req, res) => {
   })
 
   res.status(200).json({ ...newDirectMessageRelation, channel, recepient })
+})
+
+// syncs the seen number of messages with number of messages in the channel
+router.post("/:directMessageId/ack", async (req, res) => {
+  const { directMessageId } = req.params
+
+  const directMessageRelation = await DirectMessage.findOne({
+    where: { id: directMessageId },
+    relations: { channel: true },
+  })
+
+  await DirectMessage.save({
+    id: directMessageId,
+    seenMessagesCount: directMessageRelation?.channel.messageCount,
+  })
+
+  res.status(204).end()
 })
 
 export default router

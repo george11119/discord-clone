@@ -51,6 +51,7 @@ const Home = ({
   }
 
   directMessageSocketHandlers.useDirectMessageCreateListener()
+  directMessageSocketHandlers.useDirectMessageReceivedListener()
 
   serverSocketHandlers.useServerDeleteListener()
   serverSocketHandlers.useServerEditListener()

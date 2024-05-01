@@ -8,6 +8,7 @@ import { io } from "../../app"
 import { ChannelType } from "../../../../types"
 import { DirectMessage } from "../../models/directMessage"
 import { Message } from "../../models/message"
+import { db } from "../../config/db"
 
 const router = express.Router()
 router.use(authenticatedValidator)
@@ -145,6 +146,16 @@ router.post("/:channelId", async (req, res) => {
         { ...newInverseDirectMessageRelation, recepient: req.user, channel },
       )
     }
+
+    await Channel.save({
+      id: channelId,
+      messageCount: channel.messageCount + 1,
+    })
+
+    io.to(`${directMessageRelation.recepientId}`).emit(
+      "directMessage:received",
+      directMessageRelation.channelId,
+    )
 
     io.to(`channel-${message.channel.id}`)
       .except(`${user.id}`)

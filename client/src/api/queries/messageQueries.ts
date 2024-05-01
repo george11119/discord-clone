@@ -4,6 +4,8 @@ import { Message } from "../../../types.ts"
 import { useContext } from "react"
 import AuthContext from "../../pages/Auth/AuthContext.ts"
 import useMessageStore from "../stores/messageStore.ts"
+import { ChannelType } from "../../../../types.ts"
+import useDirectMessagesStore from "../stores/directMessageStore.ts"
 
 const useGetMessages = (channelId: string | undefined) => {
   const { token } = useContext(AuthContext)
@@ -18,6 +20,7 @@ const useGetMessages = (channelId: string | undefined) => {
 const useCreateMessage = (channelId: string | undefined) => {
   const { token } = useContext(AuthContext)
   const messageStore = useMessageStore()
+  const directMessagesStore = useDirectMessagesStore()
 
   return useMutation({
     mutationFn: (newMessage: { content: string }) => {
@@ -30,6 +33,10 @@ const useCreateMessage = (channelId: string | undefined) => {
     },
     onSuccess: (newMessage: Message) => {
       messageStore.addOne(newMessage)
+      if (newMessage.channel?.channelType === ChannelType.DIRECT_MESSAGE) {
+        directMessagesStore.incrementChannelMessageCount(newMessage.channel.id)
+        directMessagesStore.syncMessagesSeenCount(newMessage.channel.id)
+      }
     },
   })
 }

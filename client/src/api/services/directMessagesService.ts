@@ -14,7 +14,17 @@ const create = async (token: string, recepient: User) => {
   return res.data
 }
 
+const updateSeenCount = async (token: string, directMessageId: string) => {
+  const res = await apiCaller.post(
+    `${url}/${directMessageId}/ack`,
+    {},
+    apiConfig(token),
+  )
+  return res.data
+}
+
 export default {
   get,
   create,
+  updateSeenCount,
 }

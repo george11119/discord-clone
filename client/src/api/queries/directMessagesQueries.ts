@@ -3,8 +3,9 @@ import AuthContext from "../../pages/Auth/AuthContext.ts"
 import { useMutation, useQuery } from "@tanstack/react-query"
 import directMessagesService from "../services/directMessagesService.ts"
 import { DirectMessage, User } from "../../../types.ts"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import useDirectMessagesStore from "../stores/directMessageStore.ts"
+import { c } from "vite/dist/node/types.d-aGj9QkWt"
 
 const useGetDirectMessages = () => {
   const { token } = useContext(AuthContext)
@@ -34,9 +35,32 @@ const useCreateDirectMessages = () => {
   })
 }
 
+const useUpdateSeenMessagesCount = (directMessage: DirectMessage) => {
+  const { token } = useContext(AuthContext)
+  const directMessagesStore = useDirectMessagesStore()
+
+  return useMutation({
+    mutationFn: (directMessageId: string) => {
+      const res = directMessagesService.updateSeenCount(
+        token as string,
+        directMessageId,
+      )
+      return res
+    },
+    onSuccess: () => {
+      const editedDirectMessage = {
+        ...directMessage,
+        seenMessagesCount: directMessage.channel?.messageCount,
+      } as DirectMessage
+      directMessagesStore.updateOne(editedDirectMessage)
+    },
+  })
+}
+
 const directMessagesQueries = {
   useGetDirectMessages,
   useCreateDirectMessages,
+  useUpdateSeenMessagesCount,
 }
 
 export default directMessagesQueries

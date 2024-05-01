@@ -19,8 +19,25 @@ const useDirectMessageCreateListener = () => {
   }, [])
 }
 
+const useDirectMessageReceivedListener = () => {
+  const directMessagesStore = useDirectMessagesStore()
+
+  return useEffect(() => {
+    const onDirectMessageReceived = (channelId: string) => {
+      directMessagesStore.incrementChannelMessageCount(channelId)
+    }
+
+    socket.on("directMessage:received", onDirectMessageReceived)
+
+    return () => {
+      socket.off("directMessage:received", onDirectMessageReceived)
+    }
+  }, [])
+}
+
 const directMessageSocketHandlers = {
   useDirectMessageCreateListener,
+  useDirectMessageReceivedListener,
 }
 
 export default directMessageSocketHandlers

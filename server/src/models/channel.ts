@@ -28,6 +28,9 @@ export class Channel extends BaseEntity {
   })
   channelType: ChannelType
 
+  @Column({ default: 0 })
+  messageCount: number
+
   @CreateDateColumn()
   createdAt: Date
 

@@ -34,6 +34,7 @@ export type Channel = {
   updatedAt: Date
   server?: Server
   channelType: ChannelType
+  messageCount: number
 }
 
 export type FriendRequest = {
@@ -65,4 +66,5 @@ export type DirectMessage = {
   owner?: User
   recepient?: User
   channel?: Channel
+  seenMessagesCount: number
 }

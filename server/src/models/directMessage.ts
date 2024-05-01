@@ -1,6 +1,5 @@
 import {
   BaseEntity,
-  BeforeInsert,
   Column,
   CreateDateColumn,
   Entity,
@@ -24,6 +23,9 @@ export class DirectMessage extends BaseEntity {
 
   @Column()
   channelId: string
+
+  @Column({ default: 0 })
+  seenMessagesCount: number
 
   @CreateDateColumn()
   createdAt: Date

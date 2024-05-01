@@ -97,7 +97,7 @@ const ChatMessages = ({ messages }: { messages: Message[] }) => {
     <div>
       {mapMessages(messages)}
       <VerticalSpacer height={30} />
-      <span style={{ height: 1 }} ref={messagesEndRef}></span>
+      <span style={{ height: 5 }} ref={messagesEndRef}></span>
     </div>
   )
 }
