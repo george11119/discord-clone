@@ -93,6 +93,23 @@ const PopoutContainer = ({
     if (!isVisible) setIsOpen(false)
   }, [isVisible])
 
+  useEffect(() => {
+    const handleRightClick = (e: Event) => {
+      if (
+        !popoutRef?.contains(e.target as Node) &&
+        !ref.current?.contains(e.target as Node)
+      ) {
+        setIsOpen(false)
+      }
+    }
+
+    document.addEventListener("contextmenu", handleRightClick)
+
+    return () => {
+      document.removeEventListener("contextmenu", handleRightClick)
+    }
+  }, [popoutRef])
+
   // close the popout if clicked outside of it
   useEffect(() => {
     const handleClick = (e: Event) => {

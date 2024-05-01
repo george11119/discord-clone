@@ -5,6 +5,8 @@ import { stringToColor } from "../../../../../utils/stringToColor.ts"
 import PopoutContainer from "../../../../../shared/components/PopoutContainer.tsx"
 import { CSSProperties, useState } from "react"
 import UserInfoPopout from "../../../../../shared/components/user/UserInfoPopout.tsx"
+import useContextMenu from "../../../../../hooks/useContextMenu.ts"
+import ContextMenu from "../../../../../shared/components/ContextMenu.tsx"
 
 const Wrapper = styled.div`
   display: flex;
@@ -40,6 +42,7 @@ const Img = styled.div<{ $backgroundColor: string }>`
 
 const UserListItem = ({ user }: { user: User }) => {
   const [isOpen, setIsOpen] = useState(false)
+  const { contextMenuState, open, close } = useContextMenu()
 
   const color = stringToColor(user.username)
   const style: CSSProperties = isOpen
@@ -47,21 +50,26 @@ const UserListItem = ({ user }: { user: User }) => {
     : {}
 
   return (
-    <PopoutContainer
-      isOpen={isOpen}
-      setIsOpen={setIsOpen}
-      popout={
-        <UserInfoPopout user={user} setIsOpen={setIsOpen} position="left" />
-      }
-      position="left"
-    >
-      <Wrapper style={style}>
-        <Img $backgroundColor={color}>
-          <DiscordIcon size={19} />
-        </Img>
-        {user.username}
-      </Wrapper>
-    </PopoutContainer>
+    <>
+      <PopoutContainer
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        popout={
+          <UserInfoPopout user={user} setIsOpen={setIsOpen} position="left" />
+        }
+        position="left"
+      >
+        <Wrapper onContextMenu={(e) => open(e)} style={style}>
+          <Img $backgroundColor={color}>
+            <DiscordIcon size={19} />
+          </Img>
+          {user.username}
+        </Wrapper>
+      </PopoutContainer>
+      {contextMenuState.show && (
+        <ContextMenu contextMenuState={contextMenuState} close={close} />
+      )}
+    </>
   )
 }
 

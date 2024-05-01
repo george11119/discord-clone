@@ -19,7 +19,7 @@ import serverSocketHandlers from "../../api/sockets/serverSocketHandlers.ts"
 import messageSocketHandlers from "../../api/sockets/messageSocketHandlers.ts"
 import DirectMessageChatArea from "./DirectMessageChat/DirectMessageChatArea.tsx"
 import directMessageSocketHandlers from "../../api/sockets/directMessageSocketHandlers.ts"
-import { AnimatePresence } from "framer-motion"
+import { useEffect } from "react"
 
 const Wrapper = styled.div`
   display: grid;
@@ -46,10 +46,12 @@ const Home = ({
 
   useSocketConnection()
 
-  // listen to all server and channel changes of a user
-  for (const server of servers) {
-    socket.emit("joinServerRoom", server.id)
-  }
+  useEffect(() => {
+    // listen to all server and channel changes of a user
+    for (const server of servers) {
+      socket.emit("joinServerRoom", server.id)
+    }
+  }, [])
 
   directMessageSocketHandlers.useDirectMessageCreateListener()
   directMessageSocketHandlers.useDirectMessageReceivedListener()
@@ -74,7 +76,12 @@ const Home = ({
   messageSocketHandlers.useMessageDeleteListener()
 
   return (
-    <Wrapper>
+    <Wrapper
+      onContextMenu={(e) => {
+        const text = window.getSelection()?.toString()
+        if (!text) e.preventDefault()
+      }}
+    >
       <ServerSidebar servers={servers} />
       {isHomeLink ? (
         <>

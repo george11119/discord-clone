@@ -75,6 +75,23 @@ const UserProfilePopout = ({
   const ref = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
+    const handleRightClick = (e: Event) => {
+      if (
+        !ref.current?.contains(e.target as Node) &&
+        !userInfoRef.current?.contains(e.target as Node)
+      ) {
+        setPopoutOpen(false)
+      }
+    }
+
+    document.addEventListener("contextmenu", handleRightClick)
+
+    return () => {
+      document.removeEventListener("contextmenu", handleRightClick)
+    }
+  }, [ref, userInfoRef])
+
+  useEffect(() => {
     const handleClick = (e: Event) => {
       if (
         !ref.current?.contains(e.target as Node) &&

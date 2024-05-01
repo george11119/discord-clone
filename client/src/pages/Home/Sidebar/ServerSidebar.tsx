@@ -53,7 +53,7 @@ const ServerSidebar = ({ servers }: { servers: Server[] }) => {
             </motion.div>
           )
         })}
-        <InnerWrapper key="innerWrapper" as={motion.div} layout>
+        <InnerWrapper key="innerWrapper">
           <Separator type={"thick"} />
           {servers?.map((server) => {
             return <ServerIcon key={server.id} server={server} />

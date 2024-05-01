@@ -10,6 +10,7 @@ const Wrapper = styled.button`
   border-style: none;
   border-radius: 3px;
   font-size: 16px;
+  cursor: pointer;
 
   &:hover:enabled {
     background-color: rgb(71, 82, 196);
@@ -18,6 +19,7 @@ const Wrapper = styled.button`
 
   &:disabled {
     opacity: 0.6;
+    cursor: not-allowed;
   }
 `
 

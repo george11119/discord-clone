@@ -66,7 +66,7 @@ const ServerOptionsPopout = ({
   inviteToServer: ModalOptions
 }) => {
   const { serverId } = useParams()
-  const ref = useOnOutsideClick(() => setPopoutOpen(false))
+  const ref = useOnOutsideClick(() => setPopoutOpen(false), 1)
   const navigate = useNavigate()
 
   const deleteServerMutation = serverQueries.useDeleteServer(serverId)
