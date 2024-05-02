@@ -43,7 +43,7 @@ const Img = styled.div<{ $backgroundColor: string }>`
 
 const UserListItem = ({ user }: { user: User }) => {
   const [isOpen, setIsOpen] = useState(false)
-  const { contextMenuState, open, close } = useContextMenu()
+  const contextMenu = useContextMenu()
   const modal = useModal()
 
   const color = stringToColor(user.username)
@@ -61,7 +61,7 @@ const UserListItem = ({ user }: { user: User }) => {
         }
         position="left"
       >
-        <Wrapper onContextMenu={(e) => open(e)} style={style}>
+        <Wrapper onContextMenu={(e) => contextMenu.open(e)} style={style}>
           <Img $backgroundColor={color}>
             <DiscordIcon size={19} />
           </Img>
@@ -69,10 +69,9 @@ const UserListItem = ({ user }: { user: User }) => {
         </Wrapper>
       </PopoutContainer>
       <UserContextMenuContainer
-        contextMenuState={contextMenuState}
+        contextMenu={contextMenu}
         user={user}
         modal={modal}
-        closeContextMenu={close}
       />
     </>
   )

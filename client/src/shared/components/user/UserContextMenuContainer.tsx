@@ -1,4 +1,4 @@
-import { ContextMenuObject } from "../../../hooks/useContextMenu.ts"
+import { ContextMenuOptions } from "../../../hooks/useContextMenu.ts"
 import { User } from "../../../../types.ts"
 import UserContextMenu from "./UserContextMenu.tsx"
 import { AnimatePresence } from "framer-motion"
@@ -6,23 +6,22 @@ import UserProfileModal from "./UserProfileModal.tsx"
 import { ModalOptions } from "../../../hooks/useModal.ts"
 
 const UserContextMenuContainer = ({
-  contextMenuState,
+  contextMenu,
   user,
   modal,
-  closeContextMenu,
 }: {
-  contextMenuState: ContextMenuObject
+  contextMenu: ContextMenuOptions
   user: User
   modal: ModalOptions
-  closeContextMenu: () => void
 }) => {
+  const { contextMenuState } = contextMenu
   return (
     <>
       {contextMenuState.show && (
         <UserContextMenu
           modal={modal}
           contextMenuState={contextMenuState}
-          close={closeContextMenu}
+          close={contextMenu.close}
           user={user}
         />
       )}

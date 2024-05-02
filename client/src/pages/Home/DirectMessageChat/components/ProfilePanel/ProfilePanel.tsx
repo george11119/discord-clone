@@ -68,7 +68,11 @@ const ProfilePanel = ({ user }: { user: User | undefined }) => {
       <Banner $backgroundColor={stringToColor(user?.username as string)} />
       <ProfilePictureBorder>
         <ProfilePictureContainer>
-          <UserProfilePicture profileDiameter={80} user={user as User} />
+          <UserProfilePicture
+            profileDiameter={80}
+            user={user as User}
+            canClickProfile={true}
+          />
         </ProfilePictureContainer>
       </ProfilePictureBorder>
       <InnerWrapper>

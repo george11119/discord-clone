@@ -12,6 +12,7 @@ const Wrapper = styled.div`
   border-radius: 4px;
   display: flex;
   flex-direction: column;
+  z-index: 3;
 `
 
 const ContextMenu = ({

@@ -10,6 +10,8 @@ import useDirectMessagesStore from "../../../api/stores/directMessageStore.ts"
 import { useNavigate } from "react-router-dom"
 import directMessagesQueries from "../../../api/queries/directMessagesQueries.ts"
 import { ModalOptions } from "../../../hooks/useModal.ts"
+import { useContext } from "react"
+import AuthContext from "../../../pages/Auth/AuthContext.ts"
 
 const UserContextMenu = ({
   user,
@@ -22,6 +24,7 @@ const UserContextMenu = ({
   close: () => void
   modal: ModalOptions
 }) => {
+  const { user: selfUser } = useContext(AuthContext)
   const friendsStore = useFriendsStore()
   const directMessagesStore = useDirectMessagesStore()
   const navigate = useNavigate()
@@ -75,12 +78,22 @@ const UserContextMenu = ({
           close()
         }}
       />
-      <ContextMenuButton text="Message" onClick={directMessageCreateAction} />
-      <ContextMenuSeparator />
-      {isFriend ? (
-        <ContextMenuButton text="Remove Friend" onClick={removeFriendAction} />
-      ) : (
-        <ContextMenuButton text="Add Friend" onClick={addFriendAction} />
+      {user.id !== selfUser?.id && (
+        <>
+          <ContextMenuSeparator />
+          <ContextMenuButton
+            text="Message"
+            onClick={directMessageCreateAction}
+          />
+          {isFriend ? (
+            <ContextMenuButton
+              text="Remove Friend"
+              onClick={removeFriendAction}
+            />
+          ) : (
+            <ContextMenuButton text="Add Friend" onClick={addFriendAction} />
+          )}
+        </>
       )}
       <ContextMenuSeparator />
       <ContextMenuButton

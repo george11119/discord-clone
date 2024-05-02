@@ -4,6 +4,9 @@ import UserProfilePicture from "../../../../../shared/components/UserProfilePict
 import { Link, matchPath, useLocation } from "react-router-dom"
 import { CSSProperties } from "react"
 import VerticalSpacer from "../../../../../shared/components/VerticalSpacer.tsx"
+import UserContextMenuContainer from "../../../../../shared/components/user/UserContextMenuContainer.tsx"
+import useContextMenu from "../../../../../hooks/useContextMenu.ts"
+import useModal from "../../../../../hooks/useModal.ts"
 
 const Wrapper = styled.ul`
   margin-top: 6px;
@@ -50,6 +53,8 @@ const DirectMessagesListItem = ({
 }: {
   directMessage: DirectMessage
 }) => {
+  const contextMenu = useContextMenu()
+  const modal = useModal()
   const { pathname } = useLocation()
   const isActive = matchPath(
     `/channels/@me/${directMessage.channel?.id}/*`,
@@ -62,17 +67,29 @@ const DirectMessagesListItem = ({
   }
 
   return (
-    <ListItemWrapper style={isActive ? activeStyle : {}}>
-      <LinkWrapper to={`/channels/@me/${directMessage.channel?.id}`}>
-        <UserInfoWrapper>
-          <UserProfilePicture
-            profileDiameter={32}
-            user={directMessage.recepient as User}
-          />
-          <UsernameWrapper>{directMessage.recepient?.username}</UsernameWrapper>
-        </UserInfoWrapper>
-      </LinkWrapper>
-    </ListItemWrapper>
+    <>
+      <ListItemWrapper
+        style={isActive ? activeStyle : {}}
+        onContextMenu={(e) => contextMenu.open(e)}
+      >
+        <LinkWrapper to={`/channels/@me/${directMessage.channel?.id}`}>
+          <UserInfoWrapper>
+            <UserProfilePicture
+              profileDiameter={32}
+              user={directMessage.recepient as User}
+            />
+            <UsernameWrapper>
+              {directMessage.recepient?.username}
+            </UsernameWrapper>
+          </UserInfoWrapper>
+        </LinkWrapper>
+      </ListItemWrapper>
+      <UserContextMenuContainer
+        contextMenu={contextMenu}
+        user={directMessage.recepient as User}
+        modal={modal}
+      />
+    </>
   )
 }
 

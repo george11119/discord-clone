@@ -123,7 +123,11 @@ const UserProfilePopout = ({
       <Banner $backgroundColor={stringToColor(user?.username as string)} />
       <ProfilePictureBorder>
         <ProfilePictureContainer>
-          <UserProfilePicture profileDiameter={80} user={user} />
+          <UserProfilePicture
+            profileDiameter={80}
+            user={user}
+            canClickProfile={true}
+          />
         </ProfilePictureContainer>
       </ProfilePictureBorder>
       <InnerWrapper>

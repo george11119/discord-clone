@@ -10,6 +10,9 @@ import userQueries from "../../../../../api/queries/userQueries.ts"
 import directMessagesQueries from "../../../../../api/queries/directMessagesQueries.ts"
 import { useNavigate } from "react-router-dom"
 import useDirectMessagesStore from "../../../../../api/stores/directMessageStore.ts"
+import UserContextMenuContainer from "../../../../../shared/components/user/UserContextMenuContainer.tsx"
+import useContextMenu from "../../../../../hooks/useContextMenu.ts"
+import useModal from "../../../../../hooks/useModal.ts"
 
 const PeopleListItemWrapper = styled.div`
   cursor: pointer;
@@ -110,6 +113,8 @@ const PeopleListItem = ({
   user: User
   type: "friend" | "sent" | "received"
 }) => {
+  const contextMenu = useContextMenu()
+  const modal = useModal()
   const navigate = useNavigate()
   const directMessagesStore = useDirectMessagesStore()
 
@@ -155,6 +160,7 @@ const PeopleListItem = ({
           if (e.defaultPrevented || type !== "friend") return
           handleDirectMessageCreate()
         }}
+        onContextMenu={(e) => contextMenu.open(e)}
       >
         <div style={{ display: "flex" }}>
           <UserProfilePictureContainer>
@@ -234,6 +240,11 @@ const PeopleListItem = ({
           )}
         </PeopleListItemButtons>
       </PeopleListItemWrapper>
+      <UserContextMenuContainer
+        contextMenu={contextMenu}
+        user={user}
+        modal={modal}
+      />
     </>
   )
 }

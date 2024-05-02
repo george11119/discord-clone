@@ -5,6 +5,9 @@ import { stringToColor } from "../../../../../utils/stringToColor.ts"
 import PopoutContainer from "../../../PopoutContainer.tsx"
 import { useState } from "react"
 import UserInfoPopout from "../../../user/UserInfoPopout.tsx"
+import useModal from "../../../../../hooks/useModal.ts"
+import useContextMenu from "../../../../../hooks/useContextMenu.ts"
+import UserContextMenuContainer from "../../../user/UserContextMenuContainer.tsx"
 
 const Img = styled.div<{ $backgroundColor: string }>`
   min-height: 40px;
@@ -26,22 +29,34 @@ const Img = styled.div<{ $backgroundColor: string }>`
 `
 
 const ChatMessageProfilePicture = ({ user }: { user: User }) => {
+  const contextMenu = useContextMenu()
+  const modal = useModal()
   const color = stringToColor(user.username)
   const [isOpen, setIsOpen] = useState(false)
 
   return (
-    <PopoutContainer
-      popout={
-        <UserInfoPopout user={user} setIsOpen={setIsOpen} position="right" />
-      }
-      isOpen={isOpen}
-      setIsOpen={setIsOpen}
-      position="right"
-    >
-      <Img $backgroundColor={color}>
-        <DiscordIcon size={24} />
-      </Img>
-    </PopoutContainer>
+    <>
+      <PopoutContainer
+        popout={
+          <UserInfoPopout user={user} setIsOpen={setIsOpen} position="right" />
+        }
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        position="right"
+      >
+        <Img
+          $backgroundColor={color}
+          onContextMenu={(e) => contextMenu.open(e)}
+        >
+          <DiscordIcon size={24} />
+        </Img>
+      </PopoutContainer>
+      <UserContextMenuContainer
+        contextMenu={contextMenu}
+        user={user}
+        modal={modal}
+      />
+    </>
   )
 }
 

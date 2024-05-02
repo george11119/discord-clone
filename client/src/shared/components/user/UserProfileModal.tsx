@@ -12,6 +12,8 @@ import useDirectMessagesStore from "../../../api/stores/directMessageStore.ts"
 import { useNavigate } from "react-router-dom"
 import userQueries from "../../../api/queries/userQueries.ts"
 import directMessagesQueries from "../../../api/queries/directMessagesQueries.ts"
+import { useContext } from "react"
+import AuthContext from "../../../pages/Auth/AuthContext.ts"
 
 const Wrapper = styled.div`
   width: 600px;
@@ -74,6 +76,7 @@ const UserProfileModal = ({
   handleClose: () => void
   user: User
 }) => {
+  const { user: selfUser } = useContext(AuthContext)
   const friendsStore = useFriendsStore()
   const directMessagesStore = useDirectMessagesStore()
   const navigate = useNavigate()
@@ -119,30 +122,34 @@ const UserProfileModal = ({
           </ProfilePictureContainer>
         </ProfilePictureBorder>
         <ButtonWrapper>
-          <Button
-            text={isFriend ? "Remove Friend" : "Send Friend Request"}
-            style={{
-              fontSize: 13,
-              marginTop: 0,
-              padding: "2px 16px",
-              height: 32,
-              marginLeft: 12,
-              backgroundColor: isFriend ? "#f23f42" : "#248046",
-            }}
-            onClick={isFriend ? removeFriendAction : addFriendAction}
-          />
-          <Button
-            text="Send Message"
-            style={{
-              fontSize: 13,
-              marginTop: 0,
-              padding: "2px 16px",
-              height: 32,
-              marginLeft: 12,
-              backgroundColor: "#248046",
-            }}
-            onClick={directMessageCreateAction}
-          />
+          {user.id !== selfUser?.id && (
+            <>
+              <Button
+                text={isFriend ? "Remove Friend" : "Send Friend Request"}
+                style={{
+                  fontSize: 13,
+                  marginTop: 0,
+                  padding: "2px 16px",
+                  height: 32,
+                  marginLeft: 12,
+                  backgroundColor: isFriend ? "#f23f42" : "#248046",
+                }}
+                onClick={isFriend ? removeFriendAction : addFriendAction}
+              />
+              <Button
+                text="Send Message"
+                style={{
+                  fontSize: 13,
+                  marginTop: 0,
+                  padding: "2px 16px",
+                  height: 32,
+                  marginLeft: 12,
+                  backgroundColor: "#248046",
+                }}
+                onClick={directMessageCreateAction}
+              />
+            </>
+          )}
         </ButtonWrapper>
         <InnerWrapper>
           <VerticalSpacer height={12} />
