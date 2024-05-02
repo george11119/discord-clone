@@ -4,10 +4,12 @@ import VerticalSpacer from "../../../shared/components/VerticalSpacer.tsx"
 import HomeIcon from "./components/HomeIcon.tsx"
 import ServerIcon from "./components/ServerIcon.tsx"
 import CreateServerButton from "./components/CreateServerButton.tsx"
-import { Server } from "../../../../types.ts"
+import { Server, User } from "../../../../types.ts"
 import useDirectMessagesStore from "../../../api/stores/directMessageStore.ts"
 import DirectMessageIcon from "./components/DirectMessageIcon.tsx"
 import { motion, AnimatePresence } from "framer-motion"
+import UserProfileModal from "../../../shared/components/user/UserProfileModal.tsx"
+import { useUserProfileModalOptionsStore } from "../../../stores/useUserProfileModalOptionsStore.ts"
 
 const Wrapper = styled.nav`
   background: rgb(30, 31, 34);
@@ -32,37 +34,53 @@ const InnerWrapper = styled.div`
 `
 
 const ServerSidebar = ({ servers }: { servers: Server[] }) => {
+  const { user, close, modalOpen } = useUserProfileModalOptionsStore()
   const directMessagesStore = useDirectMessagesStore()
   const unseenDirectMessages = directMessagesStore
     .get()
     .filter((dm) => dm.seenMessagesCount !== dm.channel?.messageCount)
 
   return (
-    <Wrapper onContextMenu={(e) => e.preventDefault()}>
-      <AnimatePresence initial={false}>
-        <HomeIcon key="homeIcon" />
-        {unseenDirectMessages.map((dm) => {
-          return (
-            <motion.div
-              key={dm.id}
-              initial={{ opacity: 0, scale: 0.3 }}
-              animate={{ opacity: 1, scale: 1, transition: { duration: 0.15 } }}
-              exit={{ opacity: 0, scale: 0.5, transition: { duration: 0.15 } }}
-            >
-              <DirectMessageIcon directMessage={dm} />
-            </motion.div>
-          )
-        })}
-        <InnerWrapper key="innerWrapper">
-          <Separator type={"thick"} />
-          {servers?.map((server) => {
-            return <ServerIcon key={server.id} server={server} />
+    <>
+      <Wrapper onContextMenu={(e) => e.preventDefault()}>
+        <AnimatePresence initial={false}>
+          <HomeIcon key="homeIcon" />
+          {unseenDirectMessages.map((dm) => {
+            return (
+              <motion.div
+                key={dm.id}
+                initial={{ opacity: 0, scale: 0.3 }}
+                animate={{
+                  opacity: 1,
+                  scale: 1,
+                  transition: { duration: 0.15 },
+                }}
+                exit={{
+                  opacity: 0,
+                  scale: 0.5,
+                  transition: { duration: 0.15 },
+                }}
+              >
+                <DirectMessageIcon directMessage={dm} />
+              </motion.div>
+            )
           })}
-          <CreateServerButton />
-          <VerticalSpacer height={12} />
-        </InnerWrapper>
+          <InnerWrapper key="innerWrapper">
+            <Separator type={"thick"} />
+            {servers?.map((server) => {
+              return <ServerIcon key={server.id} server={server} />
+            })}
+            <CreateServerButton />
+            <VerticalSpacer height={12} />
+          </InnerWrapper>
+        </AnimatePresence>
+      </Wrapper>
+      <AnimatePresence initial={false} mode="wait" onExitComplete={() => null}>
+        {modalOpen && (
+          <UserProfileModal handleClose={close} user={user as User} />
+        )}
       </AnimatePresence>
-    </Wrapper>
+    </>
   )
 }
 

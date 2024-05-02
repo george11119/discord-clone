@@ -4,6 +4,7 @@ import { useId, useState } from "react"
 import DiscordIcon from "../../pages/Auth/assets/DiscordIcon.tsx"
 import { stringToColor } from "../../utils/stringToColor.ts"
 import { User } from "../../../types.ts"
+import { useUserProfileModalOptionsStore } from "../../stores/useUserProfileModalOptionsStore.ts"
 
 const Wrapper = styled.div`
   position: relative;
@@ -52,6 +53,7 @@ const UserProfilePicture = ({
   user: User | null
   canClickProfile?: boolean
 }) => {
+  const { setUser, open } = useUserProfileModalOptionsStore()
   const color = user ? stringToColor(user.username) : "#5865f2"
   const id = useId()
   const idString = `url(#${id})`
@@ -81,83 +83,83 @@ const UserProfilePicture = ({
     profileDiameter > 60 ? profileDiameter * 0.75 : profileDiameter * 0.6875
 
   return (
-    <>
-      <Wrapper
-        onClick={() => {
-          if (!canClickProfile) return
+    <Wrapper
+      onClick={() => {
+        if (!canClickProfile) return
+        setUser(user)
+        open()
+      }}
+    >
+      <svg
+        style={{
+          height: profileDiameter,
+          width: profileDiameter,
         }}
+        onMouseEnter={() => (canClickProfile ? setHovered(true) : null)}
+        onMouseLeave={() => (canClickProfile ? setHovered(false) : null)}
       >
-        <svg
-          style={{
-            height: profileDiameter,
-            width: profileDiameter,
-          }}
-          onMouseEnter={() => (canClickProfile ? setHovered(true) : null)}
-          onMouseLeave={() => (canClickProfile ? setHovered(false) : null)}
+        <mask id={id} width="16" height="16">
+          <circle
+            cx={profileDiameter / 2}
+            cy={profileDiameter / 2}
+            r={profileDiameter / 2}
+            fill="white"
+          ></circle>
+          <rect
+            color="black"
+            x={maskTranslateDistance}
+            y={maskTranslateDistance}
+            width={maskSize}
+            height={maskSize}
+            rx={profileDiameter / 4}
+            ry={profileDiameter / 4}
+          ></rect>
+        </mask>
+        <foreignObject
+          width={profileDiameter}
+          height={profileDiameter}
+          x={0}
+          y={0}
+          mask={idString}
         >
-          <mask id={id} width="16" height="16">
-            <circle
-              cx={profileDiameter / 2}
-              cy={profileDiameter / 2}
-              r={profileDiameter / 2}
-              fill="white"
-            ></circle>
-            <rect
-              color="black"
-              x={maskTranslateDistance}
-              y={maskTranslateDistance}
-              width={maskSize}
-              height={maskSize}
-              rx={profileDiameter / 4}
-              ry={profileDiameter / 4}
-            ></rect>
-          </mask>
-          <foreignObject
-            width={profileDiameter}
-            height={profileDiameter}
-            x={0}
-            y={0}
-            mask={idString}
+          {/*TODO Replace this with a img tag that contains user profile image*/}
+          <ProfileImage
+            $canClickProfile={hovered ? true : false}
+            style={{
+              height: profileDiameter,
+              width: profileDiameter,
+              backgroundColor: color,
+            }}
           >
-            {/*TODO Replace this with a img tag that contains user profile image*/}
-            <ProfileImage
-              $canClickProfile={hovered ? true : false}
+            <DiscordIcon size={profileDiameter * 0.6} />
+          </ProfileImage>
+          {canClickProfile && hovered && (
+            <ViewProfileText
               style={{
+                fontSize: profileDiameter * 0.15,
                 height: profileDiameter,
                 width: profileDiameter,
-                backgroundColor: color,
               }}
             >
-              <DiscordIcon size={profileDiameter * 0.6} />
-            </ProfileImage>
-            {canClickProfile && hovered && (
-              <ViewProfileText
-                style={{
-                  fontSize: profileDiameter * 0.15,
-                  height: profileDiameter,
-                  width: profileDiameter,
-                }}
-              >
-                View Profile
-              </ViewProfileText>
-            )}
-          </foreignObject>
-        </svg>
-        {/*<Tooltip tooltip="Do not disturb" placement="left" fontSize={14}>*/}
-        <StatusIcon
-          style={{ height: statusSize, width: statusSize }}
-          $translateDistance={statusIconTranslateDistance}
-        >
-          <circle
-            cx={statusSize / 2}
-            cy={statusSize / 2}
-            r={statusSize / 2}
-            fill="rgb(242, 63, 67)"
-          ></circle>
-        </StatusIcon>
-        {/*</Tooltip>*/}
-      </Wrapper>
-    </>
+              View Profile
+            </ViewProfileText>
+          )}
+        </foreignObject>
+      </svg>
+      {/*<Tooltip tooltip="Do not disturb" placement="left" fontSize={14}>*/}
+      <StatusIcon
+        style={{ height: statusSize, width: statusSize }}
+        $translateDistance={statusIconTranslateDistance}
+      >
+        <circle
+          cx={statusSize / 2}
+          cy={statusSize / 2}
+          r={statusSize / 2}
+          fill="rgb(242, 63, 67)"
+        ></circle>
+      </StatusIcon>
+      {/*</Tooltip>*/}
+    </Wrapper>
   )
 }
 

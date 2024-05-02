@@ -106,10 +106,12 @@ const UserProfileModal = ({
 
     if (directMessage) {
       navigate(`/channels/@me/${directMessage.channel?.id}`)
+      handleClose()
       return
     }
 
     createDirectMessageMutation.mutate(user)
+    handleClose()
   }
 
   return (
