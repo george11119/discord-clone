@@ -1,5 +1,5 @@
 import styled from "styled-components"
-import { ReactNode } from "react"
+import {ReactNode} from "react"
 
 const ContextMenuButtonWrapper = styled.button`
   padding: 6px 8px;
@@ -13,6 +13,7 @@ const ContextMenuButtonWrapper = styled.button`
   border: none;
   font-size: 14px;
   border-radius: 2px;
+  cursor: pointer;
 
   &:hover {
     color: white;
@@ -21,10 +22,10 @@ const ContextMenuButtonWrapper = styled.button`
 `
 
 const ContextMenuButton = ({
-  text,
-  icon,
-  onClick,
-}: {
+                             text,
+                             icon,
+                             onClick,
+                           }: {
   text: string
   icon?: ReactNode
   onClick: () => void

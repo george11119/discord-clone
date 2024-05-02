@@ -59,10 +59,12 @@ const UserContextMenu = ({
 
     if (directMessage) {
       navigate(`/channels/@me/${directMessage.channel?.id}`)
+      close()
       return
     }
 
     createDirectMessageMutation.mutate(user)
+    close()
   }
 
   return (
