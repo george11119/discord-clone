@@ -23,7 +23,7 @@ const Header = styled.div`
 
 const EditServerModal = ({ handleClose }: { handleClose: () => void }) => {
   return (
-    <Modal handleClose={handleClose}>
+    <Modal handleClose={handleClose} style={{ width: 440, borderRadius: 4 }}>
       <CloseButton onClick={handleClose}>
         <CloseIcon size={24} />
       </CloseButton>

@@ -31,7 +31,6 @@ const modalAnimation = {
 }
 
 const Wrapper = styled.div`
-  width: 440px;
   background-color: rgb(49, 51, 56);
   box-shadow:
     rgba(30, 31, 34, 0.6) 0px 0px 0px 1px,

@@ -113,7 +113,7 @@ const UserProfileModal = ({
   }
 
   return (
-    <Modal handleClose={handleClose}>
+    <Modal handleClose={handleClose} style={{ borderRadius: 8 }}>
       <Wrapper>
         <Banner $backgroundColor={stringToColor(user.username as string)} />
         <ProfilePictureBorder>
