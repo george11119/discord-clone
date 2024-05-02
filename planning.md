@@ -48,10 +48,10 @@
         <li>Popout that displays user info of the user clicked - DONE</li>
         <li>Automatically create a general channel when a server is created - DONE</li>
         <li>Add friending users - DONE</li>
-        <li>Create a user direct message home page</li>
+        <li>Create a user direct message home page - DONE</li>
+        <li>Add more detail to chat messages display - DONE</li>
         <li>Add pagination fetching for messages in channels</li>
         <li>Add loading animations</li>
-        <li>Add more detail to chat messages display</li>
         <li>Emoji button</li>
         <li>Authorization</li>
         <li>add socket stuff to have a live view of which users are online or not in users list</li>

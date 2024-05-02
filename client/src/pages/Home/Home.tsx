@@ -20,6 +20,7 @@ import messageSocketHandlers from "../../api/sockets/messageSocketHandlers.ts"
 import DirectMessageChatArea from "./DirectMessageChat/DirectMessageChatArea.tsx"
 import directMessageSocketHandlers from "../../api/sockets/directMessageSocketHandlers.ts"
 import { useEffect } from "react"
+import AdditionalComponents from "./AdditionalComponents/AdditionalComponents.tsx"
 
 const Wrapper = styled.div`
   display: grid;
@@ -96,6 +97,7 @@ const Home = ({
           <ChatAreaContainer />
         </>
       )}
+      <AdditionalComponents />
     </Wrapper>
   )
 }

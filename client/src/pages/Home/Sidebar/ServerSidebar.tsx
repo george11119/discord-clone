@@ -4,12 +4,10 @@ import VerticalSpacer from "../../../shared/components/VerticalSpacer.tsx"
 import HomeIcon from "./components/HomeIcon.tsx"
 import ServerIcon from "./components/ServerIcon.tsx"
 import CreateServerButton from "./components/CreateServerButton.tsx"
-import { Server, User } from "../../../../types.ts"
+import { Server } from "../../../../types.ts"
 import useDirectMessagesStore from "../../../api/stores/directMessageStore.ts"
 import DirectMessageIcon from "./components/DirectMessageIcon.tsx"
 import { motion, AnimatePresence } from "framer-motion"
-import UserProfileModal from "../../../shared/components/user/UserProfileModal.tsx"
-import { useUserProfileModalOptionsStore } from "../../../stores/useUserProfileModalOptionsStore.ts"
 
 const Wrapper = styled.nav`
   background: rgb(30, 31, 34);
@@ -34,7 +32,6 @@ const InnerWrapper = styled.div`
 `
 
 const ServerSidebar = ({ servers }: { servers: Server[] }) => {
-  const { user, close, modalOpen } = useUserProfileModalOptionsStore()
   const directMessagesStore = useDirectMessagesStore()
   const unseenDirectMessages = directMessagesStore
     .get()
@@ -75,11 +72,6 @@ const ServerSidebar = ({ servers }: { servers: Server[] }) => {
           </InnerWrapper>
         </AnimatePresence>
       </Wrapper>
-      <AnimatePresence initial={false} mode="wait" onExitComplete={() => null}>
-        {modalOpen && (
-          <UserProfileModal handleClose={close} user={user as User} />
-        )}
-      </AnimatePresence>
     </>
   )
 }
