@@ -6,7 +6,8 @@ import PopoutContainer from "../../../../../shared/components/PopoutContainer.ts
 import { CSSProperties, useState } from "react"
 import UserInfoPopout from "../../../../../shared/components/user/UserInfoPopout.tsx"
 import useContextMenu from "../../../../../hooks/useContextMenu.ts"
-import UserContextMenu from "../../../../../shared/components/ContextMenu/User/UserContextMenu.tsx"
+import useModal from "../../../../../hooks/useModal.ts"
+import UserContextMenuContainer from "../../../../../shared/components/user/UserContextMenuContainer.tsx"
 
 const Wrapper = styled.div`
   display: flex;
@@ -43,6 +44,7 @@ const Img = styled.div<{ $backgroundColor: string }>`
 const UserListItem = ({ user }: { user: User }) => {
   const [isOpen, setIsOpen] = useState(false)
   const { contextMenuState, open, close } = useContextMenu()
+  const modal = useModal()
 
   const color = stringToColor(user.username)
   const style: CSSProperties = isOpen
@@ -66,13 +68,12 @@ const UserListItem = ({ user }: { user: User }) => {
           {user.username}
         </Wrapper>
       </PopoutContainer>
-      {contextMenuState.show && (
-        <UserContextMenu
-          contextMenuState={contextMenuState}
-          close={close}
-          user={user}
-        />
-      )}
+      <UserContextMenuContainer
+        contextMenuState={contextMenuState}
+        user={user}
+        modal={modal}
+        closeContextMenu={close}
+      />
     </>
   )
 }

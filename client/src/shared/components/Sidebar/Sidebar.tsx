@@ -25,7 +25,7 @@ const Sidebar = ({
   children: ReactNode
 }) => {
   return (
-    <Wrapper onContextMenu={(e) => e.preventDefault()}>
+    <Wrapper>
       {header}
       <VerticalSpacer height={8} />
       <ScrollableContainer>{children}</ScrollableContainer>

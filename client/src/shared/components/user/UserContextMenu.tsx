@@ -1,23 +1,26 @@
-import { ContextMenuObject } from "../../../../hooks/useContextMenu.ts"
-import ContextMenu from "../ContextMenu.tsx"
-import { User } from "../../../../../types.ts"
-import ContextMenuButton from "../ContextMenuButton.tsx"
-import ContextMenuSeparator from "../ContextMenuSeparator.tsx"
-import IDIcon from "../../../svg/IDIcon.tsx"
-import userQueries from "../../../../api/queries/userQueries.ts"
-import useFriendsStore from "../../../../api/stores/friendsStore.ts"
-import useDirectMessagesStore from "../../../../api/stores/directMessageStore.ts"
+import { ContextMenuObject } from "../../../hooks/useContextMenu.ts"
+import ContextMenu from "../ContextMenu/ContextMenu.tsx"
+import { User } from "../../../../types.ts"
+import ContextMenuButton from "../ContextMenu/ContextMenuButton.tsx"
+import ContextMenuSeparator from "../ContextMenu/ContextMenuSeparator.tsx"
+import IDIcon from "../../svg/IDIcon.tsx"
+import userQueries from "../../../api/queries/userQueries.ts"
+import useFriendsStore from "../../../api/stores/friendsStore.ts"
+import useDirectMessagesStore from "../../../api/stores/directMessageStore.ts"
 import { useNavigate } from "react-router-dom"
-import directMessagesQueries from "../../../../api/queries/directMessagesQueries.ts"
+import directMessagesQueries from "../../../api/queries/directMessagesQueries.ts"
+import { ModalOptions } from "../../../hooks/useModal.ts"
 
 const UserContextMenu = ({
   user,
   contextMenuState,
   close,
+  modal,
 }: {
   user: User
   contextMenuState: ContextMenuObject
   close: () => void
+  modal: ModalOptions
 }) => {
   const friendsStore = useFriendsStore()
   const directMessagesStore = useDirectMessagesStore()
@@ -60,8 +63,18 @@ const UserContextMenu = ({
   }
 
   return (
-    <ContextMenu contextMenuState={contextMenuState} close={close}>
-      <ContextMenuButton text="Profile" onClick={() => null} />
+    <ContextMenu
+      key="userContextMenu"
+      contextMenuState={contextMenuState}
+      close={close}
+    >
+      <ContextMenuButton
+        text="Profile"
+        onClick={() => {
+          modal.open()
+          close()
+        }}
+      />
       <ContextMenuButton text="Message" onClick={directMessageCreateAction} />
       <ContextMenuSeparator />
       {isFriend ? (
