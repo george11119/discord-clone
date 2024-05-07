@@ -8,6 +8,8 @@ import { FormEvent, useState } from "react"
 import useModal from "../../../../../hooks/useModal.ts"
 import { AnimatePresence } from "framer-motion"
 import ChannelModal from "./ChannelModal.tsx"
+import useContextMenu from "../../../../../hooks/useContextMenu.ts"
+import ChannelContextMenuContainer from "../../../../../shared/components/channel/ChannelContextMenuContainer.tsx"
 
 const LinkWrapper = styled(NavLink)`
   text-decoration: none;
@@ -67,6 +69,7 @@ const ChannelListItem = ({ channel }: { channel: Channel }) => {
   const [hovered, setHovered] = useState(false)
   const { modalOpen, open, close } = useModal()
   const { pathname } = useLocation()
+  const contextMenu = useContextMenu()
   const isActive = matchPath(
     `/channels/${channel.serverId}/${channel.id}`,
     pathname,
@@ -91,6 +94,7 @@ const ChannelListItem = ({ channel }: { channel: Channel }) => {
         to={`/channels/${channel.serverId}/${channel.id}`}
         onMouseOver={() => setHovered(true)}
         onMouseOut={() => setHovered(false)}
+        onContextMenu={(e) => contextMenu.open(e)}
       >
         <Left>
           <HashtagContainer>
@@ -116,6 +120,10 @@ const ChannelListItem = ({ channel }: { channel: Channel }) => {
           />
         )}
       </AnimatePresence>
+      <ChannelContextMenuContainer
+        contextMenu={contextMenu}
+        channel={channel}
+      />
     </>
   )
 }

@@ -2,7 +2,7 @@ import Icon from "./Icon.tsx"
 import { Server } from "../../../../../types.ts"
 import useChannelStore from "../../../../api/stores/channelStore.ts"
 import useContextMenu from "../../../../hooks/useContextMenu.ts"
-import ServerContextMenuContainer from "../../../../shared/components/Server/ServerContextMenuContainer.tsx"
+import ServerContextMenuContainer from "../../../../shared/components/server/ServerContextMenuContainer.tsx"
 
 const ServerIcon = ({ server }: { server: Server }) => {
   const channelStore = useChannelStore()
