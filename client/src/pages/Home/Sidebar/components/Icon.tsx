@@ -56,6 +56,7 @@ const Icon = ({
   badge,
   color,
   canBeActive,
+  onContextMenu,
 }: {
   name: string
   link: string
@@ -66,6 +67,7 @@ const Icon = ({
   badge?: ReactNode
   color?: string
   canBeActive?: "no"
+  onContextMenu?: (e: any) => void
 }) => {
   const { pathname } = useLocation()
 
@@ -90,6 +92,7 @@ const Icon = ({
                 }
           }
           onClick={onClick}
+          onContextMenu={onContextMenu ? onContextMenu : () => null}
         >
           <Wrapper
             as={motion.div}

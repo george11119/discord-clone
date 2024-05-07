@@ -69,7 +69,7 @@ const InviteToServerModal = ({ handleClose }: { handleClose: () => void }) => {
   }
 
   return (
-    <Modal handleClose={handleClose} style={{ width: 460 }}>
+    <Modal handleClose={handleClose} style={{ width: 460, zIndex: 100 }}>
       <CloseButton onClick={handleClose}>
         <CloseIcon size={24} />
       </CloseButton>

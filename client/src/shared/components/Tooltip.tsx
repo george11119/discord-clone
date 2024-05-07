@@ -26,6 +26,7 @@ const Tooltip = ({
         onMouseEnter={() => setIsOpen(true)}
         onMouseLeave={() => setIsOpen(false)}
         onClick={() => setIsOpen(false)}
+        onContextMenu={() => setIsOpen(false)}
       >
         {children}
       </div>

@@ -1,5 +1,5 @@
 import styled from "styled-components"
-import {ReactNode} from "react"
+import { CSSProperties, ReactNode } from "react"
 
 const ContextMenuButtonWrapper = styled.button`
   padding: 6px 8px;
@@ -22,16 +22,18 @@ const ContextMenuButtonWrapper = styled.button`
 `
 
 const ContextMenuButton = ({
-                             text,
-                             icon,
-                             onClick,
-                           }: {
+  text,
+  icon,
+  onClick,
+  style,
+}: {
   text: string
   icon?: ReactNode
   onClick: () => void
+  style?: CSSProperties
 }) => {
   return (
-    <ContextMenuButtonWrapper onClick={onClick}>
+    <ContextMenuButtonWrapper onClick={onClick} style={style ? style : {}}>
       {text}
       {icon}
     </ContextMenuButtonWrapper>
