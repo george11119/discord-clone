@@ -9,6 +9,8 @@ import MessageOptionsPopout from "./MessageOptionsPopout.tsx"
 import EditMessageForm from "./EditMessageForm.tsx"
 import ChatMessageProfilePicture from "./ChatMessageProfilePicture.tsx"
 import UsernameContainer from "./UsernameContainer.tsx"
+import useContextMenu from "../../../../../hooks/useContextMenu.ts"
+import MessageContextMenuContainer from "../../../message/MessageContextMenuContainer.tsx"
 
 const Wrapper = styled.li<{ $beingEdited: boolean }>`
   margin-left: 16px;
@@ -67,13 +69,58 @@ const ChatMessage = ({
 }) => {
   const [beingEdited, setBeingEdited] = useState(false)
   const [hovered, setHovered] = useState(false)
+  const contextMenu = useContextMenu()
 
   const edited = message.createdAt !== message.updatedAt
 
   if (!withProfilePicture) {
     return (
+      <>
+        <Wrapper
+          style={{ marginTop: 0, marginLeft: 0 }}
+          $beingEdited={beingEdited}
+          onMouseOver={() => {
+            if (!beingEdited) setHovered(true)
+          }}
+          onMouseOut={() => {
+            if (!beingEdited) setHovered(false)
+          }}
+          onContextMenu={(e) => contextMenu.open(e)}
+        >
+          <Timestamp>
+            {hovered && dateFormatter(message.createdAt, "h:mm a")}
+          </Timestamp>
+          <MessageWrapper style={{ marginLeft: 0 }}>
+            {beingEdited ? (
+              <EditMessageForm
+                message={message}
+                setBeingEdited={setBeingEdited}
+              />
+            ) : (
+              <MessageContentWrapper>
+                {message.content}{" "}
+                {edited ? <EditedIndicator>(edited)</EditedIndicator> : ""}
+              </MessageContentWrapper>
+            )}
+            {hovered && (
+              <MessageOptionsPopout
+                messageId={message.id}
+                setBeingEditted={setBeingEdited}
+              />
+            )}
+          </MessageWrapper>
+        </Wrapper>
+        <MessageContextMenuContainer
+          contextMenu={contextMenu}
+          message={message}
+        />
+      </>
+    )
+  }
+
+  return (
+    <>
       <Wrapper
-        style={{ marginTop: 0, marginLeft: 0 }}
         $beingEdited={beingEdited}
         onMouseOver={() => {
           if (!beingEdited) setHovered(true)
@@ -81,11 +128,12 @@ const ChatMessage = ({
         onMouseOut={() => {
           if (!beingEdited) setHovered(false)
         }}
+        onContextMenu={(e) => contextMenu.open(e)}
       >
-        <Timestamp>
-          {hovered && dateFormatter(message.createdAt, "h:mm a")}
-        </Timestamp>
-        <MessageWrapper style={{ marginLeft: 0 }}>
+        <ChatMessageProfilePicture user={message.user} />
+        <MessageWrapper>
+          <UsernameContainer user={message.user} />
+          <DateWrapper>{messageDateFormatter(message.createdAt)}</DateWrapper>
           {beingEdited ? (
             <EditMessageForm
               message={message}
@@ -105,39 +153,11 @@ const ChatMessage = ({
           )}
         </MessageWrapper>
       </Wrapper>
-    )
-  }
-
-  return (
-    <Wrapper
-      $beingEdited={beingEdited}
-      onMouseOver={() => {
-        if (!beingEdited) setHovered(true)
-      }}
-      onMouseOut={() => {
-        if (!beingEdited) setHovered(false)
-      }}
-    >
-      <ChatMessageProfilePicture user={message.user} />
-      <MessageWrapper>
-        <UsernameContainer user={message.user} />
-        <DateWrapper>{messageDateFormatter(message.createdAt)}</DateWrapper>
-        {beingEdited ? (
-          <EditMessageForm message={message} setBeingEdited={setBeingEdited} />
-        ) : (
-          <MessageContentWrapper>
-            {message.content}{" "}
-            {edited ? <EditedIndicator>(edited)</EditedIndicator> : ""}
-          </MessageContentWrapper>
-        )}
-        {hovered && (
-          <MessageOptionsPopout
-            messageId={message.id}
-            setBeingEditted={setBeingEdited}
-          />
-        )}
-      </MessageWrapper>
-    </Wrapper>
+      <MessageContextMenuContainer
+        contextMenu={contextMenu}
+        message={message}
+      />
+    </>
   )
 }
 

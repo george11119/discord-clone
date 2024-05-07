@@ -6,6 +6,8 @@ import UsernameContainer from "./UsernameContainer.tsx"
 import { useState } from "react"
 import MessageOptionsPopout from "./MessageOptionsPopout.tsx"
 import { stringToNum } from "../../../../../utils/stringToNum.ts"
+import useContextMenu from "../../../../../hooks/useContextMenu.ts"
+import MessageContextMenuContainer from "../../../message/MessageContextMenuContainer.tsx"
 
 const Wrapper = styled.li`
   margin-top: 16px;
@@ -83,12 +85,14 @@ const welcomeMessageGenerator = (message: Message) => {
 
 const WelcomeMessage = ({ message }: { message: Message }) => {
   const [hovered, setHovered] = useState(false)
+  const contextMenu = useContextMenu()
 
   return (
     <>
       <Wrapper
         onMouseOver={() => setHovered(true)}
         onMouseOut={() => setHovered(false)}
+        onContextMenu={(e) => contextMenu.open(e)}
       >
         <UserJoinIconContainer>
           <UserJoinIcon size={18} />
@@ -101,6 +105,10 @@ const WelcomeMessage = ({ message }: { message: Message }) => {
           <MessageOptionsPopout messageId={message.id} canEdit={false} />
         )}
       </Wrapper>
+      <MessageContextMenuContainer
+        contextMenu={contextMenu}
+        message={message}
+      />
     </>
   )
 }
